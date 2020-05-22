@@ -3,6 +3,8 @@ The ```terraform-provider-harbor``` is used to configure an instance of [Harbor]
 
 This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provider](https://github.com/BESTSELLER/terraform-harbor-provider), but with some incompatible changes, like the access to the Harbor API.
 
+![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg)
+
 ## Docs
 
 The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and generated to [nolte.github.io/terraform-provider-harbor](https://nolte.github.io/terraform-provider-harbor/).
