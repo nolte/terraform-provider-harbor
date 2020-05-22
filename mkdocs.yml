@@ -1,0 +1,25 @@
+site_name: "Terraform Provider: Harbor"
+site_url: https://nolte.github.io/terraform-provider-harbor/
+repo_url: https://github.com/nolte/terraform-provider-harbor
+
+nav:
+    - reda: "../"
+    - Getting Started: index.md
+    - Data Sources:
+          - harbor_project: data_sources/harbor_project.md
+
+    - Resources:
+          - harbor_config_system: resources/harbor_config_system.md
+          - harbor_configuration: resources/harbor_configuration.md
+          - harbor_project_member: resources/harbor_project_member.md
+          - harbor_project: resources/harbor_project.md
+          - harbor_registry: resources/harbor_registry.md
+          - harbor_robot_account: resources/harbor_robot_account.md
+          - harbor_tasks: resources/harbor_tasks.md
+    - Guides:
+          - testing: guides/testing.md
+theme: readthedocs
+#extra_css: [index.css]
+markdown_extensions:
+    - toc:
+          permalink: True

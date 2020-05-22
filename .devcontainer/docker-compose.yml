@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  vscode:
+    build: .
+    # image: docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest
+    # image: qmcgaw/godevcontainer:alpine
+    # image: qmcgaw/godevcontainer:debian
+    volumes:
+      - ../:/go/src/github.com/nolte/terraform-provider-harbor
+      - ~/.ssh:/home/vscode/.ssh:ro
+      - ~/.ssh:/root/.ssh:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      ## reuse volumes for extensions
+      - terraform-harbor-vol:/home/vscode/.vscode-server/extensions
+      # And/or for VS Code Insiders
+      - terraform-harbor-vol-insiders:/home/vscode/.vscode-server-insiders/extensions
+    environment:
+      - TZ=Europe/Berlin # $(cat /etc/timezone)
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    entrypoint: zsh -c "while sleep 1000; do :; done"
+    network_mode: "host"
+
+volumes:
+  terraform-harbor-vol:
+  terraform-harbor-vol-insiders:
