@@ -1,0 +1,86 @@
+name: Release Flow
+
+on:
+  push:
+    tags:
+      - "release/*"
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.13
+        id: go
+
+      - name: Get dependencies
+        run: |
+          SWAGGER_VERSION=v0.23.0
+          mkdir -p $HOME/bin
+          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
+            && chmod +x $HOME/bin/swagger
+          echo "::add-path::$HOME/bin"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: npm install swagger-merger
+        run: |
+          npm install swagger-merger -g
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: generate sources
+        run: |
+          make generate
+
+      - name: test provider
+        run: |
+          make test
+
+      - name: build provider
+        run: |
+          scripts/build-10-compile.sh ${GITHUB_REF##*/}
+
+      - name: Upload Binaryies for publishing
+        uses: actions/upload-artifact@v2.0.1
+        with:
+          name: bin
+          path: ${{ github.workspace }}/bin/**
+
+  publish_docs:
+    name: Publish the HTML Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v1
+
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_release_artefacts:
+    name: Publish Release Artefacts
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: bin
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true

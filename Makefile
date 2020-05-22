@@ -5,27 +5,47 @@ GO := go
 
 # generate harbor cient files from swagger config
 define install_provider
-    mv terraform-provider-harbor_v1.0_linux_amd64 ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
+	tar -zxf bin/terraform-provider-harbor_*_linux_amd64.tar.gz -C  ~/.terraform.d/plugins/linux_amd64/
     chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
 endef
-# run build command
-define building_provider
-	echo "Building terraform-provider-harbor_${VERSION}_linux_amd64..."
-	env GOOS=linux GOARCH=amd64 $(GO) build -o terraform-provider-harbor_v${VERSION}_linux_amd64 .
-endef
+
+TEST?=$$(go list ./... |grep -v 'vendor')
+GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
+MAKEFLAGS += --silent
 
 default: build
 
 generate:
-	scripts/generate-client.sh
+	scripts/build-00-generate-client.sh
+
+compile:
+	scripts/build-10-compile.sh
 
 install:
 	$(call install_provider)
 
-build: generate build_cleanup
-	$(call building_provider,build)
+build: generate test compile
 
-build_cleanup:
-	rm -f ./terraform-provider-harbor_*
+fmt:
+	gofmt -w -s $(GOFMT_FILES)
 
-.PHONY: default generate build build_cleanup install
+test: fmtcheck vet
+	go test $(TEST)
+
+testacc: fmtcheck vet
+	TF_ACC=1 go test -timeout 20m $(TEST) -v $(TESTARGS)
+
+fmtcheck:
+	lineCount=$(shell gofmt -l -s $(GOFMT_FILES) | wc -l | tr -d ' ') && exit $$lineCount
+
+vet:
+	go vet ./...
+
+e2e_prepare:
+	scripts/tst-00-prepare-kind.sh
+	scripts/tst-01-prepare-harbor.sh
+
+e2e_cleanup:
+	kind delete cluster
+
+.PHONY: default install
