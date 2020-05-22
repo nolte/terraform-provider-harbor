@@ -1,10 +1,9 @@
 
 provider "harbor" {
-  # url            = "harbor.192-168-178-51.sslip.io"
-  # harbor_version = "v1"
-  # insecure       = true
-  url      = "demo.goharbor.io"
-  basepath = "/api/v2.0"
+  url      = "harbor.192-168-178-51.sslip.io"
+  insecure = true
+  #url      = "demo.goharbor.io"
+  #basepath = "/api/v2.0"
   username = "admin"
   password = "Harbor12345"
 }
@@ -56,13 +55,13 @@ resource "harbor_config_system" "main" {
 ###   vulnerability_scan_policy = "daily"
 ### }
 
-resource "harbor_registry" "main" {
-  name        = "dockerhub"
-  url         = "https://hub.docker.com"
-  type        = "docker-hub"
-  description = "Docker Hub Registry"
-  insecure    = false
-}
+#resource "harbor_registry" "main" {
+#  name        = "dockerhub"
+#  url         = "https://hub.docker.com"
+#  type        = "docker-hub"
+#  description = "Docker Hub Registry"
+#  insecure    = false
+#}
 #
 #resource "harbor_registry" "helmhub" {
 #  name        = "helmhub"
@@ -72,3 +71,8 @@ resource "harbor_registry" "main" {
 #  insecure    = false
 #}
 ##
+
+
+resource "harbor_label" "main" {
+  name = "testlabel"
+}
