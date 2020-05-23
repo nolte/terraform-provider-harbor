@@ -21,7 +21,7 @@ func dataSourceRegistry() *schema.Resource {
 				Computed: true,
 			},
 		},
-		Read: dataSourceProjectRead,
+		Read: dataSourceRegistryRead,
 	}
 }
 
@@ -32,6 +32,7 @@ func dataSourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 	resp, err := apiClient.Products.GetRegistries(query, nil)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
 	d.Set("repository_id", resp.Payload[0].ID)

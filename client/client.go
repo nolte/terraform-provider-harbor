@@ -17,7 +17,7 @@ func NewClient(host string, username string, password string, insecure bool, bas
 	if insecure {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
-	var apiSchemes = []string{schema}
+	apiSchemes := []string{schema}
 	transport := httptransport.New(host, basepath, apiSchemes)
 
 	// add default auth

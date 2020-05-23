@@ -10,16 +10,17 @@ func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"host": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_ENDPOINT", nil),
 			},
 			"username": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"password": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"schema": {
 				Type:     schema.TypeString,

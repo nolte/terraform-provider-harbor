@@ -12,7 +12,6 @@ import (
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
 
-var pathVuln = "/api/system/scanAll/schedule"
 var TypeStr string
 var CronStr string
 
