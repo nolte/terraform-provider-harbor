@@ -21,7 +21,7 @@ jobs:
         run: |
           SWAGGER_VERSION=v0.23.0
           mkdir -p $HOME/bin
-          curl -Lo $HOME/bin/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
+          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
             && chmod +x $HOME/bin/swagger
           echo "::add-path::$HOME/bin"
       - name: Use Node.js ${{ matrix.node-version }}
