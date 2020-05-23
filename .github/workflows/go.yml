@@ -50,7 +50,7 @@ jobs:
       - name: Test
         run: go test -v .
       - name: Upload Binaryies for publishing
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.0.1
         with:
           name: bin
           path: ${{ github.workspace }}/bin/**
