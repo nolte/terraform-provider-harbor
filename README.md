@@ -5,17 +5,25 @@ This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provid
 
 ![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg)
 
+**Project Status**
+
+**At the Moment this Project ist heavy under Construction, it is not recommendet for Production use, or active Forking!**
+
+**Planed Branking Changes:**
+- [ ] Rename provier attributes, like url etc.
+- [ ] Planed Git Rebase for remove the Ugly CI/CD Test Commit
+    - [ ] Finazilize the frist version of common ci workflow
+    - [ ] Finazilize the frist version of release workflow
+- [ ] use a ```develop``` branch as default
+- [ ] cleanup unused stuff from starting development
+
 ## Docs
 
-The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and generated to [nolte.github.io/terraform-provider-harbor](https://nolte.github.io/terraform-provider-harbor/).
-
-**starting**
-```bash
-mkdocs serve
-```
-and open [127.0.0.1:8000](http://127.0.0.1:8000/)
+The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and generated to [nolte.github.io/terraform-provider-harbor](https://nolte.github.io/terraform-provider-harbor/) from the latest Release like, ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nolte/terraform-provider-harbor). 
 
 ## Building
+
+As CI/CD tool we use the Github Workflow Feature.
 
 ## Visual Studio Code DevContainer
 
