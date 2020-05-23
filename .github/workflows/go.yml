@@ -44,7 +44,30 @@ jobs:
           fi
 
       - name: Build
-        run: go build -v .
+        run: |
+          package_name=terraform-provider-harbor
+          platforms=(
+          "darwin/amd64"
+          "linux/amd64"
+          "windows/amd64" )
+          for platform in "${platforms[@]}"
+          do
+              platform_split=(${platform//\// })
+              GOOS=${platform_split[0]}
+              GOARCH=${platform_split[1]}
+              output_name=$package_name
+              if [ $GOOS = "windows" ]; then
+                  output_name+='.exe'
+              fi
+              env CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -o bin/$output_name
+              zip -v bin/terraform-provider-harbor-$GOOS-$GOARCH bin/$output_name
+              rm $output_name
+          done
 
       - name: Test
         run: go test -v .
+      - name: Upload Binaryies for publishing
+        uses: actions/upload-artifact@v1
+        with:
+          name: bin
+          path: bin/*

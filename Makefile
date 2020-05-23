@@ -9,15 +9,18 @@ define install_provider
     chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
 endef
 # run build command
-define building_provider
-	echo "Building terraform-provider-harbor_${VERSION}_linux_amd64..."
-	env GOOS=linux GOARCH=amd64 $(GO) build -o terraform-provider-harbor_v${VERSION}_linux_amd64 .
-endef
+#define building_provider
+#	echo "Building terraform-provider-harbor_${VERSION}_linux_amd64..."
+#	env GOOS=linux GOARCH=amd64 $(GO) build -o terraform-provider-harbor_v${VERSION}_linux_amd64 .
+#endef
 
 default: build
 
 generate:
-	scripts/generate-client.sh
+	scripts/build-00-generate-client.sh
+
+building_provider: 
+	scripts/build-10-compile.sh
 
 install:
 	$(call install_provider)
