@@ -16,7 +16,7 @@ This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provid
     - [X] Finazilize the frist version of common ci workflow
     - [X] Finazilize the frist version of release workflow
 - [ ] use a ```develop``` branch as default
-- [ ] cleanup unused stuff from starting development
+- [X] cleanup unused stuff from starting development
 - [ ] Use First Stable version from the Devcontainer [docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest](https://github.com/nolte/vscode-devcontainers) _(not exists at the moment)_
 
 ## Docs
