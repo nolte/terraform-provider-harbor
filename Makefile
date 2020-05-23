@@ -25,6 +25,10 @@ install:
 build: generate build_cleanup
 	$(call building_provider,build)
 
+compile:
+	$(call building_provider,install)
+
+
 build_cleanup:
 	rm -f ./terraform-provider-harbor_*
 

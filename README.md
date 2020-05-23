@@ -13,7 +13,7 @@ The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and gen
 ```bash
 mkdocs serve
 ```
-and open [127.0.0.1:8001](http://127.0.0.1:8001/)
+and open [127.0.0.1:8000](http://127.0.0.1:8000/)
 
 ## Building
 

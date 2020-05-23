@@ -55,21 +55,21 @@ resource "harbor_config_system" "main" {
 ###   vulnerability_scan_policy = "daily"
 ### }
 
-#resource "harbor_registry" "main" {
-#  name        = "dockerhub"
-#  url         = "https://hub.docker.com"
-#  type        = "docker-hub"
-#  description = "Docker Hub Registry"
-#  insecure    = false
-#}
-#
-#resource "harbor_registry" "helmhub" {
-#  name        = "helmhub"
-#  url         = "https://hub.helm.sh"
-#  type        = "helm-hub"
-#  description = "Helm Hub Registry"
-#  insecure    = false
-#}
+resource "harbor_registry" "main" {
+  name        = "dockerhub"
+  url         = "https://hub.docker.com"
+  type        = "docker-hub"
+  description = "Docker Hub Registry"
+  insecure    = false
+}
+
+resource "harbor_registry" "helmhub" {
+  name        = "helmhub"
+  url         = "https://hub.helm.sh"
+  type        = "helm-hub"
+  description = "Helm Hub Registry"
+  insecure    = false
+}
 ##
 
 

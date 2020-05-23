@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-cd /go/src/github.com/nolte/terraform-provider-harbor/docs/test/script
+cd scripts/test/script
 setup() {
    terraform init
 }
