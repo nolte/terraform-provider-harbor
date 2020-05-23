@@ -1,27 +1,17 @@
 FROM docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest
 
-
-
 # https://github.com/bats-core/bats-core
 ENV BATS_VERSION=1.2.0
 
-ENV SWAGGER_VERSION=v0.23.0
-
 USER root
 
+COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/swagger /usr/local/bin/swagger
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/terraform /usr/local/bin/terraform
+COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/terraform-doc  /usr/local/bin/terraform-doc
+
 RUN curl -sSL -k https://github.com/bats-core/bats-core/archive/v${BATS_VERSION}.tar.gz -o /tmp/bats.tgz \
   && tar -zxf /tmp/bats.tgz -C /tmp \
   && /bin/bash /tmp/bats-core-${BATS_VERSION}/install.sh /usr/local
-
-RUN curl -Lo /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
-  && chmod +x /usr/local/bin/swagger 
-
-ENV TERRAFORM_DOC_VERSION=v0.9.1
-
-RUN curl -Lo /usr/local/bin/terraform-doc https://github.com/segmentio/terraform-docs/releases/download/${TERRAFORM_DOC_VERSION}/terraform-docs-${TERRAFORM_DOC_VERSION}-$(uname | tr '[:upper:]' '[:lower:]')-amd64 \
-  && chmod +x /usr/local/bin/terraform-doc 
-
 
 RUN curl -sSL -k https://github.com/bflad/tfproviderdocs/releases/download/v0.6.0/tfproviderdocs_0.6.0_linux_amd64.tar.gz -o /tmp/tfproviderdocs.tgz \
   && tar -zxf /tmp/tfproviderdocs.tgz -C /tmp \
@@ -31,13 +21,6 @@ RUN curl -sSL -k https://github.com/bflad/tfproviderdocs/releases/download/v0.6.
 RUN apk add --update-cache \
   nodejs npm \
   && rm -rf /var/cache/apk/* 
-
-
-RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
-  /home/$USERNAME/.vscode-server-insiders/extensions \
-  && chown -R $USERNAME \
-  /home/$USERNAME/.vscode-server \
-  /home/$USERNAME/.vscode-server-insiders
 
 RUN mkdir -p /go/src && chown -R ${USER_UID}:${USER_GID} /go/src \
   && mkdir -p /go/pkg && chown -R ${USER_UID}:${USER_GID} /go/pkg

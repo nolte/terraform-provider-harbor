@@ -2,7 +2,7 @@
 name: Feature request
 about: Create a question about to implement a missing Feature
 title: ''
-labels: 'feature'
+labels: 'enhancement'
 assignees: ''
 
 ---

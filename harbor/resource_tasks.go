@@ -16,23 +16,6 @@ var pathVuln = "/api/system/scanAll/schedule"
 var TypeStr string
 var CronStr string
 
-type schedule struct {
-	Schedule cron `json:"schedule`
-}
-
-type cron struct {
-	Type string `json:"type"`
-	Cron string `json:"cron`
-}
-
-type Schedule2 struct {
-	Type string `json:"type"`
-	Cron string `json:"cron"`
-}
-type Info struct {
-	Schedule Schedule2 `json:schedule`
-}
-
 func resourceTasks() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{

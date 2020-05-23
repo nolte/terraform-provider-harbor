@@ -48,7 +48,8 @@
         "mauve.terraform",
         "ms-kubernetes-tools.kind-vscode",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "jetmartin.bats"
+        "jetmartin.bats",
+        "EditorConfig.EditorConfig",
     ],
     "settings": {
         // General settings

@@ -3,24 +3,28 @@ site_url: https://nolte.github.io/terraform-provider-harbor/
 repo_url: https://github.com/nolte/terraform-provider-harbor
 
 nav:
-      - Getting Started: index.md
-      - Data Sources:
-              - harbor_project: data_sources/harbor_project.md
-              - harbor_registry: ""
+  - Getting Started: index.md
+  - Data Sources:
+      - harbor_project: data_sources/harbor_project.md
+      - harbor_registry: ""
 
-      - Resources:
-              - harbor_config_system: resources/harbor_config_system.md
-              - harbor_configuration: resources/harbor_configuration.md
-              - harbor_project_member: resources/harbor_project_member.md
-              - harbor_project: resources/harbor_project.md
-              - harbor_registry: resources/harbor_registry.md
-              - harbor_robot_account: resources/harbor_robot_account.md
-              - harbor_tasks: resources/harbor_tasks.md
-              - harbor_label: ""
-      - Guides:
-              - testing: guides/testing.md
+  - Resources:
+      - harbor_config_system: resources/harbor_config_system.md
+      - harbor_configuration: resources/harbor_configuration.md
+      - harbor_project_member: resources/harbor_project_member.md
+      - harbor_project: resources/harbor_project.md
+      - harbor_registry: resources/harbor_registry.md
+      - harbor_robot_account: resources/harbor_robot_account.md
+      - harbor_tasks: resources/harbor_tasks.md
+      - harbor_label: ""
+  - Guides:
+      - Development: guides/development.md
+      - Local E2E Tests: guides/kind.md
 theme: readthedocs
 extra_css: [index.css]
 markdown_extensions:
-      - toc:
-              permalink: True
+  - toc:
+      permalink: True
+extra_javascript:
+  # fix for https://github.com/mkdocs/mkdocs/issues/2028
+  - js/extra.js

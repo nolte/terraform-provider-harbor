@@ -1,5 +1,6 @@
 terraform-provider-harbor_*
 gen
+bin
 
 # Local .terraform directories
 **/.terraform/*

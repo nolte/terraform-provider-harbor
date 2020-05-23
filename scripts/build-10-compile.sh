@@ -26,7 +26,7 @@ package_name=terraform-provider-harbor
 platforms=(
     "darwin/amd64"
     "linux/amd64"
-    "windows/amd64" 
+    "windows/amd64"
 )
 for platform in "${platforms[@]}"
 do
@@ -39,8 +39,7 @@ do
         output_name+='.exe'
     fi
     env CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build -o ${projectBase}/bin/$output_name
-    #zip -v bin/terraform-provider-harbor-$GOOS-$GOARCH.tar.gz bin/$output_name
-    tar -czvf bin/terraform-provider-harbor_${VERSION}_${GOOS}_${GOARCH}.tar.gz ${projectBase}/bin/$output_name
+    tar -czvf bin/terraform-provider-harbor_${VERSION}_${GOOS}_${GOARCH}.tar.gz -C ${projectBase}/bin $output_name
     rm bin/$output_name
 done
 cd ${projectBase}/bin

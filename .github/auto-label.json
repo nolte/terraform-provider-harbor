@@ -1,0 +1,8 @@
+{
+    "rules": {
+        "documentation": [
+            "*.md"
+        ],
+        "ci": ".github"
+    }
+}

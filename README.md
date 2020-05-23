@@ -16,6 +16,7 @@ This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provid
     - [ ] Finazilize the frist version of release workflow
 - [ ] use a ```develop``` branch as default
 - [ ] cleanup unused stuff from starting development
+- [ ] Use First Stable version from the Devcontainer [docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest](https://github.com/nolte/vscode-devcontainers) _(not exists at the moment)_
 
 ## Docs
 
@@ -38,9 +39,9 @@ For Easy development use [Visual Studio Code DevContainer](https://code.visualst
 docker login docker.pkg.github.com
 ```
 
-4. Grab you a Coffee and wait for 3 Minutes (This happens on the first time use)
+3. Grab you a Coffee and wait for 3 Minutes (This happens on the first time use)
 
-3. Click Terminal -> New Terminal and execute the following command:
+4. Click Terminal -> New Terminal and execute the following command:
 
 ```sh
 # using the Makefile
@@ -54,8 +55,8 @@ For full building and testing you need the following tools on our machine.
 **Required For Building**
 
 * go
-* swagger
-* swagger-merger
+* [go-swagger/go-swagger](https://github.com/go-swagger/go-swagger)
+* [WindomZ/swagger-merger](https://github.com/WindomZ/swagger-merger)
 
 **Required For Testing**
 * kind
