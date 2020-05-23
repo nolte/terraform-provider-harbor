@@ -62,6 +62,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	password := d.Get("password").(string)
 	insecure := d.Get("insecure").(bool)
 	basepath := d.Get("basepath").(string)
+	schema := d.Get("schema").(string)
 
-	return client.NewClient(host, username, password, insecure, basepath), nil
+	return client.NewClient(host, username, password, insecure, basepath, schema), nil
 }
