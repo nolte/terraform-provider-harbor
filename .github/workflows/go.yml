@@ -20,8 +20,10 @@ jobs:
       - name: Get dependencies
         run: |
           SWAGGER_VERSION=v0.23.0
-          curl -Lo /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
-            && chmod +x /usr/local/bin/swagger
+          mkdir -p $HOME/bin
+          curl -Lo $HOME/bin/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
+            && chmod +x $HOME/bin/swagger
+          echo "::add-path::$HOME/bin"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
