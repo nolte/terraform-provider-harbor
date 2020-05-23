@@ -13,8 +13,7 @@ __base="$(basename ${__file} .sh)"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 arg1="${1:-}"
-
-projectBase=/go/src/github.com/nolte/terraform-provider-harbor
+projectBase=$__root
 
 rm -rf ${projectBase}/gen/harborctl
 rm ${projectBase}/gen/merged.json || true
