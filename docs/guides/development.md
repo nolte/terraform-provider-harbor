@@ -42,6 +42,13 @@ Please use the ```develop``` branch for new features and fixes.
 The [Github Release](https://github.com/nolte/terraform-provider-harbor/releases) Assets will be automatical attatch from the build job see ```.github/workflows/go.yml```.
 ![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg?branch=master)
 
+For a Easy Relase process we use the GitHub Commandline Interface [cli.github.com](https://cli.github.com/manual/).
+
+Each Release will be start from the ```develop``` branch.
+
+```sh
+TBD
+```
 
 ## Docs
 
