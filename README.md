@@ -17,9 +17,24 @@ and open [127.0.0.1:8000](http://127.0.0.1:8000/)
 
 ## Building
 
+## Visual Studio Code DevContainer
+
 For Easy development use [Visual Studio Code DevContainer](https://code.visualstudio.com/docs/remote/containers), you can find the basement from the Development Containers at [nolte/vscode-devcontainers](https://github.com/nolte/vscode-devcontainers).
 
-```bash
+1. Create you Github Personal Access Token under https://github.com/settings/tokens with the following scopes:
+   1. `read:packages`
+
+2. Login to fetch the required dev containers
+
+```sh
+docker login docker.pkg.github.com
+```
+
+4. Grab you a Coffee and wait for 3 Minutes (This happens on the first time use)
+
+3. Click Terminal -> New Terminal and execute the following command:
+
+```sh
 # using the Makefile
 make
 ```
