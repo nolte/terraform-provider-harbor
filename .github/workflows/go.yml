@@ -57,11 +57,10 @@ jobs:
           path: ${{ github.workspace }}/bin/**
       - name: Debug Action
         uses: hmarr/debug-action@v1.0.0
-  publish_release_artefacts:
+  publish_docs:
     if: startsWith( github.ref,'refs/heads/master')
-    name: Publish Release Artefacts
+    name: Publish the HTML Documentation
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
       - name: Checkout master
         uses: actions/checkout@v1
