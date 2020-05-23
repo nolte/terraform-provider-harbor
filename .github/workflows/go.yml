@@ -5,7 +5,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-
+  release:
+    types: [published]
 jobs:
   build:
     name: Build
@@ -54,3 +55,14 @@ jobs:
         with:
           name: bin
           path: ${{ github.workspace }}/bin/**
+
+  publish_release_artefacts:
+    #if: github.event_name == 'release'
+    name: Publish Release Artefacts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: bin
+      - name: Display structure of downloaded files
+        run: ls -R
