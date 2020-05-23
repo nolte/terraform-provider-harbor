@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -57,8 +57,8 @@ func resourceConfigAuth() *schema.Resource {
 
 // dasdas
 func resourceConfigAuthRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	resp, err := apiClient.Client.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
+	apiClient := m.(*client.Harbor)
+	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func resourceConfigAuthRead(d *schema.ResourceData, m interface{}) error {
 func resourceConfigAuthUpdate(d *schema.ResourceData, m interface{}) error {
 	apiClient, body := newAPIClient(d, m)
 
-	_, err := apiClient.Client.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&body), nil)
+	_, err := apiClient.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&body), nil)
 	if err != nil {
 		return err
 	}
@@ -103,8 +103,8 @@ func resourceConfigAuthDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func newAPIClient(d *schema.ResourceData, m interface{}) (*client.Client, models.Configurations) {
-	apiClient := m.(*client.Client)
+func newAPIClient(d *schema.ResourceData, m interface{}) (*client.Harbor, models.Configurations) {
+	apiClient := m.(*client.Harbor)
 
 	body := models.Configurations{
 		AuthMode:         d.Get("auth_mode").(string),

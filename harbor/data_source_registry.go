@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 )
 
@@ -26,10 +26,10 @@ func dataSourceRegistry() *schema.Resource {
 }
 
 func dataSourceRegistryRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	query := products.NewGetRegistriesParams().WithName(d.Get("name").(*string))
-	resp, err := apiClient.Client.Products.GetRegistries(query, nil)
+	resp, err := apiClient.Products.GetRegistries(query, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

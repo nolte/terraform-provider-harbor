@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -42,7 +42,7 @@ func resourceProject() *schema.Resource {
 }
 
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPostProjectsParams().WithProject(&models.ProjectReq{
 		ProjectName: d.Get("name").(string),
@@ -52,7 +52,7 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 		},
 	})
 
-	_, err := apiClient.Client.Products.PostProjects(body, nil)
+	_, err := apiClient.Products.PostProjects(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,10 +62,10 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	projectName := d.Get("name").(string)
 	query := products.NewGetProjectsParams().WithName(&projectName)
-	resp, err := apiClient.Client.Products.GetProjects(query, nil)
+	resp, err := apiClient.Products.GetProjects(query, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPutProjectsProjectIDParams().WithProject(&models.ProjectReq{
 		ProjectName: d.Get("name").(string),
@@ -102,7 +102,7 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 		},
 	}).WithProjectID(int64(d.Get("project_id").(int)))
 
-	_, err := apiClient.Client.Products.PutProjectsProjectID(body, nil)
+	_, err := apiClient.Products.PutProjectsProjectID(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,11 +111,11 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	projectId := d.Get("project_id").(int)
 
 	delete := products.NewDeleteProjectsProjectIDParams().WithProjectID(int64(projectId))
-	_, err := apiClient.Client.Products.DeleteProjectsProjectID(delete, nil)
+	_, err := apiClient.Products.DeleteProjectsProjectID(delete, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

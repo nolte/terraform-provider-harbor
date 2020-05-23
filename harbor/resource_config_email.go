@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -53,8 +53,8 @@ func resourceConfigEmail() *schema.Resource {
 }
 
 func resourceConfigEmailCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	_, err := apiClient.Client.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
+	apiClient := m.(*client.Harbor)
+	_, err := apiClient.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
 		EmailHost:     d.Get("email_host").(string),
 		EmailPort:     int64(d.Get("email_port").(int)),
 		EmailUsername: d.Get("email_username").(string),
@@ -70,9 +70,9 @@ func resourceConfigEmailCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceConfigEmailRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
-	resp, err := apiClient.Client.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
+	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

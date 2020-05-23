@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -49,7 +49,7 @@ func resourceRegistry() *schema.Resource {
 }
 
 func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPostRegistriesParams().WithRegistry(&models.Registry{
 		Description: d.Get("description").(string),
@@ -58,7 +58,7 @@ func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
 		Type:        d.Get("type").(string),
 		URL:         d.Get("url").(string),
 	})
-	_, err := apiClient.Client.Products.PostRegistries(body, nil)
+	_, err := apiClient.Products.PostRegistries(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,11 +68,11 @@ func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	projectName := d.Get("name").(string)
 
 	query := products.NewGetRegistriesParams().WithName(&projectName)
-	resp, err := apiClient.Client.Products.GetRegistries(query, nil)
+	resp, err := apiClient.Products.GetRegistries(query, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -103,8 +103,8 @@ func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	_, err := apiClient.Client.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithRepoTarget(&models.PutRegistry{
+	apiClient := m.(*client.Harbor)
+	_, err := apiClient.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithRepoTarget(&models.PutRegistry{
 		Description: d.Get("description").(string),
 		Insecure:    d.Get("insecure").(bool),
 		Name:        d.Get("name").(string),
@@ -118,9 +118,9 @@ func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRegistryDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
-	_, err := apiClient.Client.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(int64(d.Get("repository_id").(int))), nil)
+	_, err := apiClient.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(int64(d.Get("repository_id").(int))), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

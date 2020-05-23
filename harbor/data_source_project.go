@@ -3,7 +3,7 @@ package harbor
 import (
 	"log"
 
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -28,9 +28,9 @@ func dataSourceProject() *schema.Resource {
 }
 
 func dataSourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	query := products.NewGetProjectsParams().WithName(d.Get("name").(*string))
-	resp, err := apiClient.Client.Products.GetProjects(query, nil)
+	resp, err := apiClient.Products.GetProjects(query, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

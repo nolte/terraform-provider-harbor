@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -54,12 +54,12 @@ func resourceRobotAccount() *schema.Resource {
 }
 
 func resourceRobotAccountCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	projectid := int64(d.Get("project_id").(int))
 	name := d.Get("name").(string)
 	resource := "/project/" + strconv.FormatInt(projectid, 10) + "/repository"
 
-	resp, err := apiClient.Client.Products.PostProjectsProjectIDRobots(products.NewPostProjectsProjectIDRobotsParams().WithProjectID(projectid).WithRobot(&models.RobotAccountCreate{
+	resp, err := apiClient.Products.PostProjectsProjectIDRobots(products.NewPostProjectsProjectIDRobotsParams().WithProjectID(projectid).WithRobot(&models.RobotAccountCreate{
 		Name:        name,
 		Description: d.Get("description").(string),
 		Access: []*models.RobotAccountAccess{
@@ -81,11 +81,11 @@ func resourceRobotAccountCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	projectid := int64(d.Get("project_id").(int))
 	name := d.Get("name").(string)
 	log.Printf("Load Robot Accounts from %v Project", projectid)
-	resp, err := apiClient.Client.Products.GetProjectsProjectIDRobots(products.NewGetProjectsProjectIDRobotsParams().WithProjectID(projectid), nil)
+	resp, err := apiClient.Products.GetProjectsProjectIDRobots(products.NewGetProjectsProjectIDRobotsParams().WithProjectID(projectid), nil)
 
 	if err != nil {
 		log.Fatal(err)
@@ -100,12 +100,12 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceRobotAccountDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	robotID := int64(d.Get("robot_id").(int))
 	projectID := int64(d.Get("project_id").(int))
 
-	_, err := apiClient.Client.Products.DeleteProjectsProjectIDRobotsRobotID(products.NewDeleteProjectsProjectIDRobotsRobotIDParams().WithRobotID(robotID).WithProjectID(projectID), nil)
+	_, err := apiClient.Products.DeleteProjectsProjectIDRobotsRobotID(products.NewDeleteProjectsProjectIDRobotsRobotIDParams().WithRobotID(robotID).WithProjectID(projectID), nil)
 
 	if err != nil {
 		log.Fatal(err)

@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -68,11 +68,11 @@ func buildLabel(d *schema.ResourceData) *models.Label {
 	}
 }
 func resourceLabelCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPostLabelsParams().WithLabel(buildLabel(d))
 
-	_, err := apiClient.Client.Products.PostLabels(body, nil)
+	_, err := apiClient.Products.PostLabels(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,10 +82,10 @@ func resourceLabelCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceLabelRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	LabelName := d.Get("name").(string)
 	query := products.NewGetLabelsParams().WithScope(d.Get("scope").(string)).WithName(&LabelName)
-	resp, err := apiClient.Client.Products.GetLabels(query, nil)
+	resp, err := apiClient.Products.GetLabels(query, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -123,11 +123,11 @@ func resourceLabelRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceLabelUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPutLabelsIDParams().WithLabel(buildLabel(d))
 
-	_, err := apiClient.Client.Products.PutLabelsID(body, nil)
+	_, err := apiClient.Products.PutLabelsID(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -136,11 +136,11 @@ func resourceLabelUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceLabelDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 	labelID := d.Get("label_id").(int)
 
 	delete := products.NewDeleteLabelsIDParams().WithID(int64(labelID))
-	_, err := apiClient.Client.Products.DeleteLabelsID(delete, nil)
+	_, err := apiClient.Products.DeleteLabelsID(delete, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

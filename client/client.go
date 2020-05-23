@@ -10,16 +10,10 @@ import (
 	apiclient "github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 )
 
-type Client struct {
-	Client *apiclient.Harbor
-}
-
 // NewClient creates common settings
-func NewClient(host string, username string, password string, insecure bool, basepath string, schema string) *Client {
+func NewClient(host string, username string, password string, insecure bool, basepath string, schema string) *apiclient.Harbor {
 	basicAuth := httptransport.BasicAuth(username, password)
 	// create the transport
-	//proxyTLSClientConfig := &tls.Config{InsecureSkipVerify: true}
-
 	if insecure {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
@@ -31,7 +25,5 @@ func NewClient(host string, username string, password string, insecure bool, bas
 
 	// create the API client, with the transport
 	client := apiclient.New(transport, strfmt.Default)
-	return &Client{
-		Client: client,
-	}
+	return client
 }
