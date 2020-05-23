@@ -15,20 +15,33 @@ __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on
 arg1="${1:-}"
 projectBase=$__root
 
-rm -rf ${projectBase}/gen/harborctl
-rm ${projectBase}/gen/merged.json || true
+GENERATED_SOURCES_TARGET=${projectBase}/gen/harborctl
+GENERATED_MERGED_SWAGGER=${projectBase}/gen/merged.json
+
+
+if [ -d "$GENERATED_SOURCES_TARGET" ]; then
+    echo "Remove old generated sources"
+    rm -rf ${GENERATED_SOURCES_TARGET}
+fi
+
+if test -f "$GENERATED_MERGED_SWAGGER"; then
+    echo "Remove old generated merged swagger conf"
+    rm ${GENERATED_MERGED_SWAGGER}
+fi
+
+
 
 swagger-merger \
-    -o ${projectBase}/gen/merged.json \
+    -o ${GENERATED_MERGED_SWAGGER} \
     -i ${projectBase}/scripts/swagger-specs/v1-swagger-extra-fields.json \
     -i ${projectBase}/scripts/swagger-specs/v2-swagger-original.json 
 
-mkdir -p ${projectBase}/gen/harborctl
+mkdir -p ${GENERATED_SOURCES_TARGET}
 
 swagger generate client \
-    -f ${projectBase}/gen/merged.json \
+    -f ${GENERATED_MERGED_SWAGGER} \
     --name=harbor \
-    --target=${projectBase}/gen/harborctl \
+    --target=${GENERATED_SOURCES_TARGET} \
     --with-flatten=remove-unused 
     #--operation=PostProjects \
     #--operation=GetProjects \
