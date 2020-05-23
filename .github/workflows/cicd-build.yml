@@ -2,6 +2,10 @@ name: Classic CI/CD
 
 on:
   push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "*.*"
   pull_request:
 jobs:
   build:
