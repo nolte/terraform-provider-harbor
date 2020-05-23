@@ -47,7 +47,14 @@ func dataSourceProjectRead(d *schema.ResourceData, m interface{}) error {
 		setProjectSchema(d, resp.Payload[0])
 		return nil
 	}
-
+	if id, ok := d.GetOk("id"); ok {
+		resp, err := apiClient.Products.GetProjectsProjectID(products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int))), nil)
+		if err != nil {
+			d.SetId("")
+			log.Fatal(err)
+		}
+		setProjectSchema(d, resp.Payload)
+	}
 	return fmt.Errorf("please specify a name to lookup for a project")
 }
 
