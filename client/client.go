@@ -11,7 +11,7 @@ import (
 )
 
 type Client struct {
-	url      string
+	host     string
 	username string
 	password string
 	insecure bool
@@ -19,7 +19,7 @@ type Client struct {
 }
 
 // NewClient creates common settings
-func NewClient(url string, username string, password string, insecure bool, basepath string) *Client {
+func NewClient(host string, username string, password string, insecure bool, basepath string) *Client {
 	basicAuth := httptransport.BasicAuth(username, password)
 	// create the transport
 	//proxyTLSClientConfig := &tls.Config{InsecureSkipVerify: true}
@@ -27,7 +27,7 @@ func NewClient(url string, username string, password string, insecure bool, base
 	if insecure {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
-	transport := httptransport.New(url, basepath, apiclient.DefaultSchemes)
+	transport := httptransport.New(host, basepath, apiclient.DefaultSchemes)
 
 	// add default auth
 	transport.DefaultAuthentication = basicAuth
@@ -35,7 +35,7 @@ func NewClient(url string, username string, password string, insecure bool, base
 	// create the API client, with the transport
 	client := apiclient.New(transport, strfmt.Default)
 	return &Client{
-		url:      url,
+		host:     host,
 		username: username,
 		password: password,
 		insecure: insecure,

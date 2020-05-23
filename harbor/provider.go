@@ -9,7 +9,7 @@ import (
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"url": {
+			"host": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -20,6 +20,11 @@ func Provider() terraform.ResourceProvider {
 			"password": {
 				Type:     schema.TypeString,
 				Optional: true,
+			},
+			"schema": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "https",
 			},
 			"insecure": {
 				Type:     schema.TypeBool,
@@ -52,11 +57,11 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	url := d.Get("url").(string)
+	host := d.Get("host").(string)
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
 	insecure := d.Get("insecure").(bool)
 	basepath := d.Get("basepath").(string)
 
-	return client.NewClient(url, username, password, insecure, basepath), nil
+	return client.NewClient(host, username, password, insecure, basepath), nil
 }

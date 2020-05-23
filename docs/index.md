@@ -15,9 +15,22 @@ app/service documentation.
 ## Example Usage
 
 ```hcl
-provider "harbor" {
-  url      = "demo.goharbor.io"
-  basepath = "/api/v2.0"
+# example for harbor v2 api usage
+provider "harborv2" {
+  host     = "demo.goharbor.io"
+  schema   = "https"
+  insecure = true
+  basepath = "/api/v2"
+  username = "admin"
+  password = "Harbor12345"
+}
+
+# example for harbor v1 api usage
+provider "harborv1" {
+  host     = var.harbor_endpoint
+  schema   = "https"
+  insecure = true
+  basepath = var.harbor_base_path
   username = "admin"
   password = "Harbor12345"
 }
@@ -29,21 +42,17 @@ In addition to [generic `provider` arguments](https://www.terraform.io/docs/conf
 (e.g. `alias` and `version`), the following arguments are supported in the Harbor
  `provider` block:
 
-* `url` - (Required) ddd
+* `host` - (Required) Hostname from the [Harbor](https://goharbor.io) Service. like _demo.goharbor.io_
 
-* `basepath` - (Optional)
+* `username` - (Required) Username for authorize at the harbor.
 
-* `basepath` - (Optional)
+* `password` - (Required) Password from given user.
 
-* `basepath` - (Optional)
+* `schema` - (Optional) Set Used http Schema, possible values are: ```https,http```. Default: ```https```
 
-* `basepath` - (Optional)
+* `insecure` - (Optional) Verify Https Certificates, Default: ```false```
 
-* `basepath` - (Optional)
-
-* `basepath` - (Optional)
-
-* `basepath` - (Optional)
+* `basepath` - (Optional) The Harbor Api basepath, for example use ```/api``` for default HarborV1 and ```/api/v2``` for Harbor V2 Deployments.
 
 
 ## Install the Custom Provider
