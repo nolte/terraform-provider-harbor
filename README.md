@@ -11,7 +11,7 @@ This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provid
 **At the Moment this Project ist heavy under Construction, it is not recommendet for Production use, ~~or active Forking~~ !**
 
 **Planed Branking Changes:**
-- [ ] Rename provier attributes, like url etc.
+- [ ] [Rename provider](https://github.com/nolte/terraform-provider-harbor/issues/3) attributes, like url etc.
 - [x] Planed Git Rebase for remove the Ugly CI/CD Test Commit
     - [X] Finazilize the frist version of common ci workflow
     - [X] Finazilize the frist version of release workflow
