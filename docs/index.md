@@ -50,9 +50,9 @@ In addition to [generic `provider` arguments](https://www.terraform.io/docs/conf
 
 * `schema` - (Optional) Set Used http Schema, possible values are: ```https,http```. Default: ```https```
 
-* `insecure` - (Optional) Verify Https Certificates, Default: ```false```
+* `insecure` - (Optional) Verify Https Certificates. Default: ```false```
 
-* `basepath` - (Optional) The Harbor Api basepath, for example use ```/api``` for default HarborV1 and ```/api/v2``` for Harbor V2 Deployments.
+* `basepath` - (Optional) The Harbor Api basepath, for example use ```/api``` for default HarborV1 and ```/api/v2``` for Harbor V2 Deployments. Default: ```/api```
 
 
 ## Install the Custom Provider

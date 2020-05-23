@@ -1,13 +1,13 @@
-# Data Source: harbor_project
+# Data Source: harbor_registry
 
 ## Example Usage
 
 ```hcl
-data "harbor_project" "project_1" {
+data "harbor_registry" "registry_1" {
   name = "main"
 }
 
-data "harbor_project" "project_2" {
+data "harbor_registry" "registry_2" {
   id = 4
 }
 
