@@ -84,7 +84,7 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Client)
 	projectid := int64(d.Get("project_id").(int))
 	name := d.Get("name").(string)
-
+	log.Printf("Load Robot Accounts from %i Project", projectid)
 	resp, err := apiClient.Client.Products.GetProjectsProjectIDRobots(products.NewGetProjectsProjectIDRobotsParams().WithProjectID(projectid), nil)
 
 	if err != nil {
@@ -94,7 +94,6 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 		if v.Name == "robot$"+name {
 			d.Set("robot_id", int(v.ID))
 			d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", v.Name)))
-
 		}
 	}
 	return nil

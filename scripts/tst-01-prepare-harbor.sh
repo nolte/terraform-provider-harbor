@@ -18,7 +18,7 @@ kubectl create ns harbor
 
 helm repo add harbor https://helm.goharbor.io
 
-export INGRESSDOMAIN=192-168-178-51.sslip.io 
+export INGRESSDOMAIN=192-168-178-51.sslip.io
 
 helm upgrade -i tf-harbor-test harbor/harbor \
     -n harbor \
@@ -28,4 +28,4 @@ helm upgrade -i tf-harbor-test harbor/harbor \
 kubectl wait --namespace harbor \
   --for=condition=ready pod \
   --selector=component=core \
-  --timeout=90s
+  --timeout=480s

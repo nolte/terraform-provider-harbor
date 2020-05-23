@@ -1,9 +1,16 @@
 
+variable "harbor_endpoint" {
+  default = "demo.goharbor.io"
+}
+variable "harbor_base_path" {
+  default = "/api/v2.0"
+}
+
 provider "harbor" {
-  url      = "harbor.192-168-178-51.sslip.io"
+  url      = var.harbor_endpoint
   insecure = true
   #url      = "demo.goharbor.io"
-  #basepath = "/api/v2.0"
+  basepath = var.harbor_base_path
   username = "admin"
   password = "Harbor12345"
 }
@@ -11,7 +18,7 @@ provider "harbor" {
 resource "harbor_project" "main" {
   name                   = "main"
   public                 = false # (Optional) Default value is false
-  vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push 
+  vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push
 }
 
 resource "harbor_robot_account" "account" {
@@ -23,31 +30,8 @@ resource "harbor_robot_account" "account" {
 # #resource "harbor_tasks" "main" {
 # #  vulnerability_scan_policy = "daily"
 # #}
-# 
-resource "harbor_config_email" "conf_email" {
-  email_host     = "main2"
-  email_port     = 25
-  email_username = "main2"
-  email_password = "main2"
-  email_from     = "main2"
-  email_ssl      = false
-}
-# 
-# 
-resource "harbor_config_auth" "oidc" {
-  auth_mode          = "oidc_auth"
-  oidc_name          = "azure"
-  oidc_endpoint      = "https://login.microsoftonline.com/v2.0"
-  oidc_client_id     = "OIDC Client ID goes here"
-  oidc_client_secret = "ODDC Client Secret goes here"
-  oidc_scope         = "openid,email"
-  oidc_verify_cert   = true
-}
-# 
-resource "harbor_config_system" "main" {
-  project_creation_restriction = "everyone"
-  robot_token_expiration       = 5259492
-}
+#
+
 
 
 # v2 problems !!!
@@ -71,7 +55,6 @@ resource "harbor_registry" "helmhub" {
   insecure    = false
 }
 ##
-
 
 resource "harbor_label" "main" {
   name = "testlabel"

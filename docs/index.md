@@ -11,20 +11,6 @@ description: |-
 Summary of what the provider is for, including use cases and links to
 app/service documentation.
 
-## Install the Custom Provider
-
-```bash
-
-# for example https://github.com/nolte/terraform-provider-harbor/releases/download/release/v0.1.0/terraform-provider-harbor_v0.1.0_linux_amd64.tar.gz
-LATEST_LINUX_RELEASE=$(curl -sL https://api.github.com/repos/nolte/terraform-provider-harbor/releases/latest | jq -r '.assets[].browser_download_url' | grep '_linux_amd64')
-
-# install the provider directly to your pluginfolder
-curl $LATEST_LINUX_RELEASE | tar -zxf -C ~/.terraform.d/plugins/linux_amd64/
-```
-
-Here a link to the Terraform Doc how to install [third-party-plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
-
-
 
 ## Example Usage
 
@@ -58,3 +44,17 @@ In addition to [generic `provider` arguments](https://www.terraform.io/docs/conf
 * `basepath` - (Optional)
 
 * `basepath` - (Optional)
+
+
+## Install the Custom Provider
+
+```bash
+
+# for example https://github.com/nolte/terraform-provider-harbor/releases/download/release/v0.1.0/terraform-provider-harbor_v0.1.0_linux_amd64.tar.gz
+LATEST_LINUX_RELEASE=$(curl -sL https://api.github.com/repos/nolte/terraform-provider-harbor/releases/latest | jq -r '.assets[].browser_download_url' | grep '_linux_amd64')
+
+# direct install to your personal plugin directory
+wget -qO- $LATEST_LINUX_RELEASE | tar -xvz -C ~/.terraform.d/plugins/linux_amd64/
+```
+
+Here a link to the Terraform Doc how to install [third-party-plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)

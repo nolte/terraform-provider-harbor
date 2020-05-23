@@ -47,6 +47,6 @@ echo "Waiting Ingress is successfull started"
 kubectl wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
-  --timeout=90s
+  --timeout=240s
 
 echo "Kind Test Env Ready for use"

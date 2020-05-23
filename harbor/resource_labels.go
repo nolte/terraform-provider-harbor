@@ -89,6 +89,10 @@ func resourceLabelRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if len(resp.Payload) < 1 {
+		d.SetId("")
+		return nil
+	}
 
 	if err := d.Set("label_id", int(resp.Payload[0].ID)); err != nil {
 		return err

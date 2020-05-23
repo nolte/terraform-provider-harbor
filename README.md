@@ -3,7 +3,8 @@ The ```terraform-provider-harbor``` is used to configure an instance of [Harbor]
 
 This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provider](https://github.com/BESTSELLER/terraform-harbor-provider), but with some incompatible changes, like the access to the Harbor API.
 
-![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg)
+![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)
+![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)
 
 **Project Status**
 
@@ -12,15 +13,15 @@ This Frok is original based on the Work from [BESTSELLER/terraform-harbor-provid
 **Planed Branking Changes:**
 - [ ] Rename provier attributes, like url etc.
 - [ ] Planed Git Rebase for remove the Ugly CI/CD Test Commit
-    - [ ] Finazilize the frist version of common ci workflow
-    - [ ] Finazilize the frist version of release workflow
+    - [X] Finazilize the frist version of common ci workflow
+    - [X] Finazilize the frist version of release workflow
 - [ ] use a ```develop``` branch as default
 - [ ] cleanup unused stuff from starting development
 - [ ] Use First Stable version from the Devcontainer [docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest](https://github.com/nolte/vscode-devcontainers) _(not exists at the moment)_
 
 ## Docs
 
-The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and generated to [nolte.github.io/terraform-provider-harbor](https://nolte.github.io/terraform-provider-harbor/) from the latest Release like, ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nolte/terraform-provider-harbor). 
+The Documentation will be created with [mkdocs](https://www.mkdocs.org/) and generated to [nolte.github.io/terraform-provider-harbor](https://nolte.github.io/terraform-provider-harbor/) from the latest Release like, ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nolte/terraform-provider-harbor).
 
 ## Building
 

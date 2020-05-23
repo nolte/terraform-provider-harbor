@@ -39,7 +39,7 @@ Please use the ```develop``` branch for new features and fixes.
 
 ### Releasing
 
-The [Github Release](https://github.com/nolte/terraform-provider-harbor/releases) Assets will be automatical attatch from the build job see ```.github/workflows/go.yml```. 
+The [Github Release](https://github.com/nolte/terraform-provider-harbor/releases) Assets will be automatical attatch from the build job see ```.github/workflows/go.yml```.
 ![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg?branch=master)
 
 
@@ -50,3 +50,8 @@ The [Github Release](https://github.com/nolte/terraform-provider-harbor/releases
 mkdocs serve
 ```
 and open [127.0.0.1:8000](http://127.0.0.1:8000/)
+
+
+## Links
+
+* [writing-custom-providers](https://www.terraform.io/docs/extend/writing-custom-providers.html)

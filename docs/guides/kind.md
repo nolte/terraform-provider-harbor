@@ -1,8 +1,11 @@
 # E2E Tests With Kind
 
-For Quick Develp
+For Quick and Easy Local Development it is Recommendet to use a Vanilla Harbor installation.
+All releavant make goals are prefixed with ```e2s_*```.
 
 ## Kind Precondition
+
+### Manuel
 
 Starting the Kind Cluster with [Ingress Support](https://kind.sigs.k8s.io/docs/user/ingress/).
 
@@ -43,7 +46,7 @@ kind export kubeconfig
 kubectl create ns harbor
 ```
 
-## Install the Harbor Chart
+#### Install the Harbor Chart
 
 Install the Helm Chart from [goharbor/harbor-helm](https://github.com/goharbor/harbor-helm).
 
@@ -51,7 +54,7 @@ Install the Helm Chart from [goharbor/harbor-helm](https://github.com/goharbor/h
 # add helm chart repo (always done if you use the devcontainer)
 helm repo add harbor https://helm.goharbor.io
 
-export INGRESSDOMAIN=192-168-178-51.sslip.io 
+export INGRESSDOMAIN=192-168-178-51.sslip.io
 
 helm upgrade -i tf-harbor-test harbor/harbor \
     -n harbor \
@@ -62,10 +65,18 @@ helm upgrade -i tf-harbor-test harbor/harbor \
 helm delete -n harbor tf-harbor-test
 ```
 
+### Using Make Goal
+
+```sh
+# create the kind cluster with ingress and install the harbor chart
+make e2e_prepare
+
+# delete the kind cluster
+make e2e_cleanup
+```
+
 ## Update the local Provider
 
 ```bash
-make build
-mv terraform-provider-harbor_v1.0_linux_amd64 ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
-chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
+make install
 ```

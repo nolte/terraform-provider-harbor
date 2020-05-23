@@ -69,7 +69,10 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	if len(resp.Payload) < 1 {
+		d.SetId("")
+		return nil
+	}
 	if err := d.Set("project_id", int(resp.Payload[0].ProjectID)); err != nil {
 		return err
 	}

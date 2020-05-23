@@ -41,5 +41,11 @@ fmtcheck:
 vet:
 	go vet ./...
 
+e2e_prepare:
+	scripts/tst-00-prepare-kind.sh
+	scripts/tst-01-prepare-harbor.sh
+
+e2e_cleanup:
+	kind delete cluster
 
 .PHONY: default install
