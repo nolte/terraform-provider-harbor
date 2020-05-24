@@ -3,10 +3,10 @@ package harbor
 import (
 	"fmt"
 	"log"
+	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -17,16 +17,12 @@ func resourceLabel() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"project_id": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
-			},
-			"label_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				ForceNew: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -36,7 +32,7 @@ func resourceLabel() *schema.Resource {
 			"color": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default:  "green",
+				Default:  "#61717D",
 			},
 			"deleted": {
 				Type:     schema.TypeBool,
@@ -55,6 +51,9 @@ func resourceLabel() *schema.Resource {
 		Read:   resourceLabelRead,
 		Update: resourceLabelUpdate,
 		Delete: resourceLabelDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 func buildLabel(d *schema.ResourceData) *models.Label {
@@ -68,82 +67,118 @@ func buildLabel(d *schema.ResourceData) *models.Label {
 	}
 }
 func resourceLabelCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPostLabelsParams().WithLabel(buildLabel(d))
-
-	_, err := apiClient.Client.Products.PostLabels(body, nil)
+	_, err := apiClient.Products.PostLabels(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 	//d.Set("Label_id", resp.Payload[0].LabelID)
-	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", d.Get("name").(string))))
+	label, err := findLabelByNameAndScope(d, m)
+	if err != nil {
+		return err
+	}
+	d.SetId(strconv.Itoa(int(label.ID)))
 	return resourceLabelRead(d, m)
 }
 
+func findLabelByNameAndScope(d *schema.ResourceData, m interface{}) (*models.Label, error) {
+	apiClient := m.(*client.Harbor)
+	if name, ok := d.GetOk("name"); ok {
+		if scope, ok := d.GetOk("scope"); ok {
+			searchName := name.(string)
+			scopeName := scope.(string)
+			query := products.NewGetLabelsParams().WithScope(scopeName).WithName(&searchName)
+			if scopeName == "p" {
+				projectID := int64(d.Get("project_id").(int))
+				query = query.WithProjectID(&projectID)
+			}
+			resp, err := apiClient.Products.GetLabels(query, nil)
+			if err != nil {
+				d.SetId("")
+				return &models.Label{}, err
+			}
+			if len(resp.Payload) < 1 {
+				return &models.Label{}, fmt.Errorf("no label found with name %v", searchName)
+			} else if resp.Payload[0].Name != searchName {
+				return &models.Label{}, fmt.Errorf("Response Name %v not match with Expected Name %v", resp.Payload[0].Name, searchName)
+			}
+			return resp.Payload[0], nil
+		}
+	}
+	return &models.Label{}, fmt.Errorf("Fail to lookup label by Name and Scope")
+}
+
+func findLabelByID(d *schema.ResourceData, m interface{}) (*models.Label, error) {
+	apiClient := m.(*client.Harbor)
+	if searchID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		query := products.NewGetLabelsIDParams().WithID(searchID)
+		resp, err := apiClient.Products.GetLabelsID(query, nil)
+		if err != nil {
+			return &models.Label{}, err
+		}
+		return resp.Payload, nil
+	}
+	fmt.Println(d.Id(), "is not an integer.")
+	return &models.Label{}, fmt.Errorf("fail to find the label")
+}
+
+func setLabelSchema(d *schema.ResourceData, resp *models.Label) error {
+	d.SetId(strconv.Itoa(int(resp.ID)))
+	if err := d.Set("name", string(resp.Name)); err != nil {
+		return err
+	}
+	if err := d.Set("description", resp.Description); err != nil {
+		return err
+	}
+
+	if err := d.Set("deleted", resp.Deleted); err != nil {
+		return err
+	}
+	if err := d.Set("color", resp.Color); err != nil {
+		return err
+	}
+	if err := d.Set("scope", resp.Scope); err != nil {
+		return err
+	}
+	if err := d.Set("project_id", int(resp.ProjectID)); err != nil {
+		return err
+	}
+	return nil
+}
 func resourceLabelRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	LabelName := d.Get("name").(string)
-	query := products.NewGetLabelsParams().WithScope(d.Get("scope").(string)).WithName(&LabelName)
-	resp, err := apiClient.Client.Products.GetLabels(query, nil)
+	label, err := findLabelByID(d, m)
 	if err != nil {
-		log.Fatal(err)
-	}
-	if len(resp.Payload) < 1 {
-		d.SetId("")
-		return nil
-	}
-
-	if err := d.Set("label_id", int(resp.Payload[0].ID)); err != nil {
 		return err
 	}
-
-	if err := d.Set("name", string(resp.Payload[0].Name)); err != nil {
+	if err := setLabelSchema(d, label); err != nil {
 		return err
 	}
-
-	if err := d.Set("description", resp.Payload[0].Description); err != nil {
-		return err
-	}
-
-	if err := d.Set("deleted", resp.Payload[0].Deleted); err != nil {
-		return err
-	}
-	if err := d.Set("color", resp.Payload[0].Color); err != nil {
-		return err
-	}
-	if err := d.Set("scope", resp.Payload[0].Scope); err != nil {
-		return err
-	}
-	if err := d.Set("project_id", int(resp.Payload[0].ProjectID)); err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func resourceLabelUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-
-	body := products.NewPutLabelsIDParams().WithLabel(buildLabel(d))
-
-	_, err := apiClient.Client.Products.PutLabelsID(body, nil)
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if resourceID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		body := products.NewPutLabelsIDParams().WithLabel(buildLabel(d)).WithID(resourceID)
+		if _, err := apiClient.Products.PutLabelsID(body, nil); err != nil {
+			return err
+		}
+		return resourceLabelRead(d, m)
 	}
-
-	return resourceLabelRead(d, m)
+	return fmt.Errorf("Label Id not a Integer")
 }
 
 func resourceLabelDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	labelID := d.Get("label_id").(int)
-
-	delete := products.NewDeleteLabelsIDParams().WithID(int64(labelID))
-	_, err := apiClient.Client.Products.DeleteLabelsID(delete, nil)
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if resourceID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		delete := products.NewDeleteLabelsIDParams().WithID(resourceID)
+		if _, err := apiClient.Products.DeleteLabelsID(delete, nil); err != nil {
+			return err
+		}
+		d.SetId("")
+		return nil
 	}
-	d.SetId("")
-	return nil
+	return fmt.Errorf("Label Id not a Integer")
 }

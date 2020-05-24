@@ -6,9 +6,9 @@ variable "harbor_base_path" {
 }
 
 provider "harbor" {
-  url      = var.harbor_endpoint
+  host     = var.harbor_endpoint
+  schema   = "https"
   insecure = true
-  #url      = "demo.goharbor.io"
   basepath = var.harbor_base_path
   username = "admin"
   password = "Harbor12345"

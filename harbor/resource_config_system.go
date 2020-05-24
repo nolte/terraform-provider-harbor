@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -39,8 +39,8 @@ func resourceConfigSystem() *schema.Resource {
 
 func resourceConfigSystemRead(d *schema.ResourceData, m interface{}) error {
 
-	apiClient := m.(*client.Client)
-	resp, err := apiClient.Client.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
+	apiClient := m.(*client.Harbor)
+	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,8 +63,8 @@ func resourceConfigSystemRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceConfigSystemUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	_, err := apiClient.Client.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
+	apiClient := m.(*client.Harbor)
+	_, err := apiClient.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
 		ProjectCreationRestriction: d.Get("project_creation_restriction").(string),
 		TokenExpiration:            int64(d.Get("robot_token_expiration").(int)),
 		ReadOnly:                   d.Get("read_only").(bool),

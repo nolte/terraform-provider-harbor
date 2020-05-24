@@ -2,11 +2,10 @@ package harbor
 
 import (
 	"fmt"
-	"log"
+	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -19,17 +18,13 @@ func resourceProject() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"project_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
 			"public": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
 			},
 			"vulnerability_scanning": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,
 			},
@@ -38,86 +33,131 @@ func resourceProject() *schema.Resource {
 		Read:   resourceProjectRead,
 		Update: resourceProjectUpdate,
 		Delete: resourceProjectDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
+	projectName := d.Get("name").(string)
 	body := products.NewPostProjectsParams().WithProject(&models.ProjectReq{
-		ProjectName: d.Get("name").(string),
+		ProjectName: projectName,
 		Metadata: &models.ProjectMetadata{
-			AutoScan: d.Get("vulnerability_scanning").(string),
-			Public:   d.Get("public").(string),
+			AutoScan: strconv.FormatBool(d.Get("vulnerability_scanning").(bool)),
+			Public:   strconv.FormatBool(d.Get("public").(bool)),
 		},
 	})
 
-	_, err := apiClient.Client.Products.PostProjects(body, nil)
-	if err != nil {
-		log.Fatal(err)
+	if _, err := apiClient.Products.PostProjects(body, nil); err != nil {
+		return err
 	}
-	//d.Set("project_id", resp.Payload[0].ProjectID)
-	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", d.Get("name").(string))))
+	project, err := findProjectByName(d, m)
+	if err != nil {
+		return err
+	}
+	d.SetId(strconv.Itoa(int(project.ProjectID)))
 	return resourceProjectRead(d, m)
+
+}
+
+func findProjectByName(d *schema.ResourceData, m interface{}) (*models.Project, error) {
+	apiClient := m.(*client.Harbor)
+	if name, ok := d.GetOk("name"); ok {
+		projectName := name.(string)
+		query := products.NewGetProjectsParams().WithName(&projectName)
+		resp, err := apiClient.Products.GetProjects(query, nil)
+		if err != nil {
+			d.SetId("")
+			return &models.Project{}, err
+		}
+		if len(resp.Payload) < 1 {
+			return &models.Project{}, fmt.Errorf("no project found with name %v", projectName)
+		} else if resp.Payload[0].Name != projectName {
+			return &models.Project{}, fmt.Errorf("Response Name %v not match with Expected Name %v", resp.Payload[0].Name, projectName)
+		}
+		return resp.Payload[0], nil
+	}
+	return &models.Project{}, fmt.Errorf("Fail to lookup project by Name")
 }
 
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	projectName := d.Get("name").(string)
-	query := products.NewGetProjectsParams().WithName(&projectName)
-	resp, err := apiClient.Client.Products.GetProjects(query, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if len(resp.Payload) < 1 {
-		d.SetId("")
+	apiClient := m.(*client.Harbor)
+
+	if projectID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		query := products.NewGetProjectsProjectIDParams().WithProjectID(projectID)
+		resp, err := apiClient.Products.GetProjectsProjectID(query, nil)
+		if err != nil {
+			return err
+		}
+		if err := setProjectSchema(d, resp.Payload); err != nil {
+			return err
+		}
 		return nil
 	}
-	if err := d.Set("project_id", int(resp.Payload[0].ProjectID)); err != nil {
-		return err
-	}
-
-	if err := d.Set("name", string(resp.Payload[0].Name)); err != nil {
-		return err
-	}
-
-	if err := d.Set("vulnerability_scanning", string(resp.Payload[0].Metadata.AutoScan)); err != nil {
-		return err
-	}
-
-	if err := d.Set("public", string(resp.Payload[0].Metadata.Public)); err != nil {
-		return err
-	}
-	return nil
+	fmt.Println(d.Id(), "is not an integer.")
+	return fmt.Errorf("fail to load the project")
 }
 
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
-	body := products.NewPutProjectsProjectIDParams().WithProject(&models.ProjectReq{
-		ProjectName: d.Get("name").(string),
-		Metadata: &models.ProjectMetadata{
-			AutoScan: d.Get("vulnerability_scanning").(string),
-			Public:   d.Get("public").(string),
-		},
-	}).WithProjectID(int64(d.Get("project_id").(int)))
+	if projectID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		body := products.NewPutProjectsProjectIDParams().WithProject(&models.ProjectReq{
+			ProjectName: d.Get("name").(string),
+			Metadata: &models.ProjectMetadata{
+				AutoScan: d.Get("vulnerability_scanning").(string),
+				Public:   d.Get("public").(string),
+			},
+		}).WithProjectID(projectID)
 
-	_, err := apiClient.Client.Products.PutProjectsProjectID(body, nil)
-	if err != nil {
-		log.Fatal(err)
+		if _, err := apiClient.Products.PutProjectsProjectID(body, nil); err != nil {
+			return err
+		}
+
+		return resourceProjectRead(d, m)
 	}
+	return fmt.Errorf("Project Id not a Integer")
 
-	return resourceProjectRead(d, m)
 }
 
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	projectId := d.Get("project_id").(int)
-
-	delete := products.NewDeleteProjectsProjectIDParams().WithProjectID(int64(projectId))
-	_, err := apiClient.Client.Products.DeleteProjectsProjectID(delete, nil)
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if projectID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		delete := products.NewDeleteProjectsProjectIDParams().WithProjectID(projectID)
+		if _, err := apiClient.Products.DeleteProjectsProjectID(delete, nil); err != nil {
+			return err
+		}
+		return nil
 	}
+	return fmt.Errorf("Project Id not a Integer")
+}
+
+func setProjectSchema(data *schema.ResourceData, project *models.Project) error {
+	data.SetId(strconv.Itoa(int(project.ProjectID)))
+
+	if err := data.Set("name", project.Name); err != nil {
+		return err
+	}
+
+	autoScan, err := strconv.ParseBool(project.Metadata.AutoScan)
+	if err != nil {
+		return err
+	}
+
+	if err := data.Set("vulnerability_scanning", autoScan); err != nil {
+		return err
+	}
+	public, err := strconv.ParseBool(project.Metadata.Public)
+	if err != nil {
+		return err
+	}
+
+	if err := data.Set("public", public); err != nil {
+		return err
+	}
+
 	return nil
 }

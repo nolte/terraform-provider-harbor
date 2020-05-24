@@ -3,10 +3,10 @@ package harbor
 import (
 	"fmt"
 	"log"
+	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
@@ -14,10 +14,6 @@ import (
 func resourceRegistry() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"repository_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -45,11 +41,14 @@ func resourceRegistry() *schema.Resource {
 		Read:   resourceRegistryRead,
 		Update: resourceRegistryUpdate,
 		Delete: resourceRegistryDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
 func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	body := products.NewPostRegistriesParams().WithRegistry(&models.Registry{
 		Description: d.Get("description").(string),
@@ -58,72 +57,98 @@ func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
 		Type:        d.Get("type").(string),
 		URL:         d.Get("url").(string),
 	})
-	_, err := apiClient.Client.Products.PostRegistries(body, nil)
+	_, err := apiClient.Products.PostRegistries(body, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+	registry, err := findRegistryByName(d, m)
+	if err != nil {
+		return err
+	}
+	d.SetId(strconv.Itoa(int(registry.ID)))
 
-	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", d.Get("name").(string))))
 	return resourceRegistryRead(d, m)
 }
-
-func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	projectName := d.Get("name").(string)
-
-	query := products.NewGetRegistriesParams().WithName(&projectName)
-	resp, err := apiClient.Client.Products.GetRegistries(query, nil)
-	if err != nil {
-		log.Fatal(err)
+func findRegistryByName(d *schema.ResourceData, m interface{}) (*models.Registry, error) {
+	apiClient := m.(*client.Harbor)
+	if name, ok := d.GetOk("name"); ok {
+		projectName := name.(string)
+		query := products.NewGetRegistriesParams().WithName(&projectName)
+		resp, err := apiClient.Products.GetRegistries(query, nil)
+		if err != nil {
+			d.SetId("")
+			return &models.Registry{}, err
+		}
+		if len(resp.Payload) < 1 {
+			return &models.Registry{}, fmt.Errorf("no Registry found with name %v", projectName)
+		} else if resp.Payload[0].Name != projectName {
+			return &models.Registry{}, fmt.Errorf("Response Name %v not match with Expected Name %v", resp.Payload[0].Name, projectName)
+		}
+		return resp.Payload[0], nil
 	}
-	if len(resp.Payload) < 1 {
-		d.SetId("")
+	return &models.Registry{}, fmt.Errorf("Fail to lookup Registry by Name")
+}
+func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
+	apiClient := m.(*client.Harbor)
+	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		resp, err := apiClient.Products.GetRegistriesID(products.NewGetRegistriesIDParams().WithID(registryID), nil)
+		if err != nil {
+			return err
+		}
+		if err = setRegistrySchema(d, resp.Payload); err != nil {
+			return err
+		}
 		return nil
 	}
+	return fmt.Errorf("Registry Id not a Integer currently: '%s'", d.Id())
 
-	if err := d.Set("repository_id", int(resp.Payload[0].ID)); err != nil {
-		return err
-	}
-	if err := d.Set("description", resp.Payload[0].Description); err != nil {
-		return err
-	}
-	if err := d.Set("insecure", resp.Payload[0].Insecure); err != nil {
-		return err
-	}
-	if err := d.Set("name", resp.Payload[0].Name); err != nil {
-		return err
-	}
-	if err := d.Set("type", resp.Payload[0].Type); err != nil {
-		return err
-	}
-	if err := d.Set("url", resp.Payload[0].URL); err != nil {
-		return err
-	}
-	return nil
 }
 
 func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	_, err := apiClient.Client.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithRepoTarget(&models.PutRegistry{
-		Description: d.Get("description").(string),
-		Insecure:    d.Get("insecure").(bool),
-		Name:        d.Get("name").(string),
-		URL:         d.Get("url").(string),
-	}), nil)
-
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		if _, err := apiClient.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithID(registryID).WithRepoTarget(&models.PutRegistry{
+			Description: d.Get("description").(string),
+			Insecure:    d.Get("insecure").(bool),
+			Name:        d.Get("name").(string),
+			URL:         d.Get("url").(string),
+		}), nil); err != nil {
+			return err
+		}
+		return resourceRegistryRead(d, m)
 	}
-	return resourceRegistryRead(d, m)
+	return fmt.Errorf("Registry Id not a Integer")
 }
 
 func resourceRegistryDelete(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-
-	_, err := apiClient.Client.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(int64(d.Get("repository_id").(int))), nil)
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
+		if _, err := apiClient.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(registryID), nil); err != nil {
+			return err
+		}
+		return nil
 	}
 
+	return fmt.Errorf("Registry Id not a Integer")
+}
+
+func setRegistrySchema(d *schema.ResourceData, registry *models.Registry) error {
+	d.SetId(strconv.Itoa(int(registry.ID)))
+
+	if err := d.Set("description", registry.Description); err != nil {
+		return err
+	}
+	if err := d.Set("insecure", registry.Insecure); err != nil {
+		return err
+	}
+	if err := d.Set("name", registry.Name); err != nil {
+		return err
+	}
+	if err := d.Set("type", registry.Type); err != nil {
+		return err
+	}
+	if err := d.Set("url", registry.URL); err != nil {
+		return err
+	}
 	return nil
 }
