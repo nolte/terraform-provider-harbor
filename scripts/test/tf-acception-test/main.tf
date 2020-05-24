@@ -21,12 +21,17 @@ resource "harbor_project" "main" {
   vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push
 }
 
-#resource "harbor_robot_account" "account" {
-#  name        = "myrobot"
-#  description = "Robot account used to push images to harbor"
-#  project_id  = harbor_project.main.id
-#  action      = "push"
-#}
+resource "harbor_robot_account" "master_robot" {
+  name        = "god"
+  description = "Robot account used to push images to harbor"
+  project_id  = harbor_project.main.id
+  actions     = ["docker_read", "docker_write", "helm_read", "helm_write"]
+}
+
+output "harbor_robot_account_token" {
+  value = data.harbor_robot_account.master_robot.token
+}
+
 #
 resource "harbor_registry" "dockerhub" {
   name        = "dockerhub"
