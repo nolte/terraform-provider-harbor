@@ -50,6 +50,7 @@
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "jetmartin.bats",
         "EditorConfig.EditorConfig",
+        "lonefy.vscode-js-css-html-formatter",
     ],
     "settings": {
         // General settings
