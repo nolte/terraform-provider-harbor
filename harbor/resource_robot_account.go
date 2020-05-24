@@ -5,12 +5,17 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
+
+func robotAccountNamePrefix() string {
+	return "robot$"
+}
 
 func resourceRobotAccount() *schema.Resource {
 	return &schema.Resource{
@@ -42,10 +47,17 @@ func resourceRobotAccount() *schema.Resource {
 				Computed:  true,
 				Sensitive: true,
 			},
+			"disabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
 		},
 		Create: resourceRobotAccountCreate,
 		Read:   resourceRobotAccountRead,
 		Delete: resourceRobotAccountDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
@@ -165,7 +177,19 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 }
 func setRobotSchema(d *schema.ResourceData, model *models.RobotAccount) error {
 	d.SetId(strconv.Itoa(int(model.ID)))
+	if err := d.Set("name", strings.Replace(model.Name, robotAccountNamePrefix(), "", 1)); err != nil {
+		return err
+	}
+	if err := d.Set("description", model.Description); err != nil {
+		return err
+	}
+	if err := d.Set("project_id", int(model.ProjectID)); err != nil {
+		return err
+	}
 
+	if err := d.Set("disabled", model.Disabled); err != nil {
+		return err
+	}
 	return nil
 }
 

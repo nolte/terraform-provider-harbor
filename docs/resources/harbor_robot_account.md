@@ -38,3 +38,11 @@ In addition to all argument, the folloing attributes are exported:
 * `id` - The id of the robot account.
 
 * `token` - The token of the robot account.
+
+## Import
+
+Harbor Projects can be imported using the `harbor_robot_account`, e.g.
+
+```sh
+terraform import harbor_robot_account.master_robot 29
+```

@@ -29,7 +29,7 @@ resource "harbor_robot_account" "master_robot" {
 }
 
 output "harbor_robot_account_token" {
-  value = data.harbor_robot_account.master_robot.token
+  value = harbor_robot_account.master_robot.token
 }
 
 #
