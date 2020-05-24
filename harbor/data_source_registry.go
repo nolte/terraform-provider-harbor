@@ -2,7 +2,6 @@ package harbor
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
@@ -19,6 +18,26 @@ func dataSourceRegistry() *schema.Resource {
 			},
 			"id": {
 				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
+			"url": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"insecure": {
+				Type:     schema.TypeBool,
 				Optional: true,
 				Computed: true,
 			},
@@ -43,10 +62,12 @@ func dataSourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 	if id, ok := d.GetOk("id"); ok {
 		resp, err := apiClient.Products.GetRegistriesID(products.NewGetRegistriesIDParams().WithID(int64(id.(int))), nil)
 		if err != nil {
-			d.SetId("")
-			log.Fatal(err)
+			return err
 		}
-		setRegistrySchema(d, resp.Payload)
+		if err := setRegistrySchema(d, resp.Payload); err != nil {
+			return err
+		}
+		return nil
 	}
 
 	return fmt.Errorf("please specify a name to lookup for a registries")
