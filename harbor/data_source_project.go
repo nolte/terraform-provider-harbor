@@ -1,9 +1,9 @@
 package harbor
 
 import (
-	"log"
+	"fmt"
 
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -14,11 +14,22 @@ func dataSourceProject() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Optional: true,
+				Computed: true,
 			},
-			"project_id": {
+			"id": {
 				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
+			"public": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
+			"vulnerability_scanning": {
+				Type:     schema.TypeBool,
+				Optional: true,
 				Computed: true,
 			},
 		},
@@ -28,13 +39,28 @@ func dataSourceProject() *schema.Resource {
 }
 
 func dataSourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	query := products.NewGetProjectsParams().WithName(d.Get("name").(*string))
-	resp, err := apiClient.Client.Products.GetProjects(query, nil)
-	if err != nil {
-		log.Fatal(err)
+	apiClient := m.(*client.Harbor)
+	if _, ok := d.GetOk("name"); ok {
+		project, err := findProjectByName(d, m)
+		if err != nil {
+			return err
+		}
+		if err = setProjectSchema(d, project); err != nil {
+			return err
+		}
+		return nil
 	}
+	if id, ok := d.GetOk("id"); ok {
+		resp, err := apiClient.Products.GetProjectsProjectID(products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int))), nil)
+		if err != nil {
+			return err
+		}
+		if err = setProjectSchema(d, resp.Payload); err != nil {
+			return err
+		}
+		return nil
 
-	d.Set("project_id", resp.Payload[0].ProjectID)
-	return nil
+	}
+	d.SetId("")
+	return fmt.Errorf("please specify a name to lookup for a project")
 }

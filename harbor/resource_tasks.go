@@ -7,12 +7,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
 
-var pathVuln = "/api/system/scanAll/schedule"
 var TypeStr string
 var CronStr string
 
@@ -32,7 +31,7 @@ func resourceTasks() *schema.Resource {
 }
 
 func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	vulnSchedule := d.Get("vulnerability_scan_policy").(string)
 	getSchedule(vulnSchedule)
@@ -43,7 +42,7 @@ func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 			Type: TypeStr,
 		}}
 
-	resp, err := apiClient.Client.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
+	resp, err := apiClient.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
 	if err != nil {
 		log.Fatalf("Fail to load vulnerability_scan %v", err)
 	}
@@ -51,13 +50,13 @@ func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 	time := resp.Payload.Schedule.Type
 	if time != "" {
 		log.Printf("Shedule found performing PUT request")
-		_, err = apiClient.Client.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
+		_, err = apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
 		if err != nil {
 			log.Fatalf("Fail to update vulnerability_scan %v", err)
 		}
 	} else {
 		log.Printf("No shedule found performing POST request")
-		_, err = apiClient.Client.Products.PostSystemScanAllSchedule(products.NewPostSystemScanAllScheduleParams().WithSchedule(body), nil)
+		_, err = apiClient.Products.PostSystemScanAllSchedule(products.NewPostSystemScanAllScheduleParams().WithSchedule(body), nil)
 		if err != nil {
 			log.Fatalf("Fail to create new vulnerability_scan %v", err)
 		}
@@ -68,8 +67,8 @@ func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceTasksRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
-	resp, err := apiClient.Client.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
+	apiClient := m.(*client.Harbor)
+	resp, err := apiClient.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +81,7 @@ func resourceTasksRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceTasksUpdate(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
 	vulnSchedule := d.Get("vulnerability_scan_policy").(string)
 	getSchedule(vulnSchedule)
@@ -93,7 +92,7 @@ func resourceTasksUpdate(d *schema.ResourceData, m interface{}) error {
 			Type: TypeStr,
 		}}
 
-	_, err := apiClient.Client.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
+	_, err := apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -103,14 +102,14 @@ func resourceTasksUpdate(d *schema.ResourceData, m interface{}) error {
 
 func resourceTasksDelete(d *schema.ResourceData, m interface{}) error {
 	// https://github.com/goharbor/harbor/issues/11083
-	//	apiClient := m.(*client.Client)
+	//	apiClient := m.(*client.Harbor)
 	//
 	//	body := &models.AdminJobSchedule{
 	//		Schedule: &models.AdminJobScheduleObj{
 	//			Cron: "",
 	//		}}
 	//
-	//	_, err := apiClient.Client.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
+	//	_, err := apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
 	//	if err != nil {
 	//		log.Fatal(err)
 	//	}

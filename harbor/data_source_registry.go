@@ -1,10 +1,10 @@
 package harbor
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/nolte/terraform-provider-harbor/client"
+	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 )
 
@@ -13,28 +13,62 @@ func dataSourceRegistry() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Optional: true,
+				Computed: true,
 			},
-			"repository_id": {
+			"id": {
 				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
+			"url": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"insecure": {
+				Type:     schema.TypeBool,
+				Optional: true,
 				Computed: true,
 			},
 		},
-		Read: dataSourceProjectRead,
+		Read: dataSourceRegistryRead,
 	}
 }
 
 func dataSourceRegistryRead(d *schema.ResourceData, m interface{}) error {
-	apiClient := m.(*client.Client)
+	apiClient := m.(*client.Harbor)
 
-	query := products.NewGetRegistriesParams().WithName(d.Get("name").(*string))
-	resp, err := apiClient.Client.Products.GetRegistries(query, nil)
-	if err != nil {
-		log.Fatal(err)
+	if _, ok := d.GetOk("name"); ok {
+		registry, err := findRegistryByName(d, m)
+		if err != nil {
+			return err
+		}
+		if err := setRegistrySchema(d, registry); err != nil {
+			return err
+		}
+		return nil
+	}
+	if id, ok := d.GetOk("id"); ok {
+		resp, err := apiClient.Products.GetRegistriesID(products.NewGetRegistriesIDParams().WithID(int64(id.(int))), nil)
+		if err != nil {
+			return err
+		}
+		if err := setRegistrySchema(d, resp.Payload); err != nil {
+			return err
+		}
+		return nil
 	}
 
-	d.Set("repository_id", resp.Payload[0].ID)
-
-	return nil
+	return fmt.Errorf("please specify a name to lookup for a registries")
 }

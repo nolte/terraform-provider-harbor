@@ -7,13 +7,15 @@ description: |-
 
 # Resource: harbor_project
 
-Manages an Access Analyzer Analyzer. More information can be found in the [Access Analyzer User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html).
+Handle a [Harbor Project Ressource](https://goharbor.io/docs/1.10/working-with-projects/create-projects/).
 
 ## Example Usage
 
 ```hcl
-resource "aws_accessanalyzer_analyzer" "example" {
-  analyzer_name = "example"
+resource "harbor_project" "main" {
+  name                   = "main"
+  public                 = false # (Optional) Default value is false
+  vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push
 }
 ```
 
@@ -21,23 +23,29 @@ resource "aws_accessanalyzer_analyzer" "example" {
 
 The following arguments are required:
 
-* `analyzer_name` - (Required) Name of the Analyzer.
+* `name` - (Required) Name of the Project.
 
 The following arguments are optional:
 
-* `tags` - (Optional) Key-value map of resource tags.
-* `type` - (Optional) Type of Analyzer. Valid value is currently only `ACCOUNT`. Defaults to `ACCOUNT`.
+* `public` - (Optional) Handle the access to the hosted images. Default: `true`
+
+    If `true` Any user can pull images from this project. This is a convenient way for you to share repositories with others.
+
+    If `false` Only users who are members of the project can pull images
+
+* `vulnerability_scanning` - (Optional) Activate [Vulnerability Scanning](https://goharbor.io/docs/1.10/administration/vulnerability-scanning/). Default: `true`
+
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `id` - Analyzer name.
+* `id` - Harbor Project ID.
 
 ## Import
 
-Access Analyzer Analyzers can be imported using the `analyzer_name`, e.g.
+Harbor Projects can be imported using the `harbor_project`, e.g.
 
 ```
-$ terraform import aws_accessanalyzer_analyzer.example example
+$ terraform import harbor_project.main 1
 ```

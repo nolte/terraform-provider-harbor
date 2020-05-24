@@ -40,10 +40,8 @@ Please use the ```develop``` branch for new features and fixes.
 ### Releasing
 
 The [Github Release](https://github.com/nolte/terraform-provider-harbor/releases) Assets will be automatical attatch from the build job see ```.github/workflows/go.yml```.
-![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg?branch=master)
-
-For a Easy Relase process we use the GitHub Commandline Interface [cli.github.com](https://cli.github.com/manual/).
-
+![Go](https://github.com/nolte/terraform-provider-harbor/workflows/Go/badge.svg?branch=master)  
+For a Easy Relase process we use the GitHub Commandline Interface [cli.github.com](https://cli.github.com/manual/).  
 Each Release will be start from the ```develop``` branch.
 
 ```sh
@@ -58,6 +56,19 @@ mkdocs serve
 ```
 and open [127.0.0.1:8000](http://127.0.0.1:8000/)
 
+## Development Shortcuts
+
+**build and test in one command**
+
+```sh
+make compile \
+    && make install \
+    && bats scripts/test/bats/build
+```
+
+```
+terraform import -var harbor_endpoint=${HARBOR_ENDPOINT} -var harbor_base_path='/api' harbor_project.main 24
+```
 
 ## Links
 
