@@ -20,12 +20,12 @@ func resourceProject() *schema.Resource {
 				ForceNew: true,
 			},
 			"public": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
 			},
 			"vulnerability_scanning": {
-				Type:     schema.TypeString,
+				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  true,
 			},
@@ -34,6 +34,9 @@ func resourceProject() *schema.Resource {
 		Read:   resourceProjectRead,
 		Update: resourceProjectUpdate,
 		Delete: resourceProjectDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
@@ -44,8 +47,8 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	body := products.NewPostProjectsParams().WithProject(&models.ProjectReq{
 		ProjectName: projectName,
 		Metadata: &models.ProjectMetadata{
-			AutoScan: d.Get("vulnerability_scanning").(string),
-			Public:   d.Get("public").(string),
+			AutoScan: strconv.FormatBool(d.Get("vulnerability_scanning").(bool)),
+			Public:   strconv.FormatBool(d.Get("public").(bool)),
 		},
 	})
 
@@ -142,11 +145,20 @@ func setProjectSchema(data *schema.ResourceData, project *models.Project) error 
 		return err
 	}
 
-	if err := data.Set("vulnerability_scanning", string(project.Metadata.AutoScan)); err != nil {
+	autoScan, err := strconv.ParseBool(project.Metadata.AutoScan)
+	if err != nil {
 		return err
 	}
 
-	if err := data.Set("public", string(project.Metadata.Public)); err != nil {
+	if err := data.Set("vulnerability_scanning", autoScan); err != nil {
+		return err
+	}
+	public, err := strconv.ParseBool(project.Metadata.Public)
+	if err != nil {
+		return err
+	}
+
+	if err := data.Set("public", public); err != nil {
 		return err
 	}
 
