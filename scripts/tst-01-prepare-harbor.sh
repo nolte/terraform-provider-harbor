@@ -1,28 +1,25 @@
 #!/usr/bin/env bash
-# Bash3 Boilerplate. Copyright (c) 2014, kvz.io
+#
+# This can be also run with `` 
+# ./tst-01-prepare-harbor.sh "10-42-0-100.sslip.io" "1.2.0"
 
-set -o errexit
+set -e
 set -o pipefail
 set -o nounset
-# set -o xtrace
 
-# Set magic variables for current file & dir
-__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-__base="$(basename ${__file} .sh)"
-__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+INGRESS_DOMAIN=${1:-"192-168-178-51.sslip.io"}
+HARBOR_CHART_VERSION=${2:-"1.3.2"}
 
-arg1="${1:-}"
+kubectl create ns harbor || true
 
-kubectl create ns harbor
-
-helm repo add harbor https://helm.goharbor.io
-
-export INGRESSDOMAIN=192-168-178-51.sslip.io
+helm repo add harbor https://helm.goharbor.io 
 
 helm upgrade -i tf-harbor-test harbor/harbor \
+    --version "$HARBOR_CHART_VERSION" \
     -n harbor \
-    --set expose.ingress.hosts.core=harbor.${INGRESSDOMAIN},expose.ingress.hosts.notary=notary.${INGRESSDOMAIN},externalURL=https://harbor.${INGRESSDOMAIN}
+    --set expose.ingress.hosts.core="harbor.${INGRESS_DOMAIN}" \
+    --set expose.ingress.hosts.notary="notary.${INGRESS_DOMAIN}" \
+    --set externalURL="https://harbor.${INGRESS_DOMAIN}"
 
 
 kubectl wait --namespace harbor \
