@@ -52,6 +52,7 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"harbor_project":  dataSourceProject(),
 			"harbor_registry": dataSourceRegistry(),
+			"harbor_label":    dataSourceLabel(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

@@ -107,15 +107,13 @@ func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
-		_, err := apiClient.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithID(registryID).WithRepoTarget(&models.PutRegistry{
+		if _, err := apiClient.Products.PutRegistriesID(products.NewPutRegistriesIDParams().WithID(registryID).WithRepoTarget(&models.PutRegistry{
 			Description: d.Get("description").(string),
 			Insecure:    d.Get("insecure").(bool),
 			Name:        d.Get("name").(string),
 			URL:         d.Get("url").(string),
-		}), nil)
-
-		if err != nil {
-			log.Fatal(err)
+		}), nil); err != nil {
+			return err
 		}
 		return resourceRegistryRead(d, m)
 	}
@@ -125,9 +123,8 @@ func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
 func resourceRegistryDelete(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
-		_, err := apiClient.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(registryID), nil)
-		if err != nil {
-			log.Fatal(err)
+		if _, err := apiClient.Products.DeleteRegistriesID(products.NewDeleteRegistriesIDParams().WithID(registryID), nil); err != nil {
+			return err
 		}
 		return nil
 	}

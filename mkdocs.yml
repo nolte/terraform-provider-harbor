@@ -7,6 +7,7 @@ nav:
   - Data Sources:
       - harbor_project: data_sources/harbor_project.md
       - harbor_registry: data_sources/harbor_registry.md
+      - harbor_label: data_sources/harbor_label.md
   - Resources:
       - harbor_config_system: resources/harbor_config_system.md
       - harbor_configuration: resources/harbor_configuration.md
@@ -14,15 +15,16 @@ nav:
       - harbor_registry: resources/harbor_registry.md
       - harbor_robot_account: resources/harbor_robot_account.md
       - harbor_tasks: resources/harbor_tasks.md
-      - harbor_label: ""
+      - harbor_label: resources/harbor_label.md
   - Guides:
       - Development: guides/development.md
       - Local E2E Tests: guides/kind.md
 theme: readthedocs
-extra_css: [index.css]
 markdown_extensions:
   - toc:
       permalink: True
+extra_css:
+  - css/table.css
 extra_javascript:
   # fix for https://github.com/mkdocs/mkdocs/issues/2028
-  - js/extra.js
+  - js/table.js

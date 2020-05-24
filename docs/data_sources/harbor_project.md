@@ -15,10 +15,10 @@ data "harbor_project" "project_2" {
 
 ## Argument Reference
 
-- `id` - (Optional, string) ID of the datacenter.
-- `name` - (Optional, string) Name of the datacenter.
+- `id` - (Optional, int) ID of the project.
+- `name` - (Optional, string) Name of the project.
 
 ## Attributes Reference
 
-- `id` - (int) Unique ID of the datacenter.
-- `name` - (string) Name of the datacenter.
+- `id` - (int) Unique ID of the project.
+- `name` - (string) Name of the project.

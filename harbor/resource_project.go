@@ -2,7 +2,6 @@ package harbor
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -114,9 +113,8 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 			},
 		}).WithProjectID(projectID)
 
-		_, err := apiClient.Products.PutProjectsProjectID(body, nil)
-		if err != nil {
-			log.Fatal(err)
+		if _, err := apiClient.Products.PutProjectsProjectID(body, nil); err != nil {
+			return err
 		}
 
 		return resourceProjectRead(d, m)
@@ -129,9 +127,8 @@ func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	if projectID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
 		delete := products.NewDeleteProjectsProjectIDParams().WithProjectID(projectID)
-		_, err := apiClient.Products.DeleteProjectsProjectID(delete, nil)
-		if err != nil {
-			log.Fatal(err)
+		if _, err := apiClient.Products.DeleteProjectsProjectID(delete, nil); err != nil {
+			return err
 		}
 		return nil
 	}

@@ -15,10 +15,10 @@ data "harbor_registry" "registry_2" {
 
 ## Argument Reference
 
-- `id` - (Optional, string) ID of the datacenter.
-- `name` - (Optional, string) Name of the datacenter.
+- `id` - (Optional, string) ID of the registry.
+- `name` - (Optional, string) Name of the registry.
 
 ## Attributes Reference
 
-- `id` - (int) Unique ID of the datacenter.
-- `name` - (string) Name of the datacenter.
+- `id` - (int) Unique ID of the registry.
+- `name` - (string) Name of the registry.
