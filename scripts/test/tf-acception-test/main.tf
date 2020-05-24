@@ -21,41 +21,30 @@ resource "harbor_project" "main" {
   vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push
 }
 
-resource "harbor_robot_account" "account" {
-  name        = "myrobot"
-  description = "Robot account used to push images to harbor"
-  project_id  = harbor_project.main.project_id
-  action      = "push"
-}
-# #resource "harbor_tasks" "main" {
-# #  vulnerability_scan_policy = "daily"
-# #}
+#resource "harbor_robot_account" "account" {
+#  name        = "myrobot"
+#  description = "Robot account used to push images to harbor"
+#  project_id  = harbor_project.main.id
+#  action      = "push"
+#}
 #
-
-
-
-# v2 problems !!!
-### resource "harbor_tasks" "main" {
-###   vulnerability_scan_policy = "daily"
-### }
-
-resource "harbor_registry" "main" {
-  name        = "dockerhub"
-  url         = "https://hub.docker.com"
-  type        = "docker-hub"
-  description = "Docker Hub Registry"
-  insecure    = false
-}
-
-resource "harbor_registry" "helmhub" {
-  name        = "helmhub"
-  url         = "https://hub.helm.sh"
-  type        = "helm-hub"
-  description = "Helm Hub Registry"
-  insecure    = false
-}
-##
-
-resource "harbor_label" "main" {
-  name = "testlabel"
-}
+#resource "harbor_registry" "main" {
+#  name        = "dockerhub"
+#  url         = "https://hub.docker.com"
+#  type        = "docker-hub"
+#  description = "Docker Hub Registry"
+#  insecure    = false
+#}
+#
+#resource "harbor_registry" "helmhub" {
+#  name        = "helmhub"
+#  url         = "https://hub.helm.sh"
+#  type        = "helm-hub"
+#  description = "Helm Hub Registry"
+#  insecure    = false
+#}
+#
+#resource "harbor_label" "main" {
+#  name = "testlabel"
+#}
+#
