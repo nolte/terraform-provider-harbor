@@ -1,18 +1,42 @@
 # Resource: harbor_label
 
-Harbor Doc:
-Harbor Api:
+Harbor Doc: [Managing Labels](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/create-labels/)  
+Harbor Api: [/labels](https://demo.goharbor.io/#/Products/post_labels)  
 
 ## Example Usage
 
 ```hcl
+resource "harbor_label" "main" {
+  name        = "testlabel"
+  description = "Test Label"
+  color       = "#61717D"
+  scope       = "g"
+}
 
+resource "harbor_label" "project_label" {
+  name        = "projectlabel"
+  description = "Test Label for Project"
+  color       = "#333333"
+  scope       = "p"
+  project_id  = harbor_project.main.id
+}
 ```
 
 ## Argument Reference
 
-The following arguments are supported:
+The following arguments are required:
 
+* `name` - (Required) Name of the Project.
+
+The following arguments are optional:
+
+* `description` - (Optional)  The description of the label account will be displayed in harbor.
+
+* `color` - (Optional) The color the label.
+
+* `scope` - (Optional) The scope the label, `p` for project and `g` for global.
+
+* `project_id` - (Optional) The ID of project that the label belongs to, must be set if sope project.
 
 ## Attributes Reference
 

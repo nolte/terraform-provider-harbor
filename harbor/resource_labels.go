@@ -17,12 +17,12 @@ func resourceLabel() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			"project_id": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  0,
+				ForceNew: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -90,6 +90,10 @@ func findLabelByNameAndScope(d *schema.ResourceData, m interface{}) (*models.Lab
 			searchName := name.(string)
 			scopeName := scope.(string)
 			query := products.NewGetLabelsParams().WithScope(scopeName).WithName(&searchName)
+			if scopeName == "p" {
+				projectID := int64(d.Get("project_id").(int))
+				query = query.WithProjectID(&projectID)
+			}
 			resp, err := apiClient.Products.GetLabels(query, nil)
 			if err != nil {
 				d.SetId("")

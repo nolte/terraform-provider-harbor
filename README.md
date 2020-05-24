@@ -13,7 +13,7 @@ This is original based on the Work from [BESTSELLER/terraform-harbor-provider](h
 
 **Planed Branking Changes:**
 
-- [ ] [Rename provider](https://github.com/nolte/terraform-provider-harbor/issues/3) attributes, like url etc.
+- [x] [Rename provider](https://github.com/nolte/terraform-provider-harbor/issues/3) attributes, like url etc.
 - [x] Planed Git Rebase for remove the Ugly CI/CD Test Commit
   - [x] Finazilize the frist version of common ci workflow
   - [x] Finazilize the frist version of release workflow

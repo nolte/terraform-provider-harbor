@@ -50,7 +50,18 @@ resource "harbor_registry" "helmhub" {
 }
 #
 resource "harbor_label" "main" {
-  name = "testlabel"
+  name        = "testlabel"
+  description = "Test Label"
+  color       = "#61717D"
+  scope       = "g"
+}
+
+resource "harbor_label" "project_label" {
+  name        = "projectlabel"
+  description = "Test Label for Project"
+  color       = "#333333"
+  scope       = "p"
+  project_id  = harbor_project.main.id
 }
 
 data "harbor_label" "label_by_name_and_scope" {
