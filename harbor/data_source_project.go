@@ -22,6 +22,16 @@ func dataSourceProject() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"public": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
+			"vulnerability_scanning": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 		},
 
 		Read: dataSourceProjectRead,
@@ -41,12 +51,15 @@ func dataSourceProjectRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 	if id, ok := d.GetOk("id"); ok {
-		if resp, err := apiClient.Products.GetProjectsProjectID(products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int))), nil); err != nil {
-			if err = setProjectSchema(d, resp.Payload); err != nil {
-				return err
-			}
-			return nil
+		resp, err := apiClient.Products.GetProjectsProjectID(products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int))), nil)
+		if err != nil {
+			return err
 		}
+		if err = setProjectSchema(d, resp.Payload); err != nil {
+			return err
+		}
+		return nil
+
 	}
 	d.SetId("")
 	return fmt.Errorf("please specify a name to lookup for a project")

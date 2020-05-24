@@ -62,7 +62,7 @@ output "label_by_id_name" {
 output "label_by_name_and_scope_name" {
   value = data.harbor_label.label_by_name_and_scope.name
 }
-
+# registry lookups
 data "harbor_registry" "registry_by_id" {
   id = harbor_registry.dockerhub.id
 }
@@ -77,4 +77,18 @@ output "registry_by_name_name" {
   value = data.harbor_registry.registry_by_name.name
 }
 
-#
+# project lookups
+
+data "harbor_project" "by_id" {
+  id = harbor_project.main.id
+}
+output "project_by_id_name" {
+  value = data.harbor_project.by_id.name
+}
+
+data "harbor_project" "by_name" {
+  name = harbor_project.main.name
+}
+output "project_by_name_name" {
+  value = data.harbor_project.by_name.name
+}
