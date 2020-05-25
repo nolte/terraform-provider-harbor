@@ -38,9 +38,10 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
-      - name: lint provider
-        run: |
-          make lint
+      - name: Run golangci-lint
+        uses: actions-contrib/golangci-lint@v1
+          with:
+            golangci_lint_version: v1.14
 
       - name: build provider
         run: |
