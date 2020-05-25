@@ -55,36 +55,44 @@ func resourceConfigAuth() *schema.Resource {
 	}
 }
 
-// dasdas
 func resourceConfigAuthRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
+
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	if err := d.Set("auth_mode", resp.Payload.AuthMode.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("oidc_name", resp.Payload.OidcName.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("oidc_endpoint", resp.Payload.OidcEndpoint.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("oidc_client_id", resp.Payload.OidcClientID.Value); err != nil {
 		return err
 	}
+
 	if nil != resp.Payload.OidcGroupsClaim {
 		if err := d.Set("oidc_groups_claim", resp.Payload.OidcGroupsClaim.Value); err != nil {
 			return err
 		}
 	}
+
 	if err := d.Set("oidc_scope", resp.Payload.OidcScope.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("oidc_verify_cert", resp.Payload.OidcVerifyCert.Value); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -95,7 +103,9 @@ func resourceConfigAuthUpdate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", d.Get("oidc_name").(string))))
+
 	return resourceConfigAuthRead(d, m)
 }
 
@@ -116,5 +126,6 @@ func newAPIClient(d *schema.ResourceData, m interface{}) (*client.Harbor, models
 		OidcScope:        d.Get("oidc_scope").(string),
 		OidcVerifyCert:   d.Get("oidc_verify_cert").(bool),
 	}
+
 	return apiClient, body
 }

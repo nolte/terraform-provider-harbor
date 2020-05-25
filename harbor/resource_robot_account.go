@@ -63,7 +63,6 @@ func resourceRobotAccount() *schema.Resource {
 
 func factoryRobotDockerEndpoint(projectID int64) string {
 	return "/project/" + strconv.FormatInt(projectID, 10) + "/repository"
-
 }
 func factoryRobotAccountAccessDockerRead(projectID int64) *models.RobotAccountAccess {
 	return &models.RobotAccountAccess{
@@ -112,22 +111,30 @@ func resourceRobotAccountCreate(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	resp, err := apiClient.Products.PostProjectsProjectIDRobots(products.NewPostProjectsProjectIDRobotsParams().WithProjectID(projectid).WithRobot(&models.RobotAccountCreate{
+	robotCreate := &models.RobotAccountCreate{
 		Name:        name,
 		Description: d.Get("description").(string),
 		Access:      robotAccountAccess,
-	}), nil)
+	}
+
+	params := products.NewPostProjectsProjectIDRobotsParams().WithProjectID(projectid).WithRobot(robotCreate)
+
+	resp, err := apiClient.Products.PostProjectsProjectIDRobots(params, nil)
 
 	if err != nil {
 		return err
 	}
+
 	if err := d.Set("token", resp.Payload.Token); err != nil {
 		return err
 	}
+
 	robot, err := findRobotAccountByProjectAndName(d, m)
+
 	if err != nil {
 		return err
 	}
+
 	d.SetId(strconv.Itoa(int(robot.ID)))
 
 	return resourceRobotAccountRead(d, m)
@@ -139,30 +146,35 @@ func findRobotAccountByProjectAndName(d *schema.ResourceData, m interface{}) (*m
 	projectID, projectIDOk := d.GetOk("project_id")
 
 	if !nameOk || !projectIDOk {
-		return &models.RobotAccount{}, errors.New("Fail to get the name and/or project_id for robot account request")
-	} else {
+		return &models.RobotAccount{}, errors.New("fail to get the name and/or project_id for robot account request")
+	}
 
-		query := products.NewGetProjectsProjectIDRobotsParams().WithProjectID(int64(projectID.(int)))
-		resp, err := apiClient.Products.GetProjectsProjectIDRobots(query, nil)
-		if err != nil {
-			return &models.RobotAccount{}, err
-		}
-		for _, v := range resp.Payload {
-			if v.Name == "robot$"+name.(string) {
-				return v, nil
-			}
+	query := products.NewGetProjectsProjectIDRobotsParams().WithProjectID(int64(projectID.(int)))
+
+	resp, err := apiClient.Products.GetProjectsProjectIDRobots(query, nil)
+
+	if err != nil {
+		return &models.RobotAccount{}, err
+	}
+
+	for _, v := range resp.Payload {
+		if v.Name == "robot$"+name.(string) {
+			return v, nil
 		}
 	}
-	return &models.RobotAccount{}, fmt.Errorf("No Robot found for ProjectID %d, with Name %s", projectID.(int), name.(string))
 
+	return &models.RobotAccount{},
+		fmt.Errorf("no Robot found for ProjectID %d, with Name %s", projectID.(int), name.(string))
 }
 func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	projectID := d.Get("project_id").(int)
 
 	log.Printf("Load Robot Accounts from %v Project", projectID)
+
 	if robotID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
 		query := products.NewGetProjectsProjectIDRobotsRobotIDParams().WithProjectID(int64(projectID)).WithRobotID(robotID)
+
 		resp, err := apiClient.Products.GetProjectsProjectIDRobotsRobotID(query, nil)
 		if err != nil {
 			return err
@@ -171,18 +183,21 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 		if err := setRobotSchema(d, resp.Payload); err != nil {
 			return err
 		}
-
 	}
+
 	return nil
 }
 func setRobotSchema(d *schema.ResourceData, model *models.RobotAccount) error {
 	d.SetId(strconv.Itoa(int(model.ID)))
+
 	if err := d.Set("name", strings.Replace(model.Name, robotAccountNamePrefix(), "", 1)); err != nil {
 		return err
 	}
+
 	if err := d.Set("description", model.Description); err != nil {
 		return err
 	}
+
 	if err := d.Set("project_id", int(model.ProjectID)); err != nil {
 		return err
 	}
@@ -190,19 +205,26 @@ func setRobotSchema(d *schema.ResourceData, model *models.RobotAccount) error {
 	if err := d.Set("disabled", model.Disabled); err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func resourceRobotAccountDelete(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
-	projectID := int64(d.Get("project_id").(int))
+
 	if robotID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
-		_, err := apiClient.Products.DeleteProjectsProjectIDRobotsRobotID(products.NewDeleteProjectsProjectIDRobotsRobotIDParams().WithRobotID(robotID).WithProjectID(projectID), nil)
+		projectID := int64(d.Get("project_id").(int))
+		params := products.NewDeleteProjectsProjectIDRobotsRobotIDParams().WithRobotID(robotID).WithProjectID(projectID)
+
+		_, err := apiClient.Products.DeleteProjectsProjectIDRobotsRobotID(params, nil)
 		if err != nil {
 			return err
 		}
+
 		d.SetId("")
+
 		return nil
 	}
-	return fmt.Errorf("Fail to Remove Robot Account")
+
+	return fmt.Errorf("fail to Remove Robot Account")
 }

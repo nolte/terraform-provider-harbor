@@ -56,8 +56,6 @@
         // General settings
         "files.eol": "\n",
         "files.encoding": "utf8",
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4,
         "editor.renderWhitespace": "all",
         // Docker
         "remote.extensionKind": {
