@@ -40,11 +40,11 @@ func resourceLabel() *schema.Resource {
 				Default:  false,
 			},
 			"scope": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "g",
-				ForceNew: true,
-				// TODO validator for p & g
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "g",
+				ForceNew:     true,
+				ValidateFunc: validateLabelGroup,
 			},
 		},
 		Create: resourceLabelCreate,
@@ -56,6 +56,18 @@ func resourceLabel() *schema.Resource {
 		},
 	}
 }
+
+func validateLabelGroup(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+
+	if value != "g" && value != "p" {
+		errors = append(errors, fmt.Errorf("label group must be 'p' or 'g' %s", k))
+		return
+	}
+
+	return
+}
+
 func buildLabel(d *schema.ResourceData) *models.Label {
 	return &models.Label{
 		Color:       d.Get("color").(string),

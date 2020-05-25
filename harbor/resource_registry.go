@@ -76,8 +76,8 @@ func findRegistryByName(d *schema.ResourceData, m interface{}) (*models.Registry
 	apiClient := m.(*client.Harbor)
 
 	if name, ok := d.GetOk("name"); ok {
-		projectName := name.(string)
-		query := products.NewGetRegistriesParams().WithName(&projectName)
+		registryName := name.(string)
+		query := products.NewGetRegistriesParams().WithName(&registryName)
 
 		resp, err := apiClient.Products.GetRegistries(query, nil)
 		if err != nil {
@@ -86,10 +86,10 @@ func findRegistryByName(d *schema.ResourceData, m interface{}) (*models.Registry
 		}
 
 		if len(resp.Payload) < 1 {
-			return &models.Registry{}, fmt.Errorf("no Registry found with name %v", projectName)
-		} else if resp.Payload[0].Name != projectName {
+			return &models.Registry{}, fmt.Errorf("no Registry found with name %v", registryName)
+		} else if resp.Payload[0].Name != registryName {
 			return &models.Registry{},
-				fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, projectName)
+				fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, registryName)
 		}
 
 		return resp.Payload[0], nil
