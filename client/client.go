@@ -14,9 +14,10 @@ import (
 func NewClient(host string, username string, password string,
 	insecure bool, basepath string, schema string) *apiclient.Harbor {
 	basicAuth := httptransport.BasicAuth(username, password)
-	// create the transport
-	if insecure {
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// allow skipping ssl
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: insecure, // nolint: gosec
 	}
 
 	apiSchemes := make([]string, 1)
