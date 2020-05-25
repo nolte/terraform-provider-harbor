@@ -41,6 +41,9 @@ fmtcheck:
 vet:
 	go vet ./...
 
+lint:
+	golangci-lint run
+
 check-scripts:
 	shellcheck scripts/*.sh
 	shellcheck scripts/test/bats/build/*.bats
