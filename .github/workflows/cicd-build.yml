@@ -38,10 +38,11 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
-      - name: Run golangci-lint
-        uses: actions-contrib/golangci-lint@v1
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v1
         with:
-          golangci_lint_version: v1.14
+          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
+          version: v1.27
 
       - name: build provider
         run: |
