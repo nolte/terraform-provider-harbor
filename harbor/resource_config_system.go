@@ -11,6 +11,8 @@ import (
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
 
+const robotTokenExpirationDefault = 30
+
 func resourceConfigSystem() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -27,7 +29,7 @@ func resourceConfigSystem() *schema.Resource {
 			"robot_token_expiration": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				Default:  30,
+				Default:  robotTokenExpirationDefault,
 			},
 		},
 		Create: resourceConfigSystemUpdate,
@@ -38,8 +40,8 @@ func resourceConfigSystem() *schema.Resource {
 }
 
 func resourceConfigSystemRead(d *schema.ResourceData, m interface{}) error {
-
 	apiClient := m.(*client.Harbor)
+
 	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)
 	if err != nil {
 		log.Fatal(err)
@@ -53,22 +55,29 @@ func resourceConfigSystemRead(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 	} else {
-		d.Set("read_only", false)
+		if err := d.Set("read_only", false); err != nil {
+			return err
+		}
 	}
+
 	if err := d.Set("robot_token_expiration", resp.Payload.TokenExpiration.Value); err != nil {
 		return err
 	}
+
 	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", "systemconfig")))
+
 	return nil
 }
 
 func resourceConfigSystemUpdate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
-	_, err := apiClient.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
+	params := products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
 		ProjectCreationRestriction: d.Get("project_creation_restriction").(string),
 		TokenExpiration:            int64(d.Get("robot_token_expiration").(int)),
 		ReadOnly:                   d.Get("read_only").(bool),
-	}), nil)
+	})
+
+	_, err := apiClient.Products.PutConfigurations(params, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

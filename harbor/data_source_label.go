@@ -57,21 +57,27 @@ func dataSourceLabelRead(d *schema.ResourceData, m interface{}) error {
 			if err != nil {
 				return err
 			}
+
 			if err := setLabelSchema(d, registry); err != nil {
 				return err
 			}
+
 			return nil
 		}
 	}
+
 	if labelID, ok := d.GetOk("id"); ok {
 		d.SetId(strconv.Itoa(labelID.(int)))
+
 		label, err := findLabelByID(d, m)
 		if err != nil {
 			return err
 		}
+
 		if err := setLabelSchema(d, label); err != nil {
 			return err
 		}
+
 		return nil
 	}
 
