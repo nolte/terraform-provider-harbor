@@ -70,6 +70,7 @@ func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", "vulnerability_scan")))
+
 	return resourceTasksRead(d, m)
 }
 
@@ -134,5 +135,6 @@ func getSchedule(schedule string) (*models.AdminJobScheduleObj, error) {
 			Type: "Weekly",
 		}, nil
 	}
+
 	return &models.AdminJobScheduleObj{}, errors.New("Not a Valid schedule name %s" + schedule)
 }

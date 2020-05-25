@@ -61,6 +61,7 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(strconv.Itoa(int(project.ProjectID)))
+
 	return resourceProjectRead(d, m)
 }
 
@@ -86,6 +87,7 @@ func findProjectByName(d *schema.ResourceData, m interface{}) (*models.Project, 
 
 		return resp.Payload[0], nil
 	}
+
 	return &models.Project{}, fmt.Errorf("fail to lookup project by Name")
 }
 
@@ -103,8 +105,10 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 		if err := setProjectSchema(d, resp.Payload); err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	return fmt.Errorf("fail to load the project")
 }
 
@@ -126,7 +130,8 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 
 		return resourceProjectRead(d, m)
 	}
-	return fmt.Errorf("Project Id not a Integer")
+
+	return fmt.Errorf("project Id not a Integer")
 }
 
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
@@ -137,9 +142,11 @@ func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
 		if _, err := apiClient.Products.DeleteProjectsProjectID(delete, nil); err != nil {
 			return err
 		}
+
 		return nil
 	}
-	return fmt.Errorf("Project Id not a Integer")
+
+	return fmt.Errorf("project Id not a Integer")
 }
 
 func setProjectSchema(data *schema.ResourceData, project *models.Project) error {

@@ -184,16 +184,20 @@ func resourceRobotAccountRead(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 	}
+
 	return nil
 }
 func setRobotSchema(d *schema.ResourceData, model *models.RobotAccount) error {
 	d.SetId(strconv.Itoa(int(model.ID)))
+
 	if err := d.Set("name", strings.Replace(model.Name, robotAccountNamePrefix(), "", 1)); err != nil {
 		return err
 	}
+
 	if err := d.Set("description", model.Description); err != nil {
 		return err
 	}
+
 	if err := d.Set("project_id", int(model.ProjectID)); err != nil {
 		return err
 	}
@@ -201,6 +205,7 @@ func setRobotSchema(d *schema.ResourceData, model *models.RobotAccount) error {
 	if err := d.Set("disabled", model.Disabled); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -217,7 +222,9 @@ func resourceRobotAccountDelete(d *schema.ResourceData, m interface{}) error {
 		}
 
 		d.SetId("")
+
 		return nil
 	}
-	return fmt.Errorf("Fail to Remove Robot Account")
+
+	return fmt.Errorf("fail to Remove Robot Account")
 }

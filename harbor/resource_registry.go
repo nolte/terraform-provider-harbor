@@ -94,6 +94,7 @@ func findRegistryByName(d *schema.ResourceData, m interface{}) (*models.Registry
 
 		return resp.Payload[0], nil
 	}
+
 	return &models.Registry{}, fmt.Errorf("fail to lookup Registry by Name")
 }
 func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
@@ -101,14 +102,18 @@ func resourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 
 	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
 		resp, err := apiClient.Products.GetRegistriesID(products.NewGetRegistriesIDParams().WithID(registryID), nil)
+
 		if err != nil {
 			return err
 		}
+
 		if err = setRegistrySchema(d, resp.Payload); err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	return fmt.Errorf("registry Id not a Integer currently: '%s'", d.Id())
 }
 
@@ -125,9 +130,11 @@ func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
 		if _, err := apiClient.Products.PutRegistriesID(params, nil); err != nil {
 			return err
 		}
+
 		return resourceRegistryRead(d, m)
 	}
-	return fmt.Errorf("Registry Id not a Integer")
+
+	return fmt.Errorf("registry Id not a Integer")
 }
 
 func resourceRegistryDelete(d *schema.ResourceData, m interface{}) error {
@@ -135,9 +142,11 @@ func resourceRegistryDelete(d *schema.ResourceData, m interface{}) error {
 
 	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
 		params := products.NewDeleteRegistriesIDParams().WithID(registryID)
+
 		if _, err := apiClient.Products.DeleteRegistriesID(params, nil); err != nil {
 			return err
 		}
+
 		return nil
 	}
 

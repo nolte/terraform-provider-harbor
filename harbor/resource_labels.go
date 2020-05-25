@@ -95,6 +95,7 @@ func findLabelByNameAndScope(d *schema.ResourceData, m interface{}) (*models.Lab
 			scopeName := scope.(string)
 
 			query := products.NewGetLabelsParams().WithScope(scopeName).WithName(&searchName)
+
 			if scopeName == "p" {
 				projectID := int64(d.Get("project_id").(int))
 				query = query.WithProjectID(&projectID)
@@ -207,5 +208,6 @@ func resourceLabelDelete(d *schema.ResourceData, m interface{}) error {
 
 		return nil
 	}
-	return fmt.Errorf("Label Id not a Integer")
+
+	return fmt.Errorf("label Id not a Integer")
 }
