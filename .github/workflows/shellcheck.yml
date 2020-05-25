@@ -4,13 +4,13 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - '**.sh'
+      - "**.sh"
       - .github/workflows/shellcheck.yml
   push:
     branches:
-      - master
+      - "**"
     paths:
-      - '**.sh'
+      - "**.sh"
       - .github/workflows/shellcheck.yml
 
 jobs:
