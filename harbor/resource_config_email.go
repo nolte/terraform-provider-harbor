@@ -54,18 +54,22 @@ func resourceConfigEmail() *schema.Resource {
 
 func resourceConfigEmailCreate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
-	_, err := apiClient.Products.PutConfigurations(products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
+	params := products.NewPutConfigurationsParams().WithConfigurations(&models.Configurations{
 		EmailHost:     d.Get("email_host").(string),
 		EmailPort:     int64(d.Get("email_port").(int)),
 		EmailUsername: d.Get("email_username").(string),
 		EmailPassword: d.Get("email_password").(string),
 		EmailFrom:     d.Get("email_from").(string),
 		EmailSsl:      d.Get("email_ssl").(bool),
-	}), nil)
+	})
+
+	_, err := apiClient.Products.PutConfigurations(params, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", d.Get("email_host").(string))))
+
 	return resourceConfigEmailRead(d, m)
 }
 
@@ -76,21 +80,27 @@ func resourceConfigEmailRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	if err := d.Set("email_host", resp.Payload.EmailHost.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("email_port", int(resp.Payload.EmailPort.Value)); err != nil {
 		return err
 	}
+
 	if err := d.Set("email_username", resp.Payload.EmailUsername.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("email_from", resp.Payload.EmailFrom.Value); err != nil {
 		return err
 	}
+
 	if err := d.Set("email_ssl", resp.Payload.EmailSsl.Value); err != nil {
 		return err
 	}
+
 	return nil
 }
 

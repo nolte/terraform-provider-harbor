@@ -40,27 +40,36 @@ func dataSourceProject() *schema.Resource {
 
 func dataSourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
+
 	if _, ok := d.GetOk("name"); ok {
 		project, err := findProjectByName(d, m)
 		if err != nil {
 			return err
 		}
+
 		if err = setProjectSchema(d, project); err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	if id, ok := d.GetOk("id"); ok {
-		resp, err := apiClient.Products.GetProjectsProjectID(products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int))), nil)
+		params := products.NewGetProjectsProjectIDParams().WithProjectID(int64(id.(int)))
+
+		resp, err := apiClient.Products.GetProjectsProjectID(params, nil)
 		if err != nil {
 			return err
 		}
+
 		if err = setProjectSchema(d, resp.Payload); err != nil {
 			return err
 		}
-		return nil
 
+		return nil
 	}
+
 	d.SetId("")
+
 	return fmt.Errorf("please specify a name to lookup for a project")
 }

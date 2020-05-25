@@ -13,7 +13,7 @@ insert_final_newline = true
 # allow line break https://3os.org/markdownCheatSheet/lineBreaks/#line_break_with_2_spaces
 trim_trailing_whitespace = false
 
-[makefile]
+[{makefile,Makefile}]
 indent_style = tabs
 
 [{*.yml,*.yaml, *.tf}]

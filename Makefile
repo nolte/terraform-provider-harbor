@@ -29,7 +29,7 @@ build: generate test compile
 fmt:
 	gofmt -w -s $(GOFMT_FILES)
 
-test: fmtcheck vet
+test: lint fmtcheck vet
 	go test $(TEST)
 
 testacc: fmtcheck vet
@@ -40,6 +40,9 @@ fmtcheck:
 
 vet:
 	go vet ./...
+
+lint:
+	golangci-lint run
 
 check-scripts:
 	shellcheck scripts/*.sh

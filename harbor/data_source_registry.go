@@ -54,19 +54,24 @@ func dataSourceRegistryRead(d *schema.ResourceData, m interface{}) error {
 		if err != nil {
 			return err
 		}
+
 		if err := setRegistrySchema(d, registry); err != nil {
 			return err
 		}
+
 		return nil
 	}
+
 	if id, ok := d.GetOk("id"); ok {
 		resp, err := apiClient.Products.GetRegistriesID(products.NewGetRegistriesIDParams().WithID(int64(id.(int))), nil)
 		if err != nil {
 			return err
 		}
+
 		if err := setRegistrySchema(d, resp.Payload); err != nil {
 			return err
 		}
+
 		return nil
 	}
 

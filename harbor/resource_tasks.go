@@ -1,6 +1,7 @@
 package harbor
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -11,9 +12,6 @@ import (
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
-
-var TypeStr string
-var CronStr string
 
 func resourceTasks() *schema.Resource {
 	return &schema.Resource{
@@ -33,16 +31,17 @@ func resourceTasks() *schema.Resource {
 func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 
-	vulnSchedule := d.Get("vulnerability_scan_policy").(string)
-	getSchedule(vulnSchedule)
+	schedule, err := getSchedule(d.Get("vulnerability_scan_policy").(string))
+	if err != nil {
+		return err
+	}
 
 	body := &models.AdminJobSchedule{
-		Schedule: &models.AdminJobScheduleObj{
-			Cron: CronStr,
-			Type: TypeStr,
-		}}
+		Schedule: schedule,
+	}
 
 	resp, err := apiClient.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
+
 	if err != nil {
 		log.Fatalf("Fail to load vulnerability_scan %v", err)
 	}
@@ -50,24 +49,34 @@ func resourceTasksCreate(d *schema.ResourceData, m interface{}) error {
 	time := resp.Payload.Schedule.Type
 	if time != "" {
 		log.Printf("Shedule found performing PUT request")
-		_, err = apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
+
+		params := products.NewPutSystemScanAllScheduleParams().WithSchedule(body)
+
+		_, err = apiClient.Products.PutSystemScanAllSchedule(params, nil)
+
 		if err != nil {
 			log.Fatalf("Fail to update vulnerability_scan %v", err)
 		}
 	} else {
 		log.Printf("No shedule found performing POST request")
-		_, err = apiClient.Products.PostSystemScanAllSchedule(products.NewPostSystemScanAllScheduleParams().WithSchedule(body), nil)
+
+		params := products.NewPostSystemScanAllScheduleParams().WithSchedule(body)
+
+		_, err = apiClient.Products.PostSystemScanAllSchedule(params, nil)
+
 		if err != nil {
 			log.Fatalf("Fail to create new vulnerability_scan %v", err)
 		}
 	}
 
 	d.SetId(resource.PrefixedUniqueId(fmt.Sprintf("%s-", "vulnerability_scan")))
+
 	return resourceTasksRead(d, m)
 }
 
 func resourceTasksRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
+
 	resp, err := apiClient.Products.GetSystemScanAllSchedule(products.NewGetSystemScanAllScheduleParams(), nil)
 	if err != nil {
 		log.Fatal(err)
@@ -83,18 +92,20 @@ func resourceTasksRead(d *schema.ResourceData, m interface{}) error {
 func resourceTasksUpdate(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 
-	vulnSchedule := d.Get("vulnerability_scan_policy").(string)
-	getSchedule(vulnSchedule)
+	schedule, err := getSchedule(d.Get("vulnerability_scan_policy").(string))
+	if err != nil {
+		return err
+	}
 
 	body := &models.AdminJobSchedule{
-		Schedule: &models.AdminJobScheduleObj{
-			Cron: CronStr,
-			Type: TypeStr,
-		}}
+		Schedule: schedule,
+	}
 
-	_, err := apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
+	query := products.NewPutSystemScanAllScheduleParams().WithSchedule(body)
+
+	_, err = apiClient.Products.PutSystemScanAllSchedule(query, nil)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	return resourceTasksRead(d, m)
@@ -102,31 +113,28 @@ func resourceTasksUpdate(d *schema.ResourceData, m interface{}) error {
 
 func resourceTasksDelete(d *schema.ResourceData, m interface{}) error {
 	// https://github.com/goharbor/harbor/issues/11083
-	//	apiClient := m.(*client.Harbor)
-	//
-	//	body := &models.AdminJobSchedule{
-	//		Schedule: &models.AdminJobScheduleObj{
-	//			Cron: "",
-	//		}}
-	//
-	//	_, err := apiClient.Products.PutSystemScanAllSchedule(products.NewPutSystemScanAllScheduleParams().WithSchedule(body), nil)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
 	log.Printf("Not inplemented at the moment look gh issue: %s", "https://github.com/goharbor/harbor/issues/11083")
 	return nil
 }
 
-func getSchedule(schedule string) {
+func getSchedule(schedule string) (*models.AdminJobScheduleObj, error) {
 	switch schedule {
 	case "hourly":
-		TypeStr = "Hourly"
-		CronStr = "0 0 * * * *"
+		return &models.AdminJobScheduleObj{
+			Cron: "0 0 * * * *",
+			Type: "Hourly",
+		}, nil
 	case "daily":
-		TypeStr = "Daily"
-		CronStr = "0 0 0 * * *"
+		return &models.AdminJobScheduleObj{
+			Cron: "0 0 0 * * *",
+			Type: "Daily",
+		}, nil
 	case "weekly":
-		TypeStr = "Weekly"
-		CronStr = "0 0 0 * * 0"
+		return &models.AdminJobScheduleObj{
+			Cron: "0 0 0 * * 0",
+			Type: "Weekly",
+		}, nil
 	}
+
+	return &models.AdminJobScheduleObj{}, errors.New("Not a Valid schedule name %s" + schedule)
 }
