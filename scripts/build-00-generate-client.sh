@@ -8,41 +8,38 @@ set -o nounset
 
 # Set magic variables for current file & dir
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
-__base="$(basename ${__file} .sh)"
-__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+__root="$(cd "$(dirname "${__dir}")" && pwd)"
 
-arg1="${1:-}"
 projectBase=$__root
 
-GENERATED_SOURCES_TARGET=${projectBase}/gen/harborctl
-GENERATED_MERGED_SWAGGER=${projectBase}/gen/merged.json
+GENERATED_SOURCES_TARGET="${projectBase}/gen/harborctl"
+GENERATED_MERGED_SWAGGER="${projectBase}/gen/merged.json"
 
 
 if [ -d "$GENERATED_SOURCES_TARGET" ]; then
     echo "Remove old generated sources"
-    rm -rf ${GENERATED_SOURCES_TARGET}
+    rm -rf "${GENERATED_SOURCES_TARGET}"
 fi
 
 if test -f "$GENERATED_MERGED_SWAGGER"; then
     echo "Remove old generated merged swagger conf"
-    rm ${GENERATED_MERGED_SWAGGER}
+    rm "${GENERATED_MERGED_SWAGGER}"
 fi
 
 
 
 swagger-merger \
-    -o ${GENERATED_MERGED_SWAGGER} \
-    -i ${projectBase}/scripts/swagger-specs/v1-swagger-extra-fields.json \
-    -i ${projectBase}/scripts/swagger-specs/v2-swagger-original.json 
+    -o "${GENERATED_MERGED_SWAGGER}" \
+    -i "${projectBase}/scripts/swagger-specs/v1-swagger-extra-fields.json" \
+    -i "${projectBase}/scripts/swagger-specs/v2-swagger-original.json"
 
-mkdir -p ${GENERATED_SOURCES_TARGET}
+mkdir -p "${GENERATED_SOURCES_TARGET}"
 
 swagger generate client \
-    -f ${GENERATED_MERGED_SWAGGER} \
+    -f "${GENERATED_MERGED_SWAGGER}" \
     --name=harbor \
-    --target=${GENERATED_SOURCES_TARGET} \
-    --with-flatten=remove-unused 
+    --target="${GENERATED_SOURCES_TARGET}" \
+    --with-flatten=remove-unused
     #--operation=PostProjects \
     #--operation=GetProjects \
     #--operation=PutProjectsProjectID \
@@ -55,4 +52,3 @@ swagger generate client \
 
 # PostProjectsProjectIDRobots DeleteProjectsProjectIDRobotsRobotID GetProjectsProjectIDRobots
 # RobotAccountCreate
-   
