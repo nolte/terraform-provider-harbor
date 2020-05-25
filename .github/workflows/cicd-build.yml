@@ -38,20 +38,13 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
-      - name: build provider
+      - name: install golangci-lint
         run: |
-          make generate
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v1
-        with:
-          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: v1.27
-
-      - name: build provider
+      - name: test provider
         run: |
-          make test
-          make compile
+          make build
 
       - name: Upload Binaryies for publishing
         uses: actions/upload-artifact@v2.0.1
