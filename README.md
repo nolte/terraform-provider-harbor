@@ -6,6 +6,7 @@ This is original based on the Work from [BESTSELLER/terraform-harbor-provider](h
 
 ![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)
 ![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor?ref=badge_shield)
 
 ## Project Status
 
@@ -74,3 +75,7 @@ Tested with Harbor v2.1.0 and v1.10.2.
 ## Tests
 
 For the End To End Tests we use a local [kind](https://kind.sigs.k8s.io) _(KubernetesInDocker)_ Cluster.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor?ref=badge_large)
