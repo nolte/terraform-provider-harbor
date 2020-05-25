@@ -10,7 +10,7 @@ import (
 	apiclient "github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
 )
 
-// NewClient creates common settings
+// NewClient creates common settings.
 func NewClient(host string, username string, password string,
 	insecure bool, basepath string, schema string) *apiclient.Harbor {
 	basicAuth := httptransport.BasicAuth(username, password)

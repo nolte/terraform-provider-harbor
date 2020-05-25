@@ -55,7 +55,6 @@ func resourceConfigAuth() *schema.Resource {
 	}
 }
 
-// dasdas
 func resourceConfigAuthRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Harbor)
 	resp, err := apiClient.Products.GetConfigurations(products.NewGetConfigurationsParams(), nil)

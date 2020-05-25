@@ -1,7 +1,7 @@
 package harbor
 
 import (
-	"fmt"
+	"errors"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -81,5 +81,5 @@ func dataSourceLabelRead(d *schema.ResourceData, m interface{}) error {
 		return nil
 	}
 
-	return fmt.Errorf("please specify a combination of name and scope or Id to lookup for a label")
+	return errors.New("please specify a combination of name and scope or Id to lookup for a label")
 }
