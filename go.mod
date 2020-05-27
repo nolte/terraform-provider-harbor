@@ -13,5 +13,6 @@ require (
 	github.com/go-openapi/validate v0.19.8
 	github.com/hashicorp/terraform-plugin-sdk v1.13.0
 	golang.org/x/net v0.0.0-20200520182314-0ba52f642ac2 // indirect
+	golang.org/x/tools v0.0.0-20200527175047-7527cb292c67 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

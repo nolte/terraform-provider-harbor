@@ -1,6 +1,8 @@
 package harbor
 
 import (
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/nolte/terraform-provider-harbor/client"
@@ -15,12 +17,14 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("HARBOR_ENDPOINT", nil),
 			},
 			"username": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_USERNAME", nil),
 			},
 			"password": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_PASSWORD", nil),
 			},
 			"schema": {
 				Type:     schema.TypeString,
@@ -28,14 +32,16 @@ func Provider() terraform.ResourceProvider {
 				Default:  "https",
 			},
 			"insecure": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
-			},
-			"basepath": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Default:  "/api",
+				//Default:     false,
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_INSECURE", "false"),
+			},
+			"basepath": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "/api",
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_BASEPATH", nil),
 			},
 		},
 
@@ -62,7 +68,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	host := d.Get("host").(string)
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
-	insecure := d.Get("insecure").(bool)
+
+	insecure, err := strconv.ParseBool(d.Get("insecure").(string))
+	if err != nil {
+		return nil, err
+	}
+
 	basepath := d.Get("basepath").(string)
 	schema := d.Get("schema").(string)
 

@@ -49,3 +49,11 @@ linters:
     #- nestif
     #- dupl
     #- goerr113
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gochecknoglobals
+        - gochecknoinits
