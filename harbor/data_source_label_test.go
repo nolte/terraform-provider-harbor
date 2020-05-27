@@ -64,23 +64,23 @@ data "harbor_label" "ds_1" {
 `
 }
 
-func testAccHarborCheckProjectLabelDataSourceConfig() string {
-	return `
-resource "harbor_project" "project" {
-  name                   = "acc-label-test"
-  public                 = false
-  vulnerability_scanning = false
-}
-resource "harbor_label" "project_label" {
-    name        = "project-acc-golang"
-    description = "Golang Project Acc Test Label"
-    color       = "#666666"
-    scope       = "p"
-    project_id = harbor_project.project.id
-}
-data "harbor_label" "ds_2" {
-  name = harbor_label.project_label.name
-  scope = "p"
-}
-`
-}
+//func testAccHarborCheckProjectLabelDataSourceConfig() string {
+//	return `
+//resource "harbor_project" "project" {
+//  name                   = "acc-label-test"
+//  public                 = false
+//  vulnerability_scanning = false
+//}
+//resource "harbor_label" "project_label" {
+//    name        = "project-acc-golang"
+//    description = "Golang Project Acc Test Label"
+//    color       = "#666666"
+//    scope       = "p"
+//    project_id = harbor_project.project.id
+//}
+//data "harbor_label" "ds_2" {
+//  name = harbor_label.project_label.name
+//  scope = "p"
+//}
+//`
+//}
