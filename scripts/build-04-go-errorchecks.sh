@@ -2,6 +2,7 @@
 
 echo "==> Checking for unchecked errors..."
 
+# shellcheck disable=SC2230
 if ! which errcheck > /dev/null; then
     echo "==> Installing errcheck..."
     go get -u github.com/kisielk/errcheck
