@@ -7,6 +7,8 @@ set -e
 set -o pipefail
 set -o nounset
 
+echo "==> Starting the acception tests..."
+
 export TF_ACC=1
 HARBOR_ENDPOINT="$(kubectl get Ingress tf-harbor-test-harbor-ingress -n harbor -ojson | jq '.spec.rules[].host' -r | grep harbor)"
 export HARBOR_ENDPOINT
@@ -16,4 +18,4 @@ export HARBOR_PASSWORD
 export HARBOR_INSECURE="true"
 
 # shellcheck disable=SC2046
-go test -timeout 20m $(go list /go/src/github.com/nolte/terraform-provider-harbor/... |grep -v 'vendor') -v
+go test -timeout 20m $(go list /go/src/github.com/nolte/terraform-provider-harbor/... | grep -v 'vendor') -v

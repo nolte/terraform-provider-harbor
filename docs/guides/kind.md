@@ -1,7 +1,7 @@
 # E2E Tests With Kind
 
-For Quick and Easy Local Development it is Recommendet to use a Vanilla Harbor installation.
-All releavant make goals are prefixed with ```e2s_*```.
+For Quick and Easy Local Development it is Recommended to use a Vanilla Harbor installation.
+All relevant make goals are prefixed with ```e2s_*```.
 
 ## Kind Precondition
 

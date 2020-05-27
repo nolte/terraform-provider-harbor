@@ -7,7 +7,7 @@ description: |-
 
 # Resource: harbor_project
 
-Handle a [Harbor Project Ressource](https://goharbor.io/docs/1.10/working-with-projects/create-projects/).
+Handle a [Harbor Project Resource](https://goharbor.io/docs/1.10/working-with-projects/create-projects/).
 
 ## Example Usage
 

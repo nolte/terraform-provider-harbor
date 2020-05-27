@@ -27,6 +27,7 @@ install:
 build: generate test compile
 
 fmt:
+	echo "==> Formatting files with fmt..."
 	gofmt -w -s $(GOFMT_FILES)
 
 test: goLint scriptsLint vet
@@ -39,12 +40,18 @@ fmtcheck:
 	scripts/build-03-go-gofmtcheck.sh
 
 vet:
+	echo "==> Checking code with vet..."
 	go vet ./...
 
 goLint:
 	scripts/build-03-go-gofmtcheck.sh
 	scripts/build-04-go-errorchecks.sh
 	scripts/build-05-go-golint.sh
+
+gosec:
+	echo "==> Checking code with gosec..."
+	# TODO Remove unused files from generated sources !!!
+	gosec -exclude-dir=gen/harborctl/client/scanners ./...
 
 scriptsLint:
 	echo "==> Checking scripts with shellcheck..."
@@ -57,5 +64,8 @@ e2e_prepare:
 
 e2e_cleanup:
 	kind delete cluster
+
+spellingCheck:
+	mdspell '**/*.md' '!**/node_modules/**/*.md'
 
 .PHONY: default install

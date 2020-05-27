@@ -32,15 +32,15 @@ The following arguments are optional:
 
 * `description` - (Optional)  The description of the label account will be displayed in harbor.
 
-* `color` - (Optional) The color the label.
+* `color` - (Optional) The colour the label.
 
 * `scope` - (Optional) The scope the label, `p` for project and `g` for global.
 
-* `project_id` - (Optional) The ID of project that the label belongs to, must be set if sope project.
+* `project_id` - (Optional) The ID of project that the label belongs to, must be set if scope project.
 
 ## Attributes Reference
 
-In addition to all argument, the folloing attributes are exported:
+In addition to all argument, the following attributes are exported:
 
 * `id` - The id of the registry with harbor.
 

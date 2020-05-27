@@ -33,7 +33,7 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-In addition to all argument, the folloing attributes are exported:
+In addition to all argument, the following attributes are exported:
 
 * `id` - The id of the robot account.
 

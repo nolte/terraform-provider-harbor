@@ -44,3 +44,7 @@ RUN helm repo add harbor https://helm.goharbor.io
 RUN npm install swagger-merger -g
 
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
+
+RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.3.0
+
+RUN npm i markdown-spellcheck -g

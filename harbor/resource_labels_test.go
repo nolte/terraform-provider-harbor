@@ -13,12 +13,12 @@ import (
 )
 
 func init() {
-	resource.AddTestSweepers("harbor_label", &resource.Sweeper{
+	resource.AddTestSweepers("resource_harbor_label", &resource.Sweeper{
 		Name: "harbor_label",
 	})
 }
 
-func TestAccHcloudLabel_Basic(t *testing.T) {
+func TestAccHarborLabel_Basic(t *testing.T) {
 	var label models.Label
 
 	resource.Test(t, resource.TestCase{
@@ -28,7 +28,7 @@ func TestAccHcloudLabel_Basic(t *testing.T) {
 			{
 				Config: testAccHarborCheckGlobalLabelResourceConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccHcloudCheckLabelExists("harbor_label.main", &label),
+					testAccCheckLabelExists("harbor_label.main", &label),
 					resource.TestCheckResourceAttr(
 						"harbor_label.main", "name", "global-acc-golang"),
 					resource.TestCheckResourceAttr(
@@ -44,7 +44,7 @@ func TestAccHcloudLabel_Basic(t *testing.T) {
 			{
 				Config: testAccHarborCheckProjectLabelResourceConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccHcloudCheckLabelExists("harbor_label.main_project", &label),
+					testAccCheckLabelExists("harbor_label.main_project", &label),
 					resource.TestCheckResourceAttr(
 						"harbor_label.main_project", "name", "project-acc-golang"),
 					resource.TestCheckResourceAttr(
@@ -87,7 +87,7 @@ resource "harbor_label" "main_project" {
 `
 }
 
-func testAccHcloudCheckLabelExists(n string, label *models.Label) resource.TestCheckFunc {
+func testAccCheckLabelExists(n string, label *models.Label) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 

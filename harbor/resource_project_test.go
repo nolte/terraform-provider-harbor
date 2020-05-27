@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	resource.AddTestSweepers("harbor_project", &resource.Sweeper{
+	resource.AddTestSweepers("resource_harbor_project", &resource.Sweeper{
 		Name: "harbor_project",
 	})
 }

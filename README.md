@@ -9,16 +9,12 @@ This is original based on the Work from [BESTSELLER/terraform-harbor-provider](h
 
 ## Project Status
 
-**At the Moment this Project ist heavy under Construction, it is not recommendet for Production use, ~~or active Forking~~ !**
+**At the Moment this Project is heavy under Construction, it is not recommended for Production use, ~~or active Forking~~ !**
 
-**Planed Branking Changes:**
+**Planed Braking Changes:**
 
 - [x] [Rename provider](https://github.com/nolte/terraform-provider-harbor/issues/3) attributes, like url etc.
-- [x] Planed Git Rebase for remove the Ugly CI/CD Test Commit
-  - [x] Finazilize the frist version of common ci workflow
-  - [x] Finazilize the frist version of release workflow
-- [x] use a ```develop``` branch as default
-- [x] cleanup unused stuff from starting development
+- [ ] [Refectore Config Auth](https://github.com/nolte/terraform-provider-harbor/issues/10) attributes, like ldap etc.
 - [ ] Use First Stable version from the Devcontainer [docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest](https://github.com/nolte/vscode-devcontainers) _(not exists at the moment)_
 
 ## Docs
