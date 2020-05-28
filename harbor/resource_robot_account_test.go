@@ -20,6 +20,7 @@ func init() {
 
 func TestAccHarborRobot_Basic(t *testing.T) {
 	var robot models.RobotAccount
+
 	var project models.Project
 
 	resource.Test(t, resource.TestCase{
@@ -58,6 +59,7 @@ func testAccHarborCheckRobotHasGeneratedTokenExists(n string) resource.TestCheck
 		if rs.Primary.Attributes["token"] == "" {
 			return fmt.Errorf("No token generated")
 		}
+
 		return nil
 	}
 }
@@ -92,8 +94,9 @@ func testAccHarborCheckRobotExists(n string, robot *models.RobotAccount) resourc
 		client := testAccProvider.Meta().(*client.Harbor)
 
 		if searchID, err := strconv.ParseInt(rs.Primary.ID, 10, 64); err == nil {
-			if projectId, err := strconv.ParseInt(rs.Primary.Attributes["project_id"], 10, 64); err == nil {
-				query := products.NewGetProjectsProjectIDRobotsRobotIDParams().WithProjectID(projectId).WithRobotID(searchID)
+			if projectID, err := strconv.ParseInt(rs.Primary.Attributes["project_id"], 10, 64); err == nil {
+				query := products.NewGetProjectsProjectIDRobotsRobotIDParams().WithProjectID(projectID).WithRobotID(searchID)
+
 				foundRobot, err := client.Products.GetProjectsProjectIDRobotsRobotID(query, nil)
 				if err != nil {
 					return err
