@@ -56,7 +56,6 @@ gosec:
 scriptsLint:
 	echo "==> Checking scripts with shellcheck..."
 	shellcheck scripts/*.sh
-	shellcheck scripts/test/bats/build/*.bats
 
 e2e_prepare:
 	scripts/tst-00-prepare-kind.sh
