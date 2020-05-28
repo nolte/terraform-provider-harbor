@@ -28,6 +28,9 @@ resource "harbor_robot_account" "master_robot" {
   actions     = ["docker_read", "docker_write", "helm_read", "helm_write"]
 }
 
+
+
+
 output "harbor_robot_account_token" {
   value = harbor_robot_account.master_robot.token
 }
@@ -48,6 +51,7 @@ resource "harbor_registry" "helmhub" {
   description = "Helm Hub Registry"
   insecure    = false
 }
+
 #
 resource "harbor_label" "main" {
   name        = "testlabel-acc-classic"
@@ -62,4 +66,24 @@ resource "harbor_label" "project_label" {
   color       = "#333333"
   scope       = "p"
   project_id  = harbor_project.main.id
+}
+###
+
+
+resource "harbor_replication_pull" "pull_helm_chart" {
+  name                        = "helm-prometheus-operator-acc-classic"
+  description                 = "Prometheus Operator Replica ACC Classic"
+  source_registry_id          = harbor_registry.helmhub.id
+  source_registry_filter_name = "stable/prometheus-operator"
+  source_registry_filter_tag  = "**"
+  destination_namespace       = harbor_project.main.name
+}
+
+resource "harbor_replication_pull" "push_helm_chart" {
+  name                        = "docker-push-acc-classic"
+  description                 = "Push Docker Replica ACC Classic"
+  destination_registry_id     = harbor_registry.dockerhub.id
+  source_registry_filter_name = "${harbor_project.main.name}/vscode-devcontainers/k8s-operator"
+  source_registry_filter_tag  = "**"
+  destination_namespace       = "notexisting"
 }
