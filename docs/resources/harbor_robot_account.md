@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```hcl
-resource "haror_project" "main" {
+resource "harbor_project" "main" {
     name = "main"
 }
 
