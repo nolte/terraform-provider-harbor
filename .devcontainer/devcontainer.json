@@ -64,6 +64,17 @@
         "[makefile]": {
             "editor.insertSpaces": false,
             "editor.detectIndentation": false
-        }
+        },
+        "go.testEnvVars": {
+            "HARBOR_ENDPOINT":"harbor.192-168-178-51.sslip.io",
+            "HARBOR_USERNAME":"admin",
+            "HARBOR_PASSWORD":"Harbor12345",
+            "HARBOR_INSECURE":"true",
+            "TF_ACC":"1"
+        },
+
+        "go.testFlags": ["-v"],
+        "go.buildFlags": ["-v"],
+        "go.testTimeout": "180s"
     }
 }

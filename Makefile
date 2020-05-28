@@ -27,26 +27,34 @@ install:
 build: generate test compile
 
 fmt:
+	echo "==> Formatting files with fmt..."
 	gofmt -w -s $(GOFMT_FILES)
 
-test: lint fmtcheck vet
+test: goLint scriptsLint vet
 	go test $(TEST)
 
-testacc: fmtcheck vet
-	TF_ACC=1 go test -timeout 20m $(TEST) -v $(TESTARGS)
+
 
 fmtcheck:
-	lineCount=$(shell gofmt -l -s $(GOFMT_FILES) | wc -l | tr -d ' ') && exit $$lineCount
+	scripts/build-03-go-gofmtcheck.sh
 
 vet:
+	echo "==> Checking code with vet..."
 	go vet ./...
 
-lint:
-	golangci-lint run
+goLint:
+	scripts/build-03-go-gofmtcheck.sh
+	scripts/build-04-go-errorchecks.sh
+	scripts/build-05-go-golint.sh
 
-check-scripts:
+gosec:
+	echo "==> Checking code with gosec..."
+	# TODO Remove unused files from generated sources !!!
+	gosec -exclude-dir=gen/harborctl/client/scanners ./...
+
+scriptsLint:
+	echo "==> Checking scripts with shellcheck..."
 	shellcheck scripts/*.sh
-	shellcheck scripts/test/bats/build/*.bats
 
 e2e_prepare:
 	scripts/tst-00-prepare-kind.sh
@@ -54,5 +62,14 @@ e2e_prepare:
 
 e2e_cleanup:
 	kind delete cluster
+
+e2e_test:
+	scripts/tst-15-execute-go-acc.sh
+
+e2e_test_classic:
+	bats scripts/test/bats
+
+spellingCheck:
+	mdspell '**/*.md' '!**/node_modules/**/*.md'
 
 .PHONY: default install

@@ -16,8 +16,9 @@ func NewClient(host string, username string, password string,
 	basicAuth := httptransport.BasicAuth(username, password)
 
 	// allow skipping ssl
+	// #nosec
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
-		InsecureSkipVerify: insecure, // nolint: gosec
+		InsecureSkipVerify: insecure,
 	}
 
 	apiSchemes := make([]string, 1)
