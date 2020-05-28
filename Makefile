@@ -33,8 +33,7 @@ fmt:
 test: goLint scriptsLint vet
 	go test $(TEST)
 
-testaac:
-	scripts/tst-15-execute-go-acc.sh
+
 
 fmtcheck:
 	scripts/build-03-go-gofmtcheck.sh
@@ -63,6 +62,12 @@ e2e_prepare:
 
 e2e_cleanup:
 	kind delete cluster
+
+e2e_test:
+	scripts/tst-15-execute-go-acc.sh
+
+e2e_test_classic:
+	bats scripts/test/bats
 
 spellingCheck:
 	mdspell '**/*.md' '!**/node_modules/**/*.md'

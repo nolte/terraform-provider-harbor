@@ -9,8 +9,8 @@ setup() {
 
 teardown() {
    terraform destroy -force -var harbor_endpoint="${HARBOR_ENDPOINT}" -var harbor_base_path='/api'
-#   rm -rf .terraform
-#   rm -rf terraform.tfstate*
+   rm -rf .terraform
+   rm -rf terraform.tfstate*
 }
 
 @test "Build 2: apply Terraform Script" {
