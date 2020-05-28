@@ -14,8 +14,7 @@ nav:
       - harbor_label: resources/harbor_label.md
       - harbor_project: resources/harbor_project.md
       - harbor_registry: resources/harbor_registry.md
-      - harbor_replication_pull: resources/harbor_replication_pull.md
-      - harbor_replication_push: resources/harbor_replication_push.md
+      - harbor_replication: resources/harbor_replication.md
       - harbor_robot_account: resources/harbor_robot_account.md
       - harbor_tasks: resources/harbor_tasks.md
   - Guides:

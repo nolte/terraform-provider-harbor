@@ -1,24 +1,19 @@
 package harbor_test
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client"
-	"github.com/nolte/terraform-provider-harbor/gen/harborctl/client/products"
 	"github.com/nolte/terraform-provider-harbor/gen/harborctl/models"
 )
 
 func init() {
-	resource.AddTestSweepers("resource_harbor_replicationPull", &resource.Sweeper{
-		Name: "harbor_replicationPull",
+	resource.AddTestSweepers("resource_harbor_replication", &resource.Sweeper{
+		Name: "harbor_replication",
 	})
 }
 
-func TestAccHarborReplicationPull_Basic(t *testing.T) {
+func TestAccHarborReplication_Basic(t *testing.T) {
 	var project models.Project
 
 	var registry models.Registry
@@ -33,13 +28,26 @@ func TestAccHarborReplicationPull_Basic(t *testing.T) {
 					testAccHarborCheckProjectExists("harbor_project.project_replica", &project),
 					testAccHarborCheckRegistryExists("harbor_registry.registry_replica_helm_hub", &registry),
 					resource.TestCheckResourceAttr(
-						"harbor_replication_pull.pull_helm_chart", "name", "acc-helm-prometheus-operator-test"),
+						"harbor_replication.pull_helm_chart", "name", "acc-helm-prometheus-operator-test"),
 					resource.TestCheckResourceAttr(
-						"harbor_replication_pull.pull_helm_chart", "source_registry_filter_name", "stable/prometheus-operator"),
+						"harbor_replication.pull_helm_chart", "source_registry_filter_name", "stable/prometheus-operator"),
 					resource.TestCheckResourceAttr(
-						"harbor_replication_pull.pull_helm_chart", "description", "Prometheus Operator Replica"),
+						"harbor_replication.pull_helm_chart", "description", "Prometheus Operator Replica"),
 					resource.TestCheckResourceAttr(
-						"harbor_replication_pull.pull_helm_chart", "destination_namespace", "acc-project-replica-test"),
+						"harbor_replication.pull_helm_chart", "destination_namespace", "acc-project-replica-test"),
+				),
+			}, {
+				Config: testAccHarborCheckReplicationPushResourceConfig(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccHarborCheckRegistryExists("harbor_registry.registry_replica_push_helm_hub", &registry),
+					resource.TestCheckResourceAttr(
+						"harbor_replication.push_helm_chart", "name", "acc-push-test"),
+					resource.TestCheckResourceAttr(
+						"harbor_replication.push_helm_chart", "source_registry_filter_name", "stable/prometheus-operator"),
+					resource.TestCheckResourceAttr(
+						"harbor_replication.push_helm_chart", "description", "Push Replica"),
+					resource.TestCheckResourceAttr(
+						"harbor_replication.push_helm_chart", "destination_namespace", "notexistingtest"),
 				),
 			},
 		},
@@ -60,7 +68,7 @@ resource "harbor_registry" "registry_replica_helm_hub" {
   description = "Helm Hub Registry"
   insecure    = false
 }
-resource "harbor_replication_pull" "pull_helm_chart" {
+resource "harbor_replication" "pull_helm_chart" {
   name                        = "acc-helm-prometheus-operator-test"
   description                 = "Prometheus Operator Replica"
   source_registry_id          = harbor_registry.registry_replica_helm_hub.id
@@ -71,35 +79,28 @@ resource "harbor_replication_pull" "pull_helm_chart" {
 `
 }
 
-func testAccHarborCheckReplicationPullExists(n string, replicationPull *models.ReplicationPolicy) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
-
-		if !ok {
-			return fmt.Errorf("Not found: %s", n)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No Record ID is set")
-		}
-
-		client := testAccProvider.Meta().(*client.Harbor)
-
-		if searchID, err := strconv.ParseInt(rs.Primary.ID, 10, 64); err == nil {
-			params := products.NewGetReplicationPoliciesIDParams().WithID(searchID)
-
-			foundReplicationPull, err := client.Products.GetReplicationPoliciesID(params, nil)
-			if err != nil {
-				return err
-			}
-
-			if foundReplicationPull == nil {
-				return fmt.Errorf("Record not found")
-			}
-
-			*replicationPull = *foundReplicationPull.Payload
-		}
-
-		return nil
-	}
+func testAccHarborCheckReplicationPushResourceConfig() string {
+	return `
+resource "harbor_registry" "registry_replica_push_helm_hub" {
+  name        = "acc-registry-push-replica-test"
+  url         = "https://hub.helm.sh"
+  type        = "helm-hub"
+  description = "Helm Hub Registry"
+  insecure    = false
+}
+resource "harbor_label" "main_push" {
+    name        = "global-acc-push-golang"
+    description = "Golang Acc Test Label"
+    color       = "#61717D"
+}
+resource "harbor_replication" "push_helm_chart" {
+  name                        = "acc-push-test"
+  description                 = "Push Replica"
+  source_registry_filter_name = "stable/prometheus-operator"
+  source_registry_filter_tag  = "**"
+  source_registry_filter_labels  = [harbor_label.main_push.name]
+  destination_registry_id = harbor_registry.registry_replica_push_helm_hub.id
+  destination_namespace       = "notexistingtest"
+}
+`
 }
