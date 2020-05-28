@@ -14,6 +14,7 @@ func init() {
 }
 func TestAccHarborDataSourceRegistry(t *testing.T) {
 	var registry models.Registry
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccHarborPreCheck(t) },
 		Providers: testAccProviders,
