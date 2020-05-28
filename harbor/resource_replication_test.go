@@ -98,7 +98,6 @@ resource "harbor_replication" "push_helm_chart" {
   description                 = "Push Replica"
   source_registry_filter_name = "stable/prometheus-operator"
   source_registry_filter_tag  = "**"
-  source_registry_filter_labels  = [harbor_label.main_push.name]
   destination_registry_id = harbor_registry.registry_replica_push_helm_hub.id
   destination_namespace       = "notexistingtest"
 }
