@@ -58,17 +58,32 @@ scriptsLint:
 
 e2e_prepare:
 	scripts/tst-00-prepare-kind.sh
-	scripts/tst-01-prepare-harbor.sh
 
-e2e_cleanup:
-	kind delete cluster
 
-e2e_test:
-	scripts/tst-15-execute-go-acc.sh
+e2e_prepare_harbor_v1:
+	scripts/tst-01-prepare-harbor.sh "192-168-178-51.sslip.io" "1.3.2"
+
+e2e_prepare_harbor_v2:
+	scripts/tst-01-prepare-harbor.sh "192-168-178-51.sslip.io" "1.4.0"
+
+e2e_clean_cluster:
+	kind delete cluster || true
+
+e2e_clean_harbor:
+	helm delete tf-harbor-test -n harbor
+	sleep 10
+
+e2e_test_v2:
+	scripts/tst-15-execute-go-acc.sh "/api/v2"
+
+e2e_test_v1:
+	scripts/tst-15-execute-go-acc.sh "/api/v1"
 
 e2e_test_classic:
 	bats scripts/test/bats
 
+e2e_full_run: e2e_clean_cluster e2e_prepare e2e_prepare_harbor_v2 e2e_test_v2 e2e_clean_harbor e2e_prepare_harbor_v1 e2e_test_v1 e2e_clean_cluster
+# e2e_prepare e2e_prepare_harbor_v1 e2e_test e2e_cleanup
 spellingCheck:
 	mdspell '**/*.md' '!**/node_modules/**/*.md'
 
