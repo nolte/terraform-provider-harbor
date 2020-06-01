@@ -17,6 +17,6 @@ HARBOR_PASSWORD="$(kubectl -n harbor get secret tf-harbor-test-harbor-core -ojso
 export HARBOR_PASSWORD
 export HARBOR_INSECURE="true"
 export HARBOR_BASEPATH=${1:-"/api"}
-
+#export TF_LOG=TRACE
 # shellcheck disable=SC2046
-go test -timeout 20m $(go list /go/src/github.com/nolte/terraform-provider-harbor/... | grep -v 'vendor') -v
+go test -timeout 20m $(go list ./... | grep -v 'vendor') -v

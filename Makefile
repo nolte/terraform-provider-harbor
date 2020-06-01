@@ -74,10 +74,10 @@ e2e_clean_harbor:
 	sleep 10
 
 e2e_test_v2:
-	scripts/tst-15-execute-go-acc.sh "/api/v2"
+	scripts/tst-15-execute-go-acc.sh "/api/v2.0"
 
 e2e_test_v1:
-	scripts/tst-15-execute-go-acc.sh "/api/v1"
+	scripts/tst-15-execute-go-acc.sh "/api"
 
 e2e_test_classic:
 	bats scripts/test/bats

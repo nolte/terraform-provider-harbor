@@ -45,9 +45,3 @@ jobs:
       - name: test provider
         run: |
           make build
-
-      - name: Upload Binaryies for publishing
-        uses: actions/upload-artifact@v2.0.1
-        with:
-          name: bin
-          path: ${{ github.workspace }}/bin/**
