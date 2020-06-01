@@ -48,3 +48,6 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.3.0
 
 RUN npm i markdown-spellcheck -g
+
+RUN curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+

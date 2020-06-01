@@ -50,11 +50,9 @@ TBD
 
 ## Docs
 
-**starting**
-```bash
-mkdocs serve
-```
-and open [127.0.0.1:8000](http://127.0.0.1:8000/)
+If you use the [VSCode DevContainer](#visual-studio-code-devcontainer), the [mkdocs](https://www.mkdocs.org/) container will be started automatical, as a sidecar container.  
+At the Development you ca access the current state from the Documentation at [127.0.0.1:8000](http://127.0.0.1:8000/).
+
 
 ## Development Shortcuts
 

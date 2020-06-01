@@ -5,7 +5,8 @@
     ],
     "service": "vscode",
     "runServices": [
-        "vscode"
+        "vscode",
+        "mkdocs"
     ],
     "mounts": [
         "source=terraform-harbor-vol,target=/home/vscode/.vscode-server/extensions,type=volume",
