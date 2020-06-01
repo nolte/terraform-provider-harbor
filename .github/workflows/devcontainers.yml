@@ -5,13 +5,13 @@ on:
     types: [opened, synchronize]
     paths:
       - "Dockerfile**"
-      - .github/.devcontainer/devcontainers.yml
+      - .devcontainer/devcontainers.yml
   push:
     branches:
       - "**"
     paths:
       - "Dockerfile**"
-      - .github/.devcontainer/devcontainers.yml
+      - .devcontainer/devcontainers.yml
 
 jobs:
   devcontainers-check:
