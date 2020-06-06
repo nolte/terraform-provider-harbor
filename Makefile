@@ -27,32 +27,64 @@ install:
 build: generate test compile
 
 fmt:
+	echo "==> Formatting files with fmt..."
 	gofmt -w -s $(GOFMT_FILES)
 
-test: lint fmtcheck vet
+test: goLint scriptsLint vet
 	go test $(TEST)
 
-testacc: fmtcheck vet
-	TF_ACC=1 go test -timeout 20m $(TEST) -v $(TESTARGS)
+
 
 fmtcheck:
-	lineCount=$(shell gofmt -l -s $(GOFMT_FILES) | wc -l | tr -d ' ') && exit $$lineCount
+	scripts/build-03-go-gofmtcheck.sh
 
 vet:
+	echo "==> Checking code with vet..."
 	go vet ./...
 
-lint:
-	golangci-lint run
+goLint:
+	scripts/build-03-go-gofmtcheck.sh
+	scripts/build-04-go-errorchecks.sh
+	scripts/build-05-go-golint.sh
 
-check-scripts:
+gosec:
+	echo "==> Checking code with gosec..."
+	# TODO Remove unused files from generated sources !!!
+	gosec -exclude-dir=gen/harborctl/client/scanners ./...
+
+scriptsLint:
+	echo "==> Checking scripts with shellcheck..."
 	shellcheck scripts/*.sh
-	shellcheck scripts/test/bats/build/*.bats
 
 e2e_prepare:
 	scripts/tst-00-prepare-kind.sh
-	scripts/tst-01-prepare-harbor.sh
 
-e2e_cleanup:
-	kind delete cluster
+
+e2e_prepare_harbor_v1:
+	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.3.2"
+
+e2e_prepare_harbor_v2:
+	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.4.0"
+
+e2e_clean_cluster:
+	kind delete cluster || true
+
+e2e_clean_harbor:
+	helm delete tf-harbor-test -n harbor
+	sleep 10
+
+e2e_test_v2:
+	scripts/tst-15-execute-go-acc.sh "/api/v2.0"
+
+e2e_test_v1:
+	scripts/tst-15-execute-go-acc.sh "/api"
+
+e2e_test_classic:
+	bats scripts/test/bats
+
+e2e_full_run: e2e_clean_cluster e2e_prepare e2e_prepare_harbor_v2 e2e_test_v2 e2e_clean_harbor e2e_prepare_harbor_v1 e2e_test_v1 e2e_clean_cluster
+# e2e_prepare e2e_prepare_harbor_v1 e2e_test e2e_cleanup
+spellingCheck:
+	mdspell '**/*.md' '!**/node_modules/**/*.md'
 
 .PHONY: default install

@@ -19,7 +19,7 @@ resource "harbor_registry" "helmhub" {
 
 The following arguments are supported:
 
-* `name` - (Required) The of the project that will be created in harbor.
+* `name` - (Required) of the project that will be created in harbor.
 
 * `url` - (Required) The registry remote endpoint, like `https://hub.docker.com`.
 
@@ -31,7 +31,7 @@ The following arguments are supported:
 
 ## Attributes Reference
 
-In addition to all argument, the folloing attributes are exported:
+In addition to all argument, the following attributes are exported:
 
 * `id` - The id of the registry with harbor.
 

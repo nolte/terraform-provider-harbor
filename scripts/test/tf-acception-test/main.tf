@@ -1,18 +1,5 @@
-
-variable "harbor_endpoint" {
-  default = "demo.goharbor.io"
-}
-variable "harbor_base_path" {
-  default = "/api/v2.0"
-}
-
 provider "harbor" {
-  host     = var.harbor_endpoint
-  schema   = "https"
-  insecure = true
-  basepath = var.harbor_base_path
-  username = "admin"
-  password = "Harbor12345"
+  # configured by EnvVars for test
 }
 
 resource "harbor_project" "main" {
@@ -32,79 +19,51 @@ output "harbor_robot_account_token" {
   value = harbor_robot_account.master_robot.token
 }
 
-#
 resource "harbor_registry" "dockerhub" {
-  name        = "dockerhub"
+  name        = "dockerhub-acc-classic"
   url         = "https://hub.docker.com"
   type        = "docker-hub"
   description = "Docker Hub Registry"
   insecure    = false
 }
-#
+
 resource "harbor_registry" "helmhub" {
-  name        = "helmhub"
+  name        = "helmhub-acc-classic"
   url         = "https://hub.helm.sh"
   type        = "helm-hub"
   description = "Helm Hub Registry"
   insecure    = false
 }
-#
+
 resource "harbor_label" "main" {
-  name        = "testlabel"
+  name        = "testlabel-acc-classic"
   description = "Test Label"
   color       = "#61717D"
   scope       = "g"
 }
 
 resource "harbor_label" "project_label" {
-  name        = "projectlabel"
+  name        = "projectlabel-acc-classic"
   description = "Test Label for Project"
   color       = "#333333"
   scope       = "p"
   project_id  = harbor_project.main.id
 }
 
-data "harbor_label" "label_by_name_and_scope" {
-  name  = harbor_label.main.name
-  scope = harbor_label.main.scope
+resource "harbor_replication" "pull_helm_chart" {
+  name                        = "helm-prometheus-operator-acc-classic"
+  description                 = "Prometheus Operator Replica ACC Classic"
+  source_registry_id          = harbor_registry.helmhub.id
+  source_registry_filter_name = "stable/prometheus-operator"
+  source_registry_filter_tag  = "**"
+  destination_namespace       = harbor_project.main.name
 }
 
-data "harbor_label" "label_by_id" {
-  id = harbor_label.main.id
-}
-output "label_by_id_name" {
-  value = data.harbor_label.label_by_id.name
-}
-output "label_by_name_and_scope_name" {
-  value = data.harbor_label.label_by_name_and_scope.name
-}
-# registry lookups
-data "harbor_registry" "registry_by_id" {
-  id = harbor_registry.dockerhub.id
-}
-output "registry_by_id_name" {
-  value = data.harbor_registry.registry_by_id.name
-}
-
-data "harbor_registry" "registry_by_name" {
-  name = harbor_registry.dockerhub.name
-}
-output "registry_by_name_name" {
-  value = data.harbor_registry.registry_by_name.name
-}
-
-# project lookups
-
-data "harbor_project" "by_id" {
-  id = harbor_project.main.id
-}
-output "project_by_id_name" {
-  value = data.harbor_project.by_id.name
-}
-
-data "harbor_project" "by_name" {
-  name = harbor_project.main.name
-}
-output "project_by_name_name" {
-  value = data.harbor_project.by_name.name
+resource "harbor_replication" "push_helm_chart" {
+  name                        = "docker-push-acc-classic"
+  description                 = "Push Docker Replica ACC Classic"
+  destination_registry_id     = harbor_registry.dockerhub.id
+  source_registry_filter_name = "${harbor_project.main.name}/vscode-devcontainers/k8s-operator"
+  source_registry_filter_tag  = "**"
+  destination_namespace       = "notexisting"
 }

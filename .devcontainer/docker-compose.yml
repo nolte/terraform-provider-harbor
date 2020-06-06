@@ -1,6 +1,15 @@
 version: "3.7"
 
 services:
+  mkdocs:
+    build:
+      context: .
+      dockerfile: DockerfileDocs
+    volumes:
+      - ../:/workspace:ro
+    entrypoint: mkdocs serve -a 0.0.0.0:8000
+    ports:
+      - 8000:8000
   vscode:
     build: .
     # image: docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest

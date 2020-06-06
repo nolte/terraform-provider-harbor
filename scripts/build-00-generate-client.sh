@@ -26,7 +26,7 @@ if test -f "$GENERATED_MERGED_SWAGGER"; then
     rm "${GENERATED_MERGED_SWAGGER}"
 fi
 
-
+mkdir -p "${projectBase}/gen"
 
 swagger-merger \
     -o "${GENERATED_MERGED_SWAGGER}" \

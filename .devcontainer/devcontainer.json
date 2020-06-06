@@ -5,7 +5,8 @@
     ],
     "service": "vscode",
     "runServices": [
-        "vscode"
+        "vscode",
+        "mkdocs"
     ],
     "mounts": [
         "source=terraform-harbor-vol,target=/home/vscode/.vscode-server/extensions,type=volume",
@@ -22,6 +23,7 @@
         "redhat.vscode-yaml", // Kubernetes and Kedge syntax support
         // Go
         "ms-vscode.go",
+        "hbenl.vscode-test-explorer",
         "ethan-reesor.vscode-go-test-adapter",
         // Console
         "IBM.output-colorizer",
@@ -45,7 +47,7 @@
         // markdown
         "docsmsft.docs-article-templates",
         "docsmsft.docs-markdown",
-        "mauve.terraform",
+        "HashiCorp.terraform",
         "ms-kubernetes-tools.kind-vscode",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "jetmartin.bats",
@@ -64,6 +66,7 @@
         "[makefile]": {
             "editor.insertSpaces": false,
             "editor.detectIndentation": false
-        }
+        },
+        "go.useLanguageServer": true,
     }
 }

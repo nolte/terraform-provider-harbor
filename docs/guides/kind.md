@@ -1,82 +1,57 @@
 # E2E Tests With Kind
 
-For Quick and Easy Local Development it is Recommendet to use a Vanilla Harbor installation.
-All releavant make goals are prefixed with ```e2s_*```.
+For Quick and Easy Local Development it is Recommended to use a Vanilla [Harbor]() installation. The Local Test environment will be used the [Helm Chart](https://helm.sh/) from [goharbor/harbor-helm](https://github.com/goharbor/harbor-helm/releases).  
 
-## Kind Precondition
+All relevant `Makefile` goals are prefixed with ```e2s_*```.
 
-### Manuel
+| Goal                    | Description                                                                         |
+|-------------------------|-------------------------------------------------------------------------------------|
+| `e2e_prepare`           | Configure the Kind based Env, and install the latest version from the Harbor Chart. |
+| `e2e_prepare_harbor_v1` | Install a Harbor v1 to the Kind Cluster                                             |
+| `e2e_prepare_harbor_v2` | Install a Harbor v2 to the Kind Cluster                                             |
+| `e2e_test_v1`           | Starting the go based tests again a Harbor V1 Deployment                            |
+| `e2e_test_v2`           | Starting the go based tests again a Harbor V2 Deployment                            |
+| `e2e_test_classic`      | Remove the current kind cluster.                                                    |
+| `e2e_clean_harbor`      | Delete the Harbor helm chart from kind cluster                                      |
+| `e2e_clean_cluster`     | Remove the current kind cluster.                                                    |
 
-Starting the Kind Cluster with [Ingress Support](https://kind.sigs.k8s.io/docs/user/ingress/).
+The same flavore of tests will be integrated into the [CI/CD](/guides/development/#cicd) Process.
 
+
+**Befor you execute `e2e_prepare` ensure that the `INGRESS_DOMAIN` to your local host** (By default we use the Docker Bridge Network Interface like `172-17-0-1.sslip.io`.)
+
+*example without change any files*
 ```bash
-
-COPY
-cat <<EOF | kind create cluster --config=-
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-EOF
+./scripts/tst-00-prepare-kind.sh "2.1.0"
+./scripts/tst-01-prepare-harbor.sh "10-42-0-100.sslip.io" "1.2.0"
 ```
 
-Using [Nginx](https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx) as Ingress Controller.
+As wildcard DNS we use a service like [sslip.io](https://sslip.io/).  
+The scripts will be starting the [Kind](https://kind.sigs.k8s.io) Cluster with [Ingress Support](https://kind.sigs.k8s.io/docs/user/ingress/), as Ingress Controller we use [Nginx](https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx) .
+
+The [Kind](https://kind.sigs.k8s.io) installation is part of the used [Visual Studio Code Devcontainer](/guides/development/#visual-studio-code-devcontainer)
+
+## Go Based Tests
+
+For quick response and tests near the Code we use [Terrafomr Go Acceptance Tests](https://www.terraform.io/docs/extend/testing/acceptance-tests/index.html).
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ingress-nginx-2.2.0/deploy/static/provider/kind/deploy.yaml
+make e2e_test
 ```
 
-**or for a existing Cluster**
-kind export kubeconfig
+Tests will be matchs by the file name prefix `*_test.go`.
+
+## Terraform File Based Tests
+
+The Classic Terraform File based tests are located at `scripts/test/tf-acception-test`.
 
 ```bash
-kubectl create ns harbor
-```
+# compile the provider
+make compile
 
-#### Install the Harbor Chart
-
-Install the Helm Chart from [goharbor/harbor-helm](https://github.com/goharbor/harbor-helm).
-
-```bash
-# add helm chart repo (always done if you use the devcontainer)
-helm repo add harbor https://helm.goharbor.io
-
-export INGRESSDOMAIN=192-168-178-51.sslip.io
-
-helm upgrade -i tf-harbor-test harbor/harbor \
-    -n harbor \
-    --set expose.ingress.hosts.core=harbor.${INGRESSDOMAIN},expose.ingress.hosts.notary=notary.${INGRESSDOMAIN},externalURL=https://harbor.${INGRESSDOMAIN}
-
-
-# delete the chart
-helm delete -n harbor tf-harbor-test
-```
-
-### Using Make Goal
-
-```sh
-# create the kind cluster with ingress and install the harbor chart
-make e2e_prepare
-
-# delete the kind cluster
-make e2e_cleanup
-```
-
-## Update the local Provider
-
-```bash
+# copy provider to local ~/.terraform.d/plugins/linux_amd64 folder
 make install
+
+# start the tests
+make e2e_test_classic
 ```

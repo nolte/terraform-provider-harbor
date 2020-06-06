@@ -2,6 +2,7 @@ package client
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 
 	httptransport "github.com/go-openapi/runtime/client"
@@ -13,11 +14,14 @@ import (
 // NewClient creates common settings.
 func NewClient(host string, username string, password string,
 	insecure bool, basepath string, schema string) *apiclient.Harbor {
+	log.Printf("Create Harbor Api HTTP Client for %s:XXXX@%s insecure %v baspath: %s", username, host, insecure, basepath)
+
 	basicAuth := httptransport.BasicAuth(username, password)
 
 	// allow skipping ssl
+	// #nosec
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
-		InsecureSkipVerify: insecure, // nolint: gosec
+		InsecureSkipVerify: insecure,
 	}
 
 	apiSchemes := make([]string, 1)

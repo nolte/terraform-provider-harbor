@@ -1,25 +1,21 @@
 # Harbor Provider
 
-The ```terraform-provider-harbor``` is used to configure an instance of [Harbor](https://goharbor.io) in version `1.10.2`
+The ```terraform-provider-harbor``` is used to configure an instance of [Harbor](https://goharbor.io).
 
 This is original based on the Work from [BESTSELLER/terraform-harbor-provider](https://github.com/BESTSELLER/terraform-harbor-provider), but with some incompatible changes, like the access to the Harbor API.
 
-![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)
-![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)
+[![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Classic+CI%2FCD%22)
+[![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Release+Flow%22)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor?ref=badge_shield)
 
 ## Project Status
 
-**At the Moment this Project ist heavy under Construction, it is not recommendet for Production use, ~~or active Forking~~ !**
+**At the Moment this Project is heavy under Construction, it is not recommended for Production use, ~~or active Forking~~ !**
 
-**Planed Branking Changes:**
+**Planed Braking Changes:**
 
 - [x] [Rename provider](https://github.com/nolte/terraform-provider-harbor/issues/3) attributes, like url etc.
-- [x] Planed Git Rebase for remove the Ugly CI/CD Test Commit
-  - [x] Finazilize the frist version of common ci workflow
-  - [x] Finazilize the frist version of release workflow
-- [x] use a ```develop``` branch as default
-- [x] cleanup unused stuff from starting development
+- [ ] [Refectore Config Auth](https://github.com/nolte/terraform-provider-harbor/issues/10) attributes, like ldap etc.
 - [ ] Use First Stable version from the Devcontainer [docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest](https://github.com/nolte/vscode-devcontainers) _(not exists at the moment)_
 
 ## Docs
@@ -52,6 +48,8 @@ For Easy development use [Visual Studio Code DevContainer](https://code.visualst
 make
 ```
 
+After starting the VisualStudio Code DevContainer, you can access the Documentation at [localhost:8000](http://localhost:8000).
+
 ### Precondition Tools
 
 For full building and testing you need the following tools on our machine.
@@ -70,12 +68,11 @@ For full building and testing you need the following tools on our machine.
 
 ## Supported Versions
 
-Tested with Harbor v2.1.0 and v1.10.2.
+Tested with Harbor v1.10.2, v2.0.0 and v2.1.0.
 
 ## Tests
 
 For the End To End Tests we use a local [kind](https://kind.sigs.k8s.io) _(KubernetesInDocker)_ Cluster.
-
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnolte%2Fterraform-provider-harbor?ref=badge_large)

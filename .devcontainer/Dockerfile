@@ -11,20 +11,20 @@ COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/shellcheck  /usr/local/bin/shellcheck
 
 RUN curl -sSL -k https://github.com/bats-core/bats-core/archive/v${BATS_VERSION}.tar.gz -o /tmp/bats.tgz \
-	&& tar -zxf /tmp/bats.tgz -C /tmp \
-	&& /bin/bash /tmp/bats-core-${BATS_VERSION}/install.sh /usr/local
+    && tar -zxf /tmp/bats.tgz -C /tmp \
+    && /bin/bash /tmp/bats-core-${BATS_VERSION}/install.sh /usr/local
 
 RUN curl -sSL -k https://github.com/bflad/tfproviderdocs/releases/download/v0.6.0/tfproviderdocs_0.6.0_linux_amd64.tar.gz -o /tmp/tfproviderdocs.tgz \
-	&& tar -zxf /tmp/tfproviderdocs.tgz -C /tmp \
-	&& mv /tmp/tfproviderdocs /usr/local/bin/
+    && tar -zxf /tmp/tfproviderdocs.tgz -C /tmp \
+    && mv /tmp/tfproviderdocs /usr/local/bin/
 
 
 RUN apk add --update-cache \
-	nodejs npm \
-	&& rm -rf /var/cache/apk/*
+    nodejs npm \
+    && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /go/src && chown -R ${USER_UID}:${USER_GID} /go/src \
-	&& mkdir -p /go/pkg && chown -R ${USER_UID}:${USER_GID} /go/pkg
+    && mkdir -p /go/pkg && chown -R ${USER_UID}:${USER_GID} /go/pkg
 
 USER ${USERNAME}
 
@@ -42,3 +42,13 @@ RUN npm install swagger-merger --user -g
 
 RUN helm repo add harbor https://helm.goharbor.io
 RUN npm install swagger-merger -g
+
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
+
+RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.3.0
+
+RUN npm i markdown-spellcheck -g
+
+RUN curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+RUN npm i madr adr-log -g
