@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 #
-# This can be also run with `` 
+# This can be also run with ``
 # ./tst-01-prepare-harbor.sh "10-42-0-100.sslip.io" "1.2.0"
 
 set -e
 set -o pipefail
 set -o nounset
 
-INGRESS_DOMAIN=${1:-"192-168-178-51.sslip.io"}
+INGRESS_DOMAIN=${1:-"172-17-0-1.sslip.io"}
 HARBOR_CHART_VERSION=${2:-"1.3.2"}
 
 kubectl create ns harbor || true
 
-helm repo add harbor https://helm.goharbor.io 
+helm repo add harbor https://helm.goharbor.io
 
 helm upgrade -i tf-harbor-test harbor/harbor \
     --version "$HARBOR_CHART_VERSION" \

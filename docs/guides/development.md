@@ -48,13 +48,38 @@ Each Release will be start from the ```develop``` branch.
 TBD
 ```
 
-## Docs
+## Build
 
-**starting**
+The Build scripted at the moment splitted into the GitHub Workflow Stuff and a combination of Makefiles and Shell Scripts.  
+The ```Makefile`` should be use for the local development, permanten using the full GitHub Workflows needs a lot of time.
+
+
+### CI/CD
+
+For local usage the GitHub Actions we use the [nektos/act](https://github.com/nektos/act) Project.
+The first local execute will be take some time for pulling the large [nektos/act-environments-ubuntu:18.04](https://hub.docker.com/r/nektos/act-environments-ubuntu/tags) image.
+
+| *Workflow Job*                                                                                                                                                                                                                          | *Job*                                        | *Local* | *Description*                                                                                                      |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------|
+| [![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Classic+CI%2FCD%22)                           | `build`                                      | 👍       | This is the Classic Build job with Static Tests, and compile the provider.                                         |
+| [![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Release+Flow%22)                                | `releaseBuild`                               | 👎       | This Job are used for attatch Release Assets to a existing GHRelease                                               |
+| [![Acception Tests CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Acception%20Tests%20CI/CD/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Acception+Tests+CI%2FCD%22) | `acc`                                        | 👍       | Starting a full run of Terraform Integration Tests, with starting a local kind cluster and deploy a `v2` Harbor.   |
+| [![shellcheck](https://github.com/nolte/terraform-provider-harbor/workflows/shellcheck/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3Ashellcheck)                                              | `shellcheck-check`                           | 👍       | Check the Schell scripts for problems.                                                                             |
+| [![devcontainers](https://github.com/nolte/terraform-provider-harbor/workflows/devcontainers/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3Adevcontainers)                                     | `devcontainers-check`,`docscontainers-check` | 👎       | Simple build job for the both Dev Containers (VSCode and mkdocs)                                                   |
+
 ```bash
-mkdocs serve
+# call job
+act -j <job> -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
+
+# example calling the acception tests
+act -j acc -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
 ```
-and open [127.0.0.1:8000](http://127.0.0.1:8000/)
+
+### Docs
+
+If you use the [VSCode DevContainer](#visual-studio-code-devcontainer), the [mkdocs](https://www.mkdocs.org/) container will be started automatical, as a sidecar container.  
+At the Development you ca access the current state from the Documentation at [127.0.0.1:8000](http://127.0.0.1:8000/).
+
 
 ## Development Shortcuts
 

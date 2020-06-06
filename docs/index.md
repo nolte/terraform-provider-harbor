@@ -42,17 +42,17 @@ In addition to [generic `provider` arguments](https://www.terraform.io/docs/conf
 (e.g. `alias` and `version`), the following arguments are supported in the Harbor
  `provider` block:
 
-* `host` - (Required) Hostname from the [Harbor](https://goharbor.io) Service. like _demo.goharbor.io_
+* `host` - (Required) Hostname from the [Harbor](https://goharbor.io) Service. like _demo.goharbor.io_, can also be specified with the `HARBOR_ENDPOINT` environment variable.
 
-* `username` - (Required) Username for authorize at the harbor.
+* `username` - (Required) Username for authorize at the harbor, can also be specified with the `HARBOR_USERNAME` environment variable.
 
-* `password` - (Required) Password from given user.
+* `password` - (Required) Password from given user, can also be specified with the `HARBOR_PASSWORD` environment variable.
 
 * `schema` - (Optional) Set Used http Schema, possible values are: ```https,http```. Default: ```https```
 
-* `insecure` - (Optional) Verify Https Certificates. Default: ```false```
+* `insecure` - (Optional) Verify Https Certificates. Default: ```false```, can also be specified with the `HARBOR_INSECURE` environment variable.
 
-* `basepath` - (Optional) The Harbor Api basepath, for example use ```/api``` for default HarborV1 and ```/api/v2``` for Harbor V2 Deployments. Default: ```/api```
+* `basepath` - (Optional) The Harbor Api basepath, for example use ```/api``` for default HarborV1 and ```/api/v2.0``` for Harbor V2 Deployments. Default: ```/api```, can also be specified with the `HARBOR_BASEPATH` environment variable.
 
 
 ## Install the Custom Provider

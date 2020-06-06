@@ -32,16 +32,14 @@ func Provider() terraform.ResourceProvider {
 				Default:  "https",
 			},
 			"insecure": {
-				Type:     schema.TypeString,
-				Optional: true,
-				//Default:     false,
+				Type:        schema.TypeString,
+				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("HARBOR_INSECURE", "false"),
 			},
 			"basepath": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "/api",
-				DefaultFunc: schema.EnvDefaultFunc("HARBOR_BASEPATH", nil),
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("HARBOR_BASEPATH", "/api"),
 			},
 		},
 

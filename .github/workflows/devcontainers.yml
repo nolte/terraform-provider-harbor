@@ -1,0 +1,39 @@
+name: devcontainers
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - ".devcontainer/Dockerfile**"
+      - .github/workflows/devcontainers.yml
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".devcontainer/Dockerfile**"
+      - .github/workflows/devcontainers.yml
+
+jobs:
+  devcontainers-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: buid vscode dev image
+        run: |
+          cd .devcontainer
+          docker build -f Dockerfile .
+  docscontainers-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: buid docs image
+        run: |
+          cd .devcontainer
+          docker build -f DockerfileDocs .
