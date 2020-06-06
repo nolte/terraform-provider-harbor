@@ -1,5 +1,7 @@
 #!/usr/bin/env bats
 cd scripts/test/tf-acception-test || exit
+
+# used for terraform provider config
 export HARBOR_ENDPOINT=$(kubectl get Ingress tf-harbor-test-harbor-ingress -n harbor -ojson | jq '.spec.rules[].host' -r | grep harbor)
 export HARBOR_USERNAME=admin
 export HARBOR_PASSWORD=Harbor12345

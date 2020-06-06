@@ -1,17 +1,6 @@
 
-variable "harbor_endpoint" {
-}
-variable "harbor_base_path" {
-  default = "/api"
-}
-
 provider "harbor" {
-  host     = var.harbor_endpoint
-  schema   = "https"
-  insecure = true
-  basepath = var.harbor_base_path
-  username = "admin"
-  password = "Harbor12345"
+  schema = "https"
 }
 
 resource "harbor_config_email" "conf_email" {
