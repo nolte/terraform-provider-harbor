@@ -51,3 +51,4 @@ RUN npm i markdown-spellcheck -g
 
 RUN curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 
+RUN npm i madr adr-log -g

@@ -1,20 +1,24 @@
 # E2E Tests With Kind
 
-For Quick and Easy Local Development it is Recommended to use a Vanilla Harbor installation.
-All relevant make goals are prefixed with ```e2s_*```.
+For Quick and Easy Local Development it is Recommended to use a Vanilla [Harbor]() installation. The Local Test environment will be used the [Helm Chart](https://helm.sh/) from [goharbor/harbor-helm](https://github.com/goharbor/harbor-helm/releases).  
 
-Makefile Goals
+All relevant `Makefile` goals are prefixed with ```e2s_*```.
 
-| Goal          | Description                                                                         |
-|---------------|-------------------------------------------------------------------------------------|
-| `e2e_prepare` | Configure the Kind based Env, and install the latest version from the Harbor Chart. |
-| `e2e_test`    | Starting the go based tests again a Harbor Deployment                               |
-| `e2e_test_classic` | Remove the current kind cluster.                                                    |
-| `e2e_cleanup` | Remove the current kind cluster.                                                    |
+| Goal                    | Description                                                                         |
+|-------------------------|-------------------------------------------------------------------------------------|
+| `e2e_prepare`           | Configure the Kind based Env, and install the latest version from the Harbor Chart. |
+| `e2e_prepare_harbor_v1` | Install a Harbor v1 to the Kind Cluster                                             |
+| `e2e_prepare_harbor_v2` | Install a Harbor v2 to the Kind Cluster                                             |
+| `e2e_test_v1`           | Starting the go based tests again a Harbor V1 Deployment                            |
+| `e2e_test_v2`           | Starting the go based tests again a Harbor V2 Deployment                            |
+| `e2e_test_classic`      | Remove the current kind cluster.                                                    |
+| `e2e_clean_harbor`      | Delete the Harbor helm chart from kind cluster                                      |
+| `e2e_clean_cluster`     | Remove the current kind cluster.                                                    |
+
+The same flavore of tests will be integrated into the [CI/CD](/guides/development/#cicd) Process.
 
 
-
-**Befor you execute `e2e_prepare` ensure that the `INGRESS_DOMAIN` default ar configured to your local host**
+**Befor you execute `e2e_prepare` ensure that the `INGRESS_DOMAIN` to your local host** (By default we use the Docker Bridge Network Interface like `172-17-0-1.sslip.io`.)
 
 *example without change any files*
 ```bash
@@ -43,7 +47,7 @@ The Classic Terraform File based tests are located at `scripts/test/tf-acception
 
 ```bash
 # compile the provider
-make compile 
+make compile
 
 # copy provider to local ~/.terraform.d/plugins/linux_amd64 folder
 make install

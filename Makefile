@@ -61,10 +61,10 @@ e2e_prepare:
 
 
 e2e_prepare_harbor_v1:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-2.sslip.io" "1.3.2"
+	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.3.2"
 
 e2e_prepare_harbor_v2:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-2.sslip.io" "1.4.0"
+	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.4.0"
 
 e2e_clean_cluster:
 	kind delete cluster || true

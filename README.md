@@ -1,11 +1,13 @@
 # Harbor Provider
 
-The ```terraform-provider-harbor``` is used to configure an instance of [Harbor](https://goharbor.io) in version `1.10.2`
+The ```terraform-provider-harbor``` is used to configure an instance of [Harbor](https://goharbor.io).
 
 This is original based on the Work from [BESTSELLER/terraform-harbor-provider](https://github.com/BESTSELLER/terraform-harbor-provider), but with some incompatible changes, like the access to the Harbor API.
 
-![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)
-![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)
+[![Classic CI/CD](https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Classic+CI%2FCD%22)
+[![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Release+Flow%22)
+
+
 
 ## Project Status
 
@@ -47,6 +49,8 @@ For Easy development use [Visual Studio Code DevContainer](https://code.visualst
 make
 ```
 
+After starting the VisualStudio Code DevContainer, you can access the Documentation at [localhost:8000](http://localhost:8000).
+
 ### Precondition Tools
 
 For full building and testing you need the following tools on our machine.
@@ -65,8 +69,4 @@ For full building and testing you need the following tools on our machine.
 
 ## Supported Versions
 
-Tested with Harbor v2.1.0 and v1.10.2.
-
-## Tests
-
-For the End To End Tests we use a local [kind](https://kind.sigs.k8s.io) _(KubernetesInDocker)_ Cluster.
+Tested with Harbor v1.10.2, v2.0.0 and v2.1.0.
