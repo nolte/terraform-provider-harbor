@@ -8,7 +8,7 @@ set -o pipefail
 set -o nounset
 
 INGRESS_DOMAIN=${1:-"192-168-178-51.sslip.io"}
-HARBOR_CHART_VERSION=${2:-"1.3.2"}
+HARBOR_CHART_VERSION=${2:-"1.4.0"}
 
 kubectl create ns harbor || true
 
