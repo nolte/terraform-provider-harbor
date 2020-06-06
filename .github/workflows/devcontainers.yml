@@ -4,14 +4,14 @@ on:
   pull_request:
     types: [opened, synchronize]
     paths:
-      - "Dockerfile**"
-      - .devcontainer/devcontainers.yml
+      - ".devcontainer/Dockerfile**"
+      - .github/workflows/devcontainers.yml
   push:
     branches:
       - "**"
     paths:
-      - "Dockerfile**"
-      - .devcontainer/devcontainers.yml
+      - ".devcontainer/Dockerfile**"
+      - .github/workflows/devcontainers.yml
 
 jobs:
   devcontainers-check:
