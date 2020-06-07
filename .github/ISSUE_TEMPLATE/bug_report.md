@@ -1,31 +1,57 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: "\U0001F41B Bug Report"
+about: "If something isn't working as expected \U0001F914."
 title: ''
-labels: 'bug'
-assignees: ''
+labels: bug
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+<!---
+Hi there,
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+Thank you for opening an issue. Please note that we try to keep the Terraform issue tracker reserved for bug reports and feature requests. For general usage questions, please see: https://www.terraform.io/community.html.
+--->
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Terraform Version and Provider Version
+<!--- Run `terraform -v` to show the version. If you are not running the latest version of Terraform, please upgrade because your issue may have already been fixed. --->
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Version [e.g. 22]
+### Affected Resource(s)
+<!-- Please list the resources as a list, for example:
+- opc_instance
+- opc_storage_volume
 
-**Additional context**
-Add any other context about the problem here.
+If this issue appears to affect multiple resources, it may be an issue with Terraform's core, so please mention this. -->
+
+### Terraform Configuration Files
+```hcl
+# Copy-paste your Terraform configurations here.
+```
+
+### Debug Output
+<!--Please provider a link to a GitHub Gist containing the complete debug output: https://www.terraform.io/docs/internals/debugging.html. Please do NOT paste the debug output in the issue; just paste a link to the Gist.-->
+
+### Panic Output
+<!--If Terraform produced a panic, please provide a link to a GitHub Gist containing the output of the `crash.log`.-->
+
+### Expected Behavior
+What should have happened?
+
+### Actual Behavior
+What actually happened?
+
+### Steps to Reproduce
+<!-- Please list the steps required to reproduce the issue, for example:
+1. `terraform apply` -->
+
+### Important Factoids
+<!-- Are there anything atypical about your accounts that we should know? For example: Running in EC2 Classic? Custom version of OpenStack? Tight ACLs?-->
+
+### References
+<!--Are there any other GitHub issues (open or closed) or Pull Requests that should be linked here? For example:-->
+- GH-1234
+
+### Community Note
+<!--- Please keep this note for the community --->
+* Please vote on this issue by adding a 👍 [reaction](https://blog.github.com/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/) to the original issue to help the community and maintainers prioritize this request
+* If you are interested in working on this issue or have submitted a pull request, please leave a comment
