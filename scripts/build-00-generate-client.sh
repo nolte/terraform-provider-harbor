@@ -30,7 +30,6 @@ mkdir -p "${projectBase}/gen"
 
 swagger-merger \
     -o "${GENERATED_MERGED_SWAGGER}" \
-    -i "${projectBase}/scripts/swagger-specs/v1-swagger-extra-fields.json" \
     -i "${projectBase}/scripts/swagger-specs/v2-swagger-original.json"
 
 mkdir -p "${GENERATED_SOURCES_TARGET}"

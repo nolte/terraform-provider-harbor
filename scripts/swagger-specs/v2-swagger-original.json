@@ -6995,6 +6995,10 @@
         "prevent_vul": {
           "type": "string",
           "description": "Whether prevent the vulnerable images from running. The valid values are \"true\", \"false\"."
+        },
+        "retention_id": {
+          "type": "string",
+	  "description": "Retention policy id associated to the project if any"
         }
       }
     },
