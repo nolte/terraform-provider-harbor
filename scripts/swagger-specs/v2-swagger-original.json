@@ -5470,6 +5470,10 @@
           "description": "The client id of the OIDC.",
           "$ref": "#/definitions/StringConfigItem"
         },
+        "oidc_groups_claim": {
+          "description": "The client Scope Claim of the OIDC.",
+          "$ref": "#/definitions/StringConfigItem"
+        },
         "ldap_group_base_dn": {
           "description": "The base DN to search LDAP group.",
           "$ref": "#/definitions/StringConfigItem"
@@ -7680,6 +7684,10 @@
           "type": "string",
           "description": "The username for authenticate against SMTP server."
         },
+        "email_password": {
+          "type": "string",
+          "description": "The password for authenticate against SMTP server."
+        },
         "oidc_endpoint": {
           "type": "string",
           "description": "The URL of an OIDC-complaint server, must start with 'https://'."
@@ -7687,6 +7695,10 @@
         "oidc_client_secret": {
           "type": "string",
           "description": "The client secret of the OIDC."
+        },
+        "oidc_groups_claim": {
+          "description": "The client Scope Claim of the OIDC.",
+          "type": "string"
         },
         "ldap_scope": {
           "type": "integer",
