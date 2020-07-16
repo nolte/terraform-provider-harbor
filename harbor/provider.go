@@ -44,6 +44,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"harbor_project_member":   resourceProjectMember(),
 			"harbor_project":          resourceProject(),
 			"harbor_registry":         resourceRegistry(),
 			"harbor_config_email":     resourceConfigEmail(),
@@ -53,7 +54,8 @@ func Provider() terraform.ResourceProvider {
 			"harbor_tasks":            resourceTasks(),
 			"harbor_label":            resourceLabel(),
 			"harbor_replication":      resourceReplication(),
-			"harbor_retention_policy": resourceRetentionPolicy(),
+			"harbor_usergroup":        resourceUsergroup(),
+      "harbor_retention_policy": resourceRetentionPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"harbor_project":  dataSourceProject(),
