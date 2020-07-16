@@ -55,7 +55,7 @@ func Provider() terraform.ResourceProvider {
 			"harbor_label":            resourceLabel(),
 			"harbor_replication":      resourceReplication(),
 			"harbor_usergroup":        resourceUsergroup(),
-      "harbor_retention_policy": resourceRetentionPolicy(),
+			"harbor_retention_policy": resourceRetentionPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"harbor_project":  dataSourceProject(),
