@@ -156,13 +156,16 @@ func setProjectSchema(data *schema.ResourceData, project *models.Project) error 
 		return err
 	}
 
-	autoScan, err := strconv.ParseBool(project.Metadata.AutoScan)
-	if err != nil {
-		return err
-	}
+	// prevent errors where auto_scan is unset
+	if project.Metadata.AutoScan != "" {
+		autoScan, err := strconv.ParseBool(project.Metadata.AutoScan)
+		if err != nil {
+			return err
+		}
 
-	if err := data.Set("vulnerability_scanning", autoScan); err != nil {
-		return err
+		if err := data.Set("vulnerability_scanning", autoScan); err != nil {
+			return err
+		}
 	}
 
 	public, err := strconv.ParseBool(project.Metadata.Public)
