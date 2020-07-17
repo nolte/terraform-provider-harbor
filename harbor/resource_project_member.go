@@ -99,7 +99,7 @@ func resourceProjectMemberCreate(d *schema.ResourceData, m interface{}) error {
 	)
 
 	if err != nil {
-		return fmt.Errorf("Project member creation failed")
+		return fmt.Errorf("project member creation failed")
 	}
 
 	listResp, err := apiClient.Products.GetProjectsProjectIDMembers(
@@ -109,7 +109,7 @@ func resourceProjectMemberCreate(d *schema.ResourceData, m interface{}) error {
 	)
 
 	if err != nil {
-		return fmt.Errorf("Project member loading failed")
+		return fmt.Errorf("project member loading failed")
 	}
 
 	var foundMember *models.ProjectMemberEntity
@@ -124,21 +124,38 @@ func resourceProjectMemberCreate(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf("could not find member %s", groupName)
 	}
 
-	if err := resourceProjectMemberRefresh(d, foundMember); err != nil {
+	groupRef, err := apiClient.Products.GetUsergroupsGroupID(
+		products.NewGetUsergroupsGroupIDParams().
+			WithGroupID(foundMember.EntityID),
+		nil,
+	)
+
+	if err != nil {
+		return fmt.Errorf("could not find member %s reference, error %v", groupName, err)
+	}
+
+	if err := resourceProjectMemberRefresh(d, foundMember, groupRef.Payload.GroupType); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func resourceProjectMemberRefresh(d *schema.ResourceData, r *models.ProjectMemberEntity) error {
+func resourceProjectMemberRefresh(d *schema.ResourceData, r *models.ProjectMemberEntity, groupType int64) error {
 	d.SetId(fmt.Sprintf("%d/%d", r.ProjectID, r.ID))
 
 	roleName := roleId2Name[r.RoleID]
 	if err := d.Set("role", roleName); err != nil {
 		return err
 	}
+	usergroupTypeName := groupTypeNum2Name[groupType]
+	if err := d.Set("group_type", usergroupTypeName); err != nil {
+		return err
+	}
 	if err := d.Set("group_name", r.EntityName); err != nil {
+		return err
+	}
+	if err := d.Set("project_id", r.ProjectID); err != nil {
 		return err
 	}
 
@@ -183,7 +200,17 @@ func resourceProjectMemberRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	if err := resourceProjectMemberRefresh(d, resp.Payload); err != nil {
+	groupRef, err := apiClient.Products.GetUsergroupsGroupID(
+		products.NewGetUsergroupsGroupIDParams().
+			WithGroupID(resp.Payload.EntityID),
+		nil,
+	)
+
+	if err != nil {
+		return fmt.Errorf("could not find member reference for ID %d, error %v", memberID, err)
+	}
+
+	if err := resourceProjectMemberRefresh(d, resp.Payload, groupRef.Payload.GroupType); err != nil {
 		return err
 	}
 
