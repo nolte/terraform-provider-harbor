@@ -45,8 +45,7 @@
         "spikespaz.vscode-smoothtype", // smooth cursor animation
         "vscode-icons-team.vscode-icons",
         // markdown
-        "docsmsft.docs-article-templates",
-        "docsmsft.docs-markdown",
+        "bierner.github-markdown-preview",
         "HashiCorp.terraform",
         "ms-kubernetes-tools.kind-vscode",
         "ms-kubernetes-tools.vscode-kubernetes-tools",

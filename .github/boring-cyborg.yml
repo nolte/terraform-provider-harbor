@@ -1,0 +1,12 @@
+labelPRBasedOnFilePath:
+  cicd:
+    - .github/workflows/**
+  project-config:
+    - .github/settings.yml
+  chore:
+    - .github/**
+  documentations:
+    - docs/**
+    - mkdocs.yml
+    - .github/ISSUE_TEMPLATE/**
+    - .github/pull_request_template.md
