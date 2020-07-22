@@ -23,6 +23,13 @@ resource "harbor_retention_policy" "cleanup" {
                 untagged: false
             })
         }
+        scope_selectors {
+            repository {
+                kind       = "doublestar"
+                decoration = "repoMatches"
+                pattern    = "**"
+            }
+        }
     }
 
     rule {
@@ -91,7 +98,7 @@ The following arguments are supported:
 
   * `latestPushedK`: (retain) the most recently pushed # artifacts
 
-  * `latestPulledK`: (retain) the most recently pulled # artifacts
+  * `latestPulledN`: (retain) the most recently pulled # artifacts
 
   * `nDaysSinceLastPush`: (retain) the artifacts pushed with the last # days
 
