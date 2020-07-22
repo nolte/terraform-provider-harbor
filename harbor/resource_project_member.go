@@ -13,17 +13,17 @@ import (
 
 var roleName2Id = map[string]int64{
 	"project_admin": 1,
-	"master":        2,
-	"developer":     3,
-	"guest":         4,
+	"developer":     2,
+	"guest":         3,
+	"master":        4,
 	"limited_guest": 5,
 }
 
 var roleId2Name = map[int64]string{
 	1: "project_admin",
-	2: "master",
-	3: "developer",
-	4: "guest",
+	2: "developer",
+	3: "guest",
+	4: "master",
 	5: "limited_guest",
 }
 
