@@ -68,6 +68,14 @@ act -j <job> -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
 act -j acc -P ubuntu-latest=nektos/act-environments-ubuntu:18.04
 ```
 
+### HarborAPI Client
+
+At the moment the Swagger Json for generate the Api Client, look [./docs/adr/0001-use-swagger-for-generate-http-client.md](https://github.com/nolte/terraform-provider-harbor/blob/develop/docs/adr/0001-use-swagger-for-generate-http-client.md).
+
+For manipulate the Swagger Json, and generating a useable go api client, we use [evanphx/json-patch](https://github.com/evanphx/json-patch) inside the buildprocess, for adding or replace different JSonStructures. So if you need new manipulations, change the `scripts/swagger-specs/patch.1.json` patch file. More informations about [jsonpatch](http://jsonpatch.com/).
+
+The problem are tracked, [#12474](https://github.com/*goharbor/harbor/issues/12474).
+
 ### Docs
 
 If you use the [VSCode DevContainer](#visual-studio-code-devcontainer), the [mkdocs](https://www.mkdocs.org/) container will be started automatical, as a sidecar container.  
