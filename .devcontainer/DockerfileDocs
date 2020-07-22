@@ -11,7 +11,7 @@ ARG USER_GID=1000
 
 RUN adduser $USERNAME -s /bin/sh -D -u $USER_UID $USER_GID
 
-RUN pip install mkdocs
+RUN pip install mkdocs pymdown-extensions Pygments
 
 RUN mkdir -p /workspace \
     && chown -R ${USER_UID}:${USER_UID} /workspace

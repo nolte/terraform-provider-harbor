@@ -16,13 +16,13 @@ resource "harbor_retention_policy" "cleanup" {
 
     rule {
         template = "always"
-	tag_selectors {
-	    decoration = "matches"
-	    pattern    = "master"
-	    extras     = jsonencode({
+        tag_selectors {
+            decoration = "matches"
+            pattern    = "master"
+            extras     = jsonencode({
                 untagged: false
             })
-	}
+        }
     }
 
     rule {
