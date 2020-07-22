@@ -1,0 +1,58 @@
+[{
+        "op": "add",
+        "path": "/definitions/ConfigurationsResponse/properties/oidc_scope",
+        "value": {
+            "description": "The Scope of the OIDC.",
+            "$ref": "#/definitions/StringConfigItem"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/ConfigurationsResponse/properties/oidc_client_secret",
+        "value": {
+            "description": "The client Secret of the OIDC.",
+            "$ref": "#/definitions/StringConfigItem"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/ConfigurationsResponse/properties/oidc_groups_claim",
+        "value": {
+            "description": "The scope sent to OIDC server during authentication, should be separated by comma. It has to contain \u201copenid\u201d, and \u201coffline_access\u201d. If you are using google, please remove \u201coffline_access\u201d from this field.",
+            "$ref": "#/definitions/StringConfigItem"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/ConfigurationsResponse/properties/ldap_search_dn/$ref",
+        "value": "#/definitions/StringConfigItem"
+    },
+    {
+        "op": "remove",
+        "path": "/definitions/ConfigurationsResponse/properties/ldap_search_dn/type"
+    },
+    {
+        "op": "add",
+        "path": "/definitions/ProjectMetadata/properties/retention_id",
+        "value": {
+            "type": "string",
+            "description": "Retention policy id associated to the project if any"
+        }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/Configurations/properties/email_password",
+        "value": {
+            "type": "string",
+            "description": "The password for authenticate against SMTP server."
+        }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/Configurations/properties/oidc_groups_claim",
+        "value": {
+            "type": "string",
+            "description": "The client Scope Claim of the OIDC."
+        }
+    }
+]

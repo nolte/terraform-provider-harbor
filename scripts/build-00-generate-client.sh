@@ -28,9 +28,9 @@ fi
 
 mkdir -p "${projectBase}/gen"
 
-swagger-merger \
-    -o "${GENERATED_MERGED_SWAGGER}" \
-    -i "${projectBase}/scripts/swagger-specs/v2-swagger-original.json"
+# shellcheck disable=SC2002
+cat "${projectBase}/scripts/swagger-specs/v2-swagger-original.json" | json-patch -p "${projectBase}/scripts/swagger-specs/patch.1.json" > "${GENERATED_MERGED_SWAGGER}"
+
 
 mkdir -p "${GENERATED_SOURCES_TARGET}"
 

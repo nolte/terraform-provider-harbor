@@ -52,6 +52,7 @@
         "jetmartin.bats",
         "EditorConfig.EditorConfig",
         "lonefy.vscode-js-css-html-formatter",
+        "richie5um2.vscode-statusbar-json-path",
     ],
     "settings": {
         // General settings
