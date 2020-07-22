@@ -28,7 +28,7 @@ markdown_extensions:
   - toc:
       permalink: True
   - pymdownx.snippets:
-      base_path: docs
+      base_path: .
   - pymdownx.arithmatex
   - pymdownx.betterem:
       smart_enable: all

@@ -80,7 +80,7 @@ e2e_test_v1:
 	scripts/tst-15-execute-go-acc.sh "/api"
 
 e2e_test_classic:
-	bats scripts/test/bats
+	scripts/tst-15-execute-classic-acc.sh "/api"
 
 e2e_full_run: e2e_clean_cluster e2e_prepare e2e_prepare_harbor_v2 e2e_test_v2 e2e_clean_harbor e2e_prepare_harbor_v1 e2e_test_v1 e2e_clean_cluster
 # e2e_prepare e2e_prepare_harbor_v1 e2e_test e2e_cleanup

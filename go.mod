@@ -8,5 +8,8 @@ require (
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/go-openapi/swag v0.19.9
 	github.com/go-openapi/validate v0.19.10
+	github.com/gruntwork-io/terratest v0.28.10
 	github.com/hashicorp/terraform-plugin-sdk v1.15.0
+	github.com/kisielk/errcheck v1.4.0 // indirect
+	github.com/stretchr/testify v1.6.1
 )
