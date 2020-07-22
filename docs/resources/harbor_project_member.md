@@ -14,7 +14,7 @@ resource "harbor_usergroup" "developers" {
 
 resource "harbor_project_member" "developers_main" {
     project_id = harbor_project.main.id
-    role_id    = "guest"
+    role       = "guest"
     group_type = "http"
     group_name = harbor_usergroup.developers.name
 }
