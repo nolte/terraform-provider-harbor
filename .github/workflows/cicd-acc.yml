@@ -14,9 +14,11 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        helm_chart_version:
-          - 1.4.0
-          - 1.4.1
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.1
+            harbor_path: "/api/v2.0"
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
@@ -75,14 +77,14 @@ jobs:
 
       - name: install harbor
         run: |
-          ./scripts/tst-01-prepare-harbor.sh ${INGRESS_DOMAIN} "${matrix.helm_chart_version}"
+          ./scripts/tst-01-prepare-harbor.sh ${INGRESS_DOMAIN} "${{ matrix.harbor_deployments.helm_chart_version }}"
       #- name: install harbor
       #  run: |
       #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
 
       - name: Starting the Acc
         run: |
-          ./scripts/tst-15-execute-go-acc.sh "/api/v2.0"
+          ./scripts/tst-15-execute-go-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
 
       - name: remove the kind cluster
         if: ${{ always() }}
