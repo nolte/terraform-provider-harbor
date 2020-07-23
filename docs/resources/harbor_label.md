@@ -7,9 +7,12 @@ Harbor Api: [/labels](https://demo.goharbor.io/#/Products/post_labels)
 
 ```hcl
 --8<--
-examples/tf-acception-test/project.tf
 
 examples/tf-acception-test/label.tf
+
+examples/tf-acception-test-part-2/data_project.tf
+
+examples/tf-acception-test-part-2/label.tf
 --8<--
 ```
 
