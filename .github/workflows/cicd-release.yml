@@ -1,6 +1,9 @@
 name: Release Flow
 
 on:
+  create:
+    tags:
+      - "release/*"
   push:
     tags:
       - "release/*"
