@@ -1,5 +1,10 @@
 version: 2
-update_configs:
-  - package_manager: "github_actions"
+updates:
+  - package-ecosystem: "github-actions"
     directory: "/"
-    update_schedule: "daily"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
