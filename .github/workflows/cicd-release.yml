@@ -22,14 +22,12 @@ jobs:
             && chmod +x $HOME/bin/swagger
           echo "::add-path::$HOME/bin"
 
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: npm install swagger-merger
+      - name: install go stuff
         run: |
-          npm install swagger-merger -g
+          go get -v \
+           github.com/magefile/mage \
+           github.com/evanphx/json-patch/cmd/json-patch
+          echo "::add-path::$(go env GOPATH)/bin"
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2

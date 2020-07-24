@@ -58,7 +58,7 @@ For full building and testing you need the following tools on our machine.
 
 - go
 - [go-swagger/go-swagger](https://github.com/go-swagger/go-swagger)
-- [WindomZ/swagger-merger](https://github.com/WindomZ/swagger-merger)
+- [evanphx/json-patch](https://github.com/evanphx/json-patch)
 
 #### Required For Testing
 
