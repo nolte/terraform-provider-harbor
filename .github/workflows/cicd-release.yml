@@ -1,12 +1,8 @@
 name: Release Flow
 
 on:
-  create:
-    tags:
-      - "release/*"
-  push:
-    tags:
-      - "release/*"
+  release:
+    types: [published]
 jobs:
   releaseBuild:
     name: ReleaseBuild
