@@ -48,7 +48,7 @@ jobs:
           scripts/build-10-compile.sh ${GITHUB_REF##*/}
 
       - name: Upload Binaryies for publishing
-        uses: actions/upload-artifact@v2.0.1
+        uses: actions/upload-artifact@2.1.0
         with:
           name: bin
           path: ${{ github.workspace }}/bin/**
