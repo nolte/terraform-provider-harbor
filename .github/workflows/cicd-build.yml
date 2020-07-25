@@ -11,6 +11,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
@@ -43,3 +48,78 @@ jobs:
       - name: test provider
         run: |
           make build
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v2
+        with:
+          name: provider
+          path: bin/*
+
+  acc_go:
+    name: acc-go
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v2
+        with:
+          name: provider
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: test provider
+        run: |
+          make install
+
+      # https://github.com/engineerd/setup-kind
+      - uses: engineerd/setup-kind@v0.4.0
+        with:
+          skipClusterCreation: true
+
+      - name: Starting the Kind Cluster
+        run: |
+          ./scripts/tst-00-prepare-kind.sh
+
+      - name: Testing
+        run: |
+          kind export kubeconfig
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          NODEDNSNAME=$(kubectl get nodes -ojson | jq '.items[0].status.addresses[0].address' -r | sed 's/\./-/g')
+          echo "::set-env name=INGRESS_DOMAIN::${NODEDNSNAME}.sslip.io"
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: install helm3
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: install harbor
+        run: |
+          ./scripts/tst-01-prepare-harbor.sh ${INGRESS_DOMAIN} "${{ matrix.harbor_deployments.helm_chart_version }}"
+      #- name: install harbor
+      #  run: |
+      #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
+
+      - name: Starting the Acc
+        run: |
+          ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
+
+      - name: remove the kind cluster
+        if: ${{ always() }}
+        run: |
+          kind delete cluster

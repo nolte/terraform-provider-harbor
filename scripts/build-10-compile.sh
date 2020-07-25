@@ -27,8 +27,7 @@ platforms=(
     "linux/amd64"
     "windows/amd64"
 )
-for platform in "${platforms[@]}"
-do
+for platform in "${platforms[@]}"; do
     echo "Building terraform-provider-harbor_${VERSION} for ${platform}"
 
     # shellcheck disable=SC2206
@@ -45,5 +44,5 @@ do
     rm bin/$output_name
 done
 cd "${projectBase}/bin"
-sha256sum -b ./* > SHA256SUMS
+sha256sum -b ./* >SHA256SUMS
 cd "${STARTDIR}"

@@ -15,6 +15,7 @@ projectBase=$__root
 GENERATED_SOURCES_TARGET="${projectBase}/gen/harborctl"
 GENERATED_MERGED_SWAGGER="${projectBase}/gen/merged.json"
 
+echo "==> Generate GoApi Client from Swagger Spec"
 
 if [ -d "$GENERATED_SOURCES_TARGET" ]; then
     echo "Remove old generated sources"
@@ -29,8 +30,7 @@ fi
 mkdir -p "${projectBase}/gen"
 
 # shellcheck disable=SC2002
-cat "${projectBase}/scripts/swagger-specs/v2-swagger-original.json" | json-patch -p "${projectBase}/scripts/swagger-specs/patch.1.json" > "${GENERATED_MERGED_SWAGGER}"
-
+cat "${projectBase}/scripts/swagger-specs/v2-swagger-original.json" | json-patch -p "${projectBase}/scripts/swagger-specs/patch.1.json" >"${GENERATED_MERGED_SWAGGER}"
 
 mkdir -p "${GENERATED_SOURCES_TARGET}"
 
@@ -39,15 +39,15 @@ swagger generate client \
     --name=harbor \
     --target="${GENERATED_SOURCES_TARGET}" \
     --with-flatten=remove-unused
-    #--operation=PostProjects \
-    #--operation=GetProjects \
-    #--operation=PutProjectsProjectID \
-    #--operation=DeleteProjectsProjectID \
-    #--model=ProjectReq \
-    #--model=Project \
-    #--model=CVEWhitelist \
-    #--model=ProjectMetadata \
-    #--model=CVEWhitelistItem
+#--operation=PostProjects \
+#--operation=GetProjects \
+#--operation=PutProjectsProjectID \
+#--operation=DeleteProjectsProjectID \
+#--model=ProjectReq \
+#--model=Project \
+#--model=CVEWhitelist \
+#--model=ProjectMetadata \
+#--model=CVEWhitelistItem
 
 # PostProjectsProjectIDRobots DeleteProjectsProjectIDRobotsRobotID GetProjectsProjectIDRobots
 # RobotAccountCreate
