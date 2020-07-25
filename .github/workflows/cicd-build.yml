@@ -85,16 +85,13 @@ jobs:
       - name: test provider
         run: |
           ls -all bin/*
+          tar -C ~/.terraform.d/plugins/linux_amd64/ -xvf ./bin/terraform-provider-harbor_v0.1.0_linux_amd64.tar.gz
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
-
-      - name: test provider
-        run: |
-          make install
 
       # https://github.com/engineerd/setup-kind
       - uses: engineerd/setup-kind@v0.4.0
