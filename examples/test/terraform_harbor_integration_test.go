@@ -14,10 +14,12 @@ func TestHarborBaseComponentsExists(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../tf-acception-test",
 		Parallelism:  1,
+		MaxRetries:   3,
 	}
 	terraformOptionsPartTwo := &terraform.Options{
 		TerraformDir: "../tf-acception-test-part-2",
 		Parallelism:  1,
+		MaxRetries:   3,
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
@@ -36,6 +38,8 @@ func TestHarborSystemConfig(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../tf-project-only",
+		Parallelism:  1,
+		MaxRetries:   3,
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
