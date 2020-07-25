@@ -69,6 +69,11 @@ jobs:
         harbor_deployments:
           - helm_chart_version: 1.4.0
             harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.1
+            harbor_path: "/api/v2.0"
+          # TODO: https://github.com/nolte/terraform-provider-harbor/issues/40
+          #- helm_chart_version: 1.3.2
+          #  harbor_path: "/api"
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
