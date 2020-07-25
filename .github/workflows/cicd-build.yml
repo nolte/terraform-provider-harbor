@@ -85,6 +85,7 @@ jobs:
       - name: test provider
         run: |
           ls -all bin/*
+          mkdir -p ~/.terraform.d/plugins/linux_amd64/
           tar -C ~/.terraform.d/plugins/linux_amd64/ -xvf ./bin/terraform-provider-harbor_v0.1.0_linux_amd64.tar.gz
 
       - name: Check out code into the Go module directory
