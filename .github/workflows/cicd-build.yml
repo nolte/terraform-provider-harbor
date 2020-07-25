@@ -220,6 +220,10 @@ jobs:
         run: |
           ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
 
+      - name: read harbor logs
+        if: ${{ failure() }}
+        run: |
+          kubectl logs -l component=core -n harbor
       - name: remove the kind cluster
         if: ${{ always() }}
         run: |
