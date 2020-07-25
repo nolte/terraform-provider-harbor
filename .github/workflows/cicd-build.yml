@@ -80,6 +80,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: provider
+          path: bin
 
       - name: test provider
         run: |
