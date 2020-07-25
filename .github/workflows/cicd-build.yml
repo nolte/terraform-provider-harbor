@@ -223,7 +223,7 @@ jobs:
       - name: read harbor logs
         if: ${{ failure() }}
         run: |
-          kubectl logs -l component=core -n harbor
+          kubectl logs -l component=core -n harbor --tail=-1
       - name: remove the kind cluster
         if: ${{ always() }}
         run: |
