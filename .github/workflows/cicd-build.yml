@@ -142,13 +142,13 @@ jobs:
     strategy:
       matrix:
         terraform_version:
-          - 0.11.14
-          - 0.12.25
+          #- 0.11.14
+          #- 0.12.25
           - 0.12.29
-          - 0.13.0-rc1
+          #- 0.13.0-rc1
         harbor_deployments:
-          - helm_chart_version: 1.4.0
-            harbor_path: "/api/v2.0"
+          #- helm_chart_version: 1.4.0
+          #  harbor_path: "/api/v2.0"
           - helm_chart_version: 1.4.1
             harbor_path: "/api/v2.0"
           # TODO: https://github.com/nolte/terraform-provider-harbor/issues/40
