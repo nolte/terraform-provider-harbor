@@ -13,9 +13,11 @@ func TestHarborBaseComponentsExists(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../tf-acception-test",
+		Parallelism:  1,
 	}
 	terraformOptionsPartTwo := &terraform.Options{
 		TerraformDir: "../tf-acception-test-part-2",
+		Parallelism:  1,
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
