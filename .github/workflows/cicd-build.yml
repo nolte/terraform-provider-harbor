@@ -141,6 +141,11 @@ jobs:
     needs: build
     strategy:
       matrix:
+        terraform_version:
+          - 0.11.14
+          - 0.12.25
+          - 0.12.29
+          - 0.13.0-rc1
         harbor_deployments:
           - helm_chart_version: 1.4.0
             harbor_path: "/api/v2.0"
@@ -173,6 +178,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ matrix.terraform_version }}
 
       # https://github.com/engineerd/setup-kind
       - uses: engineerd/setup-kind@v0.4.0
