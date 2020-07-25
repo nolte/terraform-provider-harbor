@@ -31,6 +31,12 @@ jobs:
             && chmod +x $HOME/bin/swagger
           echo "::add-path::$HOME/bin"
 
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: install go stuff
         run: |
           go get -v \
@@ -74,6 +80,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: provider
+
+      - name: test provider
+        run: |
+          ls -all
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
