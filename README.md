@@ -1,6 +1,6 @@
 # Harbor Provider
 
-The ` `  ` terraform-provider-harbor `  ` ` is used to configure an instance of [Harbor](https://goharbor.io).
+The `terraform-provider-harbor` is used to configure an instance of [Harbor](https://goharbor.io).
 
 This is original based on the Work from [BESTSELLER/terraform-harbor-provider](https://github.com/BESTSELLER/terraform-harbor-provider), but with some incompatible changes, like the access to the Harbor API.
 
