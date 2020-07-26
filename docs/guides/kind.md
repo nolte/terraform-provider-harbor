@@ -4,16 +4,16 @@ For Quick and Easy Local Development it is Recommended to use a Vanilla [Harbor]
 
 All relevant `Makefile` goals are prefixed with ```e2s_*```.
 
-| Goal                    | Description                                                                         |
-|-------------------------|-------------------------------------------------------------------------------------|
-| `e2e_prepare`           | Configure the Kind based Env, and install the latest version from the Harbor Chart. |
-| `e2e_prepare_harbor_v1` | Install a Harbor v1 to the Kind Cluster                                             |
-| `e2e_prepare_harbor_v2` | Install a Harbor v2 to the Kind Cluster                                             |
-| `e2e_test_v1`           | Starting the go based tests again a Harbor V1 Deployment                            |
-| `e2e_test_v2`           | Starting the go based tests again a Harbor V2 Deployment                            |
-| `e2e_test_classic`      | Remove the current kind cluster.                                                    |
-| `e2e_clean_harbor`      | Delete the Harbor helm chart from kind cluster                                      |
-| `e2e_clean_cluster`     | Remove the current kind cluster.                                                    |
+| Goal                    | Description                                                                                  |
+|-------------------------|----------------------------------------------------------------------------------------------|
+| `e2e_prepare`           | Configure the Kind based Env, and install the latest version from the Harbor Chart.          |
+| `e2e_prepare_harbor_v1` | Install a Harbor v1 to the Kind Cluster                                                      |
+| `e2e_prepare_harbor_v2` | Install a Harbor v2 to the Kind Cluster                                                      |
+| `e2e_test_v1`           | Starting the go based tests again a Harbor V1 Deployment                                     |
+| `e2e_test_v2`           | Starting the go based tests again a Harbor V2 Deployment                                     |
+| `e2e_test_classic`      | Test the Terraform Scripts from `examples` with [terratest](https://terratest.gruntwork.io/) |
+| `e2e_clean_harbor`      | Delete the Harbor helm chart from kind cluster                                               |
+| `e2e_clean_cluster`     | Remove the current kind cluster.                                                             |
 
 The same flavore of tests will be integrated into the [CI/CD](/guides/development/#cicd) Process.
 
