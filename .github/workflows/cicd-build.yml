@@ -218,7 +218,7 @@ jobs:
 
       - name: Starting the Acc
         run: |
-          ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
+          sleep 60
 
       - name: read harbor logs core
         if: ${{ failure() }}
