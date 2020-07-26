@@ -150,7 +150,7 @@ jobs:
           # - 0.11.14 Out of Support
           - 0.12.25
           - 0.12.29
-          - 0.13.0-rc1
+          # - 0.13.0-rc1 # required changes at the cicd structure
         harbor_deployments:
           - helm_chart_version: 1.4.0
             harbor_path: "/api/v2.0"
@@ -215,10 +215,6 @@ jobs:
       #- name: install harbor
       #  run: |
       #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
-
-      - name: Starting the Acc
-        run: |
-          sleep 60
 
       - name: read harbor logs core
         if: ${{ failure() }}
