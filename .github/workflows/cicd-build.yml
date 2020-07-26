@@ -216,6 +216,10 @@ jobs:
       #  run: |
       #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
 
+      - name: Starting the Acc
+        run: |
+          ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
+
       - name: read harbor logs core
         if: ${{ failure() }}
         run: |
