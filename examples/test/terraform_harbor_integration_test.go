@@ -4,7 +4,6 @@ package test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
@@ -13,16 +12,16 @@ import (
 func TestHarborBaseComponentsExists(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
-		TerraformDir:       "../tf-acception-test",
-		Parallelism:        1,
-		MaxRetries:         5,
-		TimeBetweenRetries: time.Second + 10,
+		TerraformDir: "../tf-acception-test",
+		//Parallelism:        1,
+		//MaxRetries:         5,
+		//TimeBetweenRetries: time.Second + 10,
 	}
 	terraformOptionsPartTwo := &terraform.Options{
-		TerraformDir:       "../tf-acception-test-part-2",
-		Parallelism:        1,
-		MaxRetries:         5,
-		TimeBetweenRetries: time.Second + 10,
+		TerraformDir: "../tf-acception-test-part-2",
+		//Parallelism:        1,
+		//MaxRetries:         5,
+		//TimeBetweenRetries: time.Second + 10,
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
@@ -41,8 +40,8 @@ func TestHarborSystemConfig(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../tf-project-only",
-		Parallelism:  1,
-		MaxRetries:   5,
+		//Parallelism:  1,
+		//MaxRetries:   5,
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
