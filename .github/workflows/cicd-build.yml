@@ -215,7 +215,9 @@ jobs:
       #- name: install harbor
       #  run: |
       #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
-
+      - name: Starting the Acc
+        run: |
+          sleep 30
       - name: Starting the Acc
         run: |
           ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
