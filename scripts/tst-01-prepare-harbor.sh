@@ -27,7 +27,9 @@ echo "==> Waiting for ready Harbor pods..."
 
 kubectl wait --namespace harbor \
     --for=condition=ready pod \
-    --selector=component=core \
+    --selector=app=harbor \
     --timeout=680s
+
+sleep 2
 
 echo "==> Harbor Ready for use"
