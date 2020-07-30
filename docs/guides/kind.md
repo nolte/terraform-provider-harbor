@@ -21,6 +21,7 @@ The same flavore of tests will be integrated into the [CI/CD](/guides/developmen
 **Befor you execute `e2e_prepare` ensure that the `INGRESS_DOMAIN` to your local host** (By default we use the Docker Bridge Network Interface like `172-17-0-1.sslip.io`.)
 
 *example without change any files*
+
 ```bash
 ./scripts/tst-00-prepare-kind.sh "2.1.0"
 ./scripts/tst-01-prepare-harbor.sh "10-42-0-100.sslip.io" "1.2.0"
@@ -41,9 +42,9 @@ make e2e_test
 
 Tests will be matchs by the file name prefix `*_test.go`.
 
-## Terraform File Based Tests
+## Terratest File Based Tests
 
-The Classic Terraform File based tests are located at `scripts/test/tf-acception-test`.
+The Classic Terraform File based tests are located at `examples/**`, and executed with [terratest](https://terratest.gruntwork.io/). For execution you need, a full runnable Terraform Enviroment with the current version from the harbor terraform provider.
 
 ```bash
 # compile the provider
