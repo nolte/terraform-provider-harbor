@@ -3,11 +3,11 @@
 ## Example Usage
 
 ```hcl
-resource "harbor_usergroup" "developers" {
-    name = "developers"
-    type = "http"
-}
+--8<--
+examples/tf-acception-test/usergroup.tf
+--8<--
 ```
+
 
 ## Argument Reference
 

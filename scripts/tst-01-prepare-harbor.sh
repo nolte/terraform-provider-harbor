@@ -7,6 +7,8 @@ set -e
 set -o pipefail
 set -o nounset
 
+echo "==> Starting the Harbor installation..."
+
 INGRESS_DOMAIN=${1:-"172-17-0-1.sslip.io"}
 HARBOR_CHART_VERSION=${2:-"1.3.2"}
 
@@ -21,8 +23,13 @@ helm upgrade -i tf-harbor-test harbor/harbor \
     --set expose.ingress.hosts.notary="notary.${INGRESS_DOMAIN}" \
     --set externalURL="https://harbor.${INGRESS_DOMAIN}"
 
+echo "==> Waiting for ready Harbor pods..."
 
 kubectl wait --namespace harbor \
-  --for=condition=ready pod \
-  --selector=component=core \
-  --timeout=480s
+    --for=condition=ready pod \
+    --selector=app=harbor \
+    --timeout=680s
+
+sleep 2
+
+echo "==> Harbor Ready for use"

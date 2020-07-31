@@ -5,6 +5,7 @@ GO := go
 
 # generate harbor cient files from swagger config
 define install_provider
+	mkdir -p ~/.terraform.d/plugins/linux_amd64/
 	tar -zxf bin/terraform-provider-harbor_*_linux_amd64.tar.gz -C  ~/.terraform.d/plugins/linux_amd64/
     chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
 endef
@@ -61,7 +62,7 @@ e2e_prepare:
 
 
 e2e_prepare_harbor_v1:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.3.4"
+	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.3.2"
 
 e2e_prepare_harbor_v2:
 	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.4.0"
@@ -83,7 +84,7 @@ e2e_test_v1:
 	scripts/tst-15-execute-go-acc.sh "/api"
 
 e2e_test_classic:
-	bats scripts/test/bats
+	scripts/tst-15-execute-classic-acc.sh "/api/v2.0"
 
 e2e_full_run: e2e_clean_cluster e2e_prepare e2e_prepare_harbor_v2 e2e_test_v2 e2e_clean_harbor e2e_prepare_harbor_v1 e2e_test_v1 e2e_clean_cluster
 # e2e_prepare e2e_prepare_harbor_v1 e2e_test e2e_cleanup

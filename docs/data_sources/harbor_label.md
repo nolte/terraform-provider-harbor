@@ -3,15 +3,13 @@
 ## Example Usage
 
 ```hcl
-data "harbor_label" "label_1" {
-  name   = "main"
-  scope  = "g"
-}
+--8<--
+examples/tf-acception-test-part-2/data_label.tf
+--8<--
 
 data "harbor_label" "label_2" {
   id = 4
 }
-
 ```
 
 ## Argument Reference
