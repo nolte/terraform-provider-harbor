@@ -4,53 +4,6 @@ on:
   release:
     types: [published]
 jobs:
-  releaseBuild:
-    name: ReleaseBuild
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v2
-        with:
-          go-version: ^1.14
-        id: go
-
-      - name: Get dependencies
-        run: |
-          SWAGGER_VERSION=v0.23.0
-          mkdir -p $HOME/bin
-          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
-            && chmod +x $HOME/bin/swagger
-          echo "::add-path::$HOME/bin"
-
-      - name: install go stuff
-        run: |
-          go get -v \
-           github.com/magefile/mage \
-           github.com/evanphx/json-patch/cmd/json-patch
-          echo "::add-path::$(go env GOPATH)/bin"
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
-
-      - name: install golangci-lint
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
-
-      - name: test provider
-        run: |
-          make generate
-          make test
-
-      - name: build provider
-        run: |
-          scripts/build-10-compile.sh ${GITHUB_REF##*/}
-
-      - name: Upload Binaryies for publishing
-        uses: actions/upload-artifact@v2.1.1
-        with:
-          name: bin
-          path: ${{ github.workspace }}/bin/**
-
   publish_docs:
     name: Publish the HTML Documentation
     runs-on: ubuntu-latest
@@ -62,23 +15,3 @@ jobs:
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish_release_artefacts:
-    name: Publish Release Artefacts
-    runs-on: ubuntu-latest
-    needs: [releaseBuild]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: bin
-      - name: Display structure of downloaded files
-        run: ls -R
-
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v1-release
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./*
-          tag: ${{ github.ref }}
-          overwrite: true
-          file_glob: true

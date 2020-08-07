@@ -1,0 +1,49 @@
+name: goreleaser
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Get dependencies
+        run: |
+          SWAGGER_VERSION=v0.23.0
+          mkdir -p $HOME/bin
+          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
+            && chmod +x $HOME/bin/swagger
+          echo "::add-path::$HOME/bin"
+
+      - name: install go stuff
+        run: |
+          go get -v \
+           github.com/magefile/mage \
+           github.com/evanphx/json-patch/cmd/json-patch
+          echo "::add-path::$(go env GOPATH)/bin"
+      - name: test provider
+        run: |
+          make generate
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
