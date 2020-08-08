@@ -188,6 +188,9 @@ jobs:
 
       - name: install the provider to local terrafomd.d folder
         run: |
+          echo $(pwd)
+          ls -all .
+          ls -all ./dist/
           make install
 
       - name: Setup Terraform
