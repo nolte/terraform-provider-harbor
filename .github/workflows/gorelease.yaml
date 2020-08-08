@@ -15,21 +15,6 @@ jobs:
         with:
           go-version: ^1.14
         id: go
-
-      - name: Get dependencies
-        run: |
-          SWAGGER_VERSION=v0.23.0
-          mkdir -p $HOME/bin
-          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
-            && chmod +x $HOME/bin/swagger
-          echo "::add-path::$HOME/bin"
-
-      - name: install go stuff
-        run: |
-          go get -v \
-           github.com/magefile/mage \
-           github.com/evanphx/json-patch/cmd/json-patch
-          echo "::add-path::$(go env GOPATH)/bin"
       - name: Checkout
         uses: actions/checkout@v2
         with:

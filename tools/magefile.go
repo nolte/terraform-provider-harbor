@@ -6,6 +6,9 @@ import (
 	"context"
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
+    _ "github.com/golangci/golangci-lint/pkg/commands"
+	"github.com/magefile/mage/sh"
+
 	flags "github.com/jessevdk/go-flags"
 	"io/ioutil"
 	"os"
@@ -42,23 +45,27 @@ func GenerateHarborGoClient(ctx context.Context) error {
 
 func generateGoSourcesFromSwaggerSpec(path string) error {
 
-    generatedPath := "../gen/harborctl"
-    os.RemoveAll(generatedPath)
-    err := os.MkdirAll(generatedPath, 0777)
-    check(err)
+	generatedPath := "../gen/harborctl"
+	os.RemoveAll(generatedPath)
+	err := os.MkdirAll(generatedPath, 0777)
+	check(err)
 
 	clt := generate.Client{}
 	clt.Shared.Spec = flags.Filename(path)
-    clt.Shared.Target = flags.Filename(generatedPath)
-    clt.Models.ModelPackage = "models"
-    clt.Name = "harbor"
-    clt.ClientPackage = "client"
+	clt.Shared.Target = flags.Filename(generatedPath)
+	clt.Models.ModelPackage = "models"
+	clt.Name = "harbor"
+	clt.ClientPackage = "client"
 
-    var args []string
+	var args []string
 
-    args = append(args,"--with-flatten=remove-unused")
-
-
+	args = append(args, "--with-flatten=remove-unused")
 
 	return clt.Execute(args)
+}
+
+func Lint() error {
+	os.Chdir("../")
+	defer os.Chdir("./tools")
+	return sh.Run("golangci-lint", "run")
 }

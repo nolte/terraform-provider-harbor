@@ -43,5 +43,5 @@ require (
 	go.mongodb.org/mongo-driver v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de // indirect
 	golang.org/x/sys v0.0.0-20200808120158-1030fc2bf1d9 // indirect
-	golang.org/x/tools v0.0.0-20200807235657-19738be007ce // indirect
+	golang.org/x/tools v0.0.0-20200808145551-b8f4a4e40dc2 // indirect
 )

@@ -17,7 +17,7 @@ MAKEFLAGS += --silent
 default: build
 
 generate:
-	scripts/build-00-generate-client.sh
+	cd ./tools && go run mage.go -v GenerateHarborGoClient
 
 compile:
 	# scripts/build-10-compile.sh
@@ -47,7 +47,7 @@ vet:
 goLint:
 	scripts/build-03-go-gofmtcheck.sh
 	scripts/build-04-go-errorchecks.sh
-	scripts/build-05-go-golint.sh
+	cd ./tools && go run mage.go -v lint || true
 
 gosec:
 	echo "==> Checking code with gosec..."
