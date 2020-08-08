@@ -3,7 +3,8 @@ name: goreleaser
 on:
   pull_request:
   push:
-
+  release:
+    types: [published]
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
