@@ -4,25 +4,25 @@ package main
 
 import (
 	"context"
-    "io/ioutil"
-    "os"
+	jsonpatch "github.com/evanphx/json-patch"
+	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
+	flags "github.com/jessevdk/go-flags"
+	"io/ioutil"
+	"os"
 	"path"
-    jsonpatch "github.com/evanphx/json-patch"
-    "github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
-    flags "github.com/jessevdk/go-flags"
-
 )
+
 func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+	if e != nil {
+		panic(e)
+	}
 }
 
-func TestCommand(ctx context.Context) error {
-    originalDat, err := ioutil.ReadFile("../scripts/swagger-specs/v2-swagger-original.json")
-    check(err)
-    patchDat, err := ioutil.ReadFile("../scripts/swagger-specs/patch.1.json")
-    check(err)
+func GenerateHarborGoClient(ctx context.Context) error {
+	originalDat, err := ioutil.ReadFile("../scripts/swagger-specs/v2-swagger-original.json")
+	check(err)
+	patchDat, err := ioutil.ReadFile("../scripts/swagger-specs/patch.1.json")
+	check(err)
 	patch, err := jsonpatch.DecodePatch(patchDat)
 	if err != nil {
 		panic(err)
@@ -31,24 +31,34 @@ func TestCommand(ctx context.Context) error {
 	modified, err := patch.Apply(originalDat)
 	if err != nil {
 		panic(err)
-    }
+	}
 
 	configPath := path.Join(os.TempDir(), "patched-swagger.json")
-    err = ioutil.WriteFile(configPath, modified, 0o600)
-    check(err)
-    defer os.Remove(configPath)
-    return generateGoSourcesFromSwaggerSpec(configPath)
+	err = ioutil.WriteFile(configPath, modified, 0o600)
+	check(err)
+	defer os.Remove(configPath)
+	return generateGoSourcesFromSwaggerSpec(configPath)
 }
+
 func generateGoSourcesFromSwaggerSpec(path string) error {
 
-    clt := generate.Client{
+    generatedPath := "../gen/harborctl"
+    os.RemoveAll(generatedPath)
+    err := os.MkdirAll(generatedPath, 0777)
+    check(err)
 
-    }
+	clt := generate.Client{}
 	clt.Shared.Spec = flags.Filename(path)
-    clt.Shared.Target = flags.Filename("../gen/harborctl")
-    //clt.Shared.Name = "harbor"
+    clt.Shared.Target = flags.Filename(generatedPath)
+    clt.Models.ModelPackage = "models"
+    clt.Name = "harbor"
+    clt.ClientPackage = "client"
 
     var args []string
 
-    return clt.Execute(args)
+    args = append(args,"--with-flatten=remove-unused")
+
+
+
+	return clt.Execute(args)
 }
