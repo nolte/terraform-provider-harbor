@@ -21,6 +21,11 @@ RUN apk add --update-cache \
 RUN mkdir -p /go/src && chown -R ${USER_UID}:${USER_GID} /go/src \
     && mkdir -p /go/pkg && chown -R ${USER_UID}:${USER_GID} /go/pkg
 
+RUN curl -sSL -k https://github.com/goreleaser/goreleaser/releases/download/v0.141.0/goreleaser_Linux_x86_64.tar.gz -o /tmp/goreleaser.tgz \
+    && tar -zxf /tmp/goreleaser.tgz -C /tmp \
+    && mv /tmp/goreleaser /usr/local/bin/
+
+
 USER ${USERNAME}
 
 #COPY --chown=${USER_UID}:${USER_GID} --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest  /home/${USERNAME}/.zshrc-specific /home/${USERNAME}/.zshrc-specific
