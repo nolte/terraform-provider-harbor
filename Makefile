@@ -5,9 +5,9 @@ GO := go
 
 # generate harbor cient files from swagger config
 define install_provider
-	mkdir -p ~/.terraform.d/plugins/linux_amd64/
-	tar -zxf bin/terraform-provider-harbor_*_linux_amd64.tar.gz -C  ~/.terraform.d/plugins/linux_amd64/
-    chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor
+    mkdir -p ~/.terraform.d/plugins/linux_amd64/
+    cp ./dist/terraform-provider-harbor_linux_amd64/terraform-provider-harbor_v* ~/.terraform.d/plugins/linux_amd64/
+    chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor_v*
 endef
 
 TEST?=$$(go list ./... |grep -v 'vendor')
@@ -20,7 +20,8 @@ generate:
 	scripts/build-00-generate-client.sh
 
 compile:
-	scripts/build-10-compile.sh
+	# scripts/build-10-compile.sh
+	goreleaser build --rm-dist --snapshot
 
 install:
 	$(call install_provider)

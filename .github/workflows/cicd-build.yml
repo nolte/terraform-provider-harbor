@@ -49,9 +49,10 @@ jobs:
       - name: Generate Sources from Swagger Spec
         run: |
           make generate
-      - name: compile the provider
+
+      - name: execute the Tests
         run: |
-          make generate
+          make test
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
@@ -187,6 +188,7 @@ jobs:
           ls -all dist/*
           mkdir -p ~/.terraform.d/plugins/linux_amd64/
           cp ./dist/terraform-provider-harbor_linux_amd64/terraform-provider-harbor_v* ~/.terraform.d/plugins/linux_amd64/
+          chmod +x ~/.terraform.d/plugins/linux_amd64/terraform-provider-harbor_v*
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
