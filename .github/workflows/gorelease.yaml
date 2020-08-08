@@ -1,17 +1,14 @@
 name: goreleaser
 
 on:
-  pull_request:
   push:
-
+    tags:
+      - 'v*'
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
@@ -33,6 +30,10 @@ jobs:
            github.com/magefile/mage \
            github.com/evanphx/json-patch/cmd/json-patch
           echo "::add-path::$(go env GOPATH)/bin"
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: test provider
         run: |
           make generate

@@ -57,14 +57,17 @@ In addition to [generic `provider` arguments](https://www.terraform.io/docs/conf
 
 ## Install the Custom Provider
 
-Download the Latest Release, [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nolte/terraform-provider-harbor)](https://github.com/nolte/terraform-provider-harbor/releases) published by [![Release Flow](https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg)](https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Release+Flow%22).
+Download the Latest Release, [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nolte/terraform-provider-harbor)](https://github.com/nolte/terraform-provider-harbor/releases).
 
 ```bash
 # for example https://github.com/nolte/terraform-provider-harbor/releases/download/release/v0.1.0/terraform-provider-harbor_v0.1.0_linux_amd64.tar.gz
 LATEST_LINUX_RELEASE=$(curl -sL https://api.github.com/repos/nolte/terraform-provider-harbor/releases/latest | jq -r '.assets[].browser_download_url' | grep '_linux_amd64')
+TAG_NAME=$(curl -sL https://api.github.com/repos/nolte/terraform-provider-harbor/releases/latest | jq -r '.tag_name')
 
 # direct install to your personal plugin directory
-wget -qO- $LATEST_LINUX_RELEASE | tar -xvz -C ~/.terraform.d/plugins/linux_amd64/
+wget -q $LATEST_LINUX_RELEASE -o /tmp/terraform-provider-harbor.zip \
+    && unzip -j "/tmp/terraform-provider-harbor.zip" "terraform-provider-harbor_${TAG_NAME}" -d /home/${USERNAME}/.terraform.d/plugins/linux_amd64 \
+    && rm /tmp/terraform-provider-harbor.zip
 ```
 
 Here a link to the Terraform Doc how to install [third-party-plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
