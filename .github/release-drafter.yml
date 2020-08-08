@@ -1,5 +1,5 @@
 name-template: v$NEXT_PATCH_VERSION
-tag-template: v$NEXT_PATCH_VERSION
+tag-template: release/v$NEXT_PATCH_VERSION
 branches:
   - master
   - develop
