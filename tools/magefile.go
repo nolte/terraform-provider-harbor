@@ -19,6 +19,8 @@ import (
 
 	// mage:import
 	_ "github.com/nolte/plumbing/cmd/kind"
+
+	plumbing "github.com/nolte/plumbing/pkg"
 )
 
 func check(e error) {
@@ -27,7 +29,68 @@ func check(e error) {
 	}
 }
 
-func GenerateHarborGoClient(ctx context.Context) error {
+func newHarborHelmDeployment(version string) (deployment plumbing.HelmDeployment, selectors map[string]string) {
+	targetNamespace := "harbor"
+	ingressDnsName := os.Getenv("INGRESS_DOMAIN")
+	if ingressDnsName == "" {
+		ingressDnsName = "172-17-0-1.sslip.io"
+	}
+
+	chart := plumbing.HelmDeployment{
+		ExtraValues: map[string]string{
+			"expose.ingress.hosts.core":   fmt.Sprintf("harbor.%s", ingressDnsName),
+			"expose.ingress.hosts.notary": fmt.Sprintf("notary.%s", ingressDnsName),
+			"externalURL":                 fmt.Sprintf("https://harbor.%s", ingressDnsName),
+		},
+		ReleaseName: "tf-harbor-test",
+		Namespace:   targetNamespace,
+		Chart: plumbing.HelmChart{
+			Name:    "harbor",
+			Version: version,
+			Repository: plumbing.HelmRepository{
+				Name: "harbor",
+				URL:  "https://helm.goharbor.io",
+			},
+		},
+	}
+	labels := map[string]string{
+		"app": "harbor",
+	}
+	return chart, labels
+}
+
+// TestArtefacts configure the Test Artefacts.
+type TestArtefacts mg.Namespace
+
+// Deploy Harbor Helm Chart to Cluster.
+func (TestArtefacts) Deploy(ctx context.Context) {
+	version := os.Getenv("HARBOR_HELM_CHART_VERSION")
+	chart, labels := newHarborHelmDeployment(version)
+	plumbing.ApplyHelmChart(chart, labels)
+}
+
+// DeployV1 Harbor Helm Chart to Cluster.
+func (TestArtefacts) DeployV1(ctx context.Context) {
+	chart, labels := newHarborHelmDeployment("1.3.2")
+	plumbing.ApplyHelmChart(chart, labels)
+}
+
+// DeployV2 Harbor Helm Chart to Cluster.
+func (TestArtefacts) DeployV2(ctx context.Context) {
+	chart, labels := newHarborHelmDeployment("1.4.2")
+	plumbing.ApplyHelmChart(chart, labels)
+}
+
+// Delete Harbor Helm Chart from Cluster.
+func (TestArtefacts) Delete(ctx context.Context) {
+	chart, _ := newHarborHelmDeployment("1.4.2")
+	chart.Delete()
+}
+
+// Build configure the Build Targets.
+type Build mg.Namespace
+
+func (Build) GenerateHarborGoClient(ctx context.Context) error {
 	originalDat, err := ioutil.ReadFile("../scripts/swagger-specs/v2-swagger-original.json")
 	check(err)
 	patchDat, err := ioutil.ReadFile("../scripts/swagger-specs/patch.1.json")
@@ -70,12 +133,12 @@ func generateGoSourcesFromSwaggerSpec(path string) error {
 	return clt.Execute(args)
 }
 
-func Lint(ctx context.Context) {
+func (Build) Lint(ctx context.Context) {
 	ctx = context.WithValue(ctx, "basedir", "../")
 	mg.CtxDeps(ctx, golang.Golang.Lint)
 }
 
-func Fmt(ctx context.Context) {
+func (Build) Fmt(ctx context.Context) {
 	ctx = context.WithValue(ctx, "basedir", "../")
 	mg.CtxDeps(ctx, golang.Golang.Fmt)
 }
@@ -88,7 +151,7 @@ var (
 	builtBy = ""
 )
 
-func GoRelease() {
+func (Build) GoRelease() {
 	os.Chdir("../")
 	defer os.Chdir("./tools")
 	args := []string{"build", "--rm-dist", "--snapshot"}
