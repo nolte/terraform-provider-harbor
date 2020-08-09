@@ -9,7 +9,5 @@ require (
 	github.com/goreleaser/goreleaser v0.141.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/magefile/mage v1.10.0
-	github.com/nolte/plumbing v0.0.0-20200809123920-bc76af6b9449
+	github.com/nolte/plumbing v0.0.1
 )
-
-//replace github.com/nolte/plumbing => /go/src/github.com/nolte/plumbing
