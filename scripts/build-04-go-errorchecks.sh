@@ -4,10 +4,10 @@ echo "==> Checking for unchecked errors..."
 
 # shellcheck disable=SC2230
 if ! which errcheck > /dev/null; then
-    cd ./tools
+    cd ./tools || exit
     echo "==> Installing errcheck..."
     go get github.com/kisielk/errcheck
-    cd ..
+    cd .. || exit
 fi
 
 # shellcheck disable=SC1126,SC2046

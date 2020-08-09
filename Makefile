@@ -59,7 +59,7 @@ scriptsLint:
 	shellcheck scripts/*.sh
 
 e2e_prepare:
-	scripts/tst-00-prepare-kind.sh
+	cd ./tools && go run mage.go -v kind:recreate
 
 
 e2e_prepare_harbor_v1:

@@ -4,15 +4,21 @@ package main
 
 import (
 	"context"
-	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
-    _ "github.com/golangci/golangci-lint/pkg/commands"
-	"github.com/magefile/mage/sh"
-
-	flags "github.com/jessevdk/go-flags"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
+
+	jsonpatch "github.com/evanphx/json-patch"
+	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
+	_ "github.com/golangci/golangci-lint/pkg/commands"
+	"github.com/goreleaser/goreleaser/cmd"
+	flags "github.com/jessevdk/go-flags"
+	"github.com/magefile/mage/mg"
+	"github.com/nolte/plumbing/cmd/golang"
+
+	// mage:import
+	_ "github.com/nolte/plumbing/cmd/kind"
 )
 
 func check(e error) {
@@ -64,8 +70,44 @@ func generateGoSourcesFromSwaggerSpec(path string) error {
 	return clt.Execute(args)
 }
 
-func Lint() error {
+func Lint(ctx context.Context) {
+	ctx = context.WithValue(ctx, "basedir", "../")
+	mg.CtxDeps(ctx, golang.Golang.Lint)
+}
+
+func Fmt(ctx context.Context) {
+	ctx = context.WithValue(ctx, "basedir", "../")
+	mg.CtxDeps(ctx, golang.Golang.Fmt)
+}
+
+// nolint: gochecknoglobals
+var (
+	version = "dev"
+	commit  = ""
+	date    = ""
+	builtBy = ""
+)
+
+func GoRelease() {
 	os.Chdir("../")
 	defer os.Chdir("./tools")
-	return sh.Run("golangci-lint", "run")
+	args := []string{"build", "--rm-dist", "--snapshot"}
+	cmd.Execute(
+		buildVersion(version, commit, date, builtBy),
+		os.Exit,
+		args,
+	)
+}
+func buildVersion(version, commit, date, builtBy string) string {
+	var result = version
+	if commit != "" {
+		result = fmt.Sprintf("%s\ncommit: %s", result, commit)
+	}
+	if date != "" {
+		result = fmt.Sprintf("%s\nbuilt at: %s", result, date)
+	}
+	if builtBy != "" {
+		result = fmt.Sprintf("%s\nbuilt by: %s", result, builtBy)
+	}
+	return result
 }
