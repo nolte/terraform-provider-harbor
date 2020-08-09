@@ -25,7 +25,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
@@ -147,14 +146,14 @@ jobs:
           go-version: ^1.14
         id: go
 
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
       - name: Download terraform provider binary
         uses: actions/download-artifact@v2
         with:
           name: provider
           path: dist
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v2
 
       - name: install the provider to local terraform.d folder
         run: |
