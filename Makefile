@@ -17,11 +17,11 @@ MAKEFLAGS += --silent
 default: build
 
 generate:
-	scripts/build-00-generate-client.sh
+	cd ./tools && go run mage.go -v build:generateHarborGoClient
 
 compile:
 	# scripts/build-10-compile.sh
-	goreleaser build --rm-dist --snapshot
+	cd ./tools && go run mage.go -v build:goRelease
 
 install:
 	$(call install_provider)
@@ -30,24 +30,22 @@ build: generate test compile
 
 fmt:
 	echo "==> Formatting files with fmt..."
-	gofmt -w -s $(GOFMT_FILES)
+	cd ./tools && go run mage.go -v build:fmt
 
 test: goLint scriptsLint vet
 	go test $(TEST)
 
-
-
 fmtcheck:
-	scripts/build-03-go-gofmtcheck.sh
+	cd ./tools && go run mage.go -v build:fmt
 
 vet:
 	echo "==> Checking code with vet..."
 	go vet ./...
 
 goLint:
-	scripts/build-03-go-gofmtcheck.sh
+	fmt
 	scripts/build-04-go-errorchecks.sh
-	scripts/build-05-go-golint.sh
+	cd ./tools && go run mage.go -v lint || true
 
 gosec:
 	echo "==> Checking code with gosec..."
@@ -59,23 +57,22 @@ scriptsLint:
 	shellcheck scripts/*.sh
 
 e2e_prepare:
-	scripts/tst-00-prepare-kind.sh
-
+	cd ./tools && go run mage.go -v kind:recreate
 
 e2e_prepare_harbor_v1:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.3.2"
+	cd ./tools && HARBOR_HELM_CHART_VERSION=1.3.2 go run mage.go -v testArtefacts:deploy
 
 e2e_prepare_harbor_v2:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.4.0"
+	cd ./tools && HARBOR_HELM_CHART_VERSION=1.4.0 go run mage.go -v testArtefacts:deploy
 
 e2e_prepare_harbor_v2_1:
-	scripts/tst-01-prepare-harbor.sh "172-17-0-1.sslip.io" "1.4.1"
+	cd ./tools && HARBOR_HELM_CHART_VERSION=1.4.1 go run mage.go -v testArtefacts:deploy
 
 e2e_clean_cluster:
 	kind delete cluster || true
 
 e2e_clean_harbor:
-	helm delete tf-harbor-test -n harbor
+	cd ./tools && go run mage.go -v testArtefacts:delete
 	sleep 10
 
 e2e_test_v2:
