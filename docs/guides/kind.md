@@ -23,7 +23,7 @@ The same flavore of tests will be integrated into the [CI/CD](/guides/developmen
 *example without change any files*
 
 ```bash
-./scripts/tst-00-prepare-kind.sh "2.1.0"
+cd ./tools && go run mage.go -v kind:recreate
 ./scripts/tst-01-prepare-harbor.sh "10-42-0-100.sslip.io" "1.2.0"
 ```
 

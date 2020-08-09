@@ -82,7 +82,7 @@ jobs:
 
       - name: Starting the Kind Cluster
         run: |
-          ./scripts/tst-00-prepare-kind.sh
+          make e2e_prepare
 
       - name: configure kind kubeconfig
         run: |
@@ -166,7 +166,7 @@ jobs:
 
       - name: Starting the Kind Cluster
         run: |
-          ./scripts/tst-00-prepare-kind.sh
+          make e2e_prepare
 
       - name: configure kind kubeconfig
         run: |
