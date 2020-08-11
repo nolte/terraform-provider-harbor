@@ -3,21 +3,16 @@
 ## Example Usage
 
 ```hcl
-resource "harbor_project" "main" {
-    name = "main"
-}
+--8<--
 
-resource "harbor_usergroup" "developers" {
-    name = "developers"
-    type = "http"
-}
+examples/tf-acception-test/project.tf
 
-resource "harbor_project_member" "developers_main" {
-    project_id = harbor_project.main.id
-    role       = "guest"
-    group_type = "http"
-    group_name = harbor_usergroup.developers.name
-}
+examples/tf-acception-test/usergroup.tf
+
+examples/tf-acception-test/project_member.tf
+--8<--
+
+
 ```
 
 ## Argument Reference

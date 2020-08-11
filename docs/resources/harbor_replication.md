@@ -6,36 +6,13 @@ Harbor Doc: [configuring-replication](https://goharbor.io/docs/2.0.0/administrat
 ## Example Usage
 
 ```hcl
-data "harbor_project" "project_replica" {
-  name = "main"
-}
+--8<--
+examples/tf-acception-test/project.tf
 
-data "harbor_registry" "registry_helm_hub" {
-  name = "helmhub"
-}
+examples/tf-acception-test/registry.tf
 
-data "harbor_registry" "registry_docker_hub" {
-  name = "dockerhub"
-}
-
-resource "harbor_replication" "pull_based_helm" {
-  name                        = "acc-helm-prometheus-operator-test"
-  description                 = "Prometheus Operator Replica"
-  source_registry_id          = data.harbor_registry.registry_replica_helm_hub.id
-  source_registry_filter_name = "stable/prometheus-operator"
-  source_registry_filter_tag  = "**"
-  destination_namespace       = data.harbor_project.project_replica.name
-}
-
-resource "harbor_replication_pull" "push_based_docker" {
-  name                        = "docker-push"
-  description                 = "Push Docker"
-  destination_registry_id     = data.harbor_registry.registry_docker_hub.id
-  destination_namespace       = "notexisting"
-  source_registry_filter_name = "${data.harbor_project.project_replica.name}/vscode-devcontainers/k8s-operator"
-  source_registry_filter_tag  = "**"
-}
-
+examples/tf-acception-test/replication.tf
+--8<--
 ```
 
 ## Argument Reference

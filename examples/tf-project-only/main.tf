@@ -1,8 +1,3 @@
-
-provider "harbor" {
-  schema = "https"
-}
-
 resource "harbor_config_email" "conf_email" {
   email_host     = "main2"
   email_port     = 25

@@ -9,9 +9,9 @@ description: |-
 
 ## Example Usage
 ```
-resource "harbor_tasks" "main" {
-  vulnerability_scan_policy = "daily"
-}
+--8<--
+examples/tf-acception-test/tasks.tf
+--8<--
 ```
 
 ## Argument Reference

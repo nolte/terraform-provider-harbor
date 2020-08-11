@@ -54,5 +54,14 @@
             "type": "string",
             "description": "The client Scope Claim of the OIDC."
         }
+    },
+    {
+        "op": "add",
+        "path": "/definitions/ConfigurationsResponse/properties/ldap_scope/$ref",
+        "value": "#/definitions/IntegerConfigItem"
+    },
+    {
+        "op": "remove",
+        "path": "/definitions/ConfigurationsResponse/properties/ldap_scope/type"
     }
 ]

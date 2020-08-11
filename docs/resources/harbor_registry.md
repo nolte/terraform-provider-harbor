@@ -6,13 +6,7 @@ Harbor Api: [Create](https://demo.goharbor.io/#/Products/post_registries)
 ## Example Usage
 
 ```hcl
-resource "harbor_registry" "helmhub" {
-  name        = "helmhub"
-  url         = "https://hub.helm.sh"
-  type        = "helm-hub"
-  description = "Helm Hub Registry"
-  insecure    = false
-}
+--8<-- "examples/tf-acception-test/registry.tf"
 ```
 
 ## Argument Reference

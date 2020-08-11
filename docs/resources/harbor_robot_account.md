@@ -3,20 +3,11 @@
 ## Example Usage
 
 ```hcl
-resource "harbor_project" "main" {
-    name = "main"
-}
+--8<--
+examples/tf-acception-test/project.tf
 
-resource "harbor_robot_account" "master_robot" {
-  name        = "god"
-  description = "Robot account used to push images to harbor"
-  project_id  = harbor_project.main.id
-  actions     = ["docker_read", "docker_write", "helm_read", "helm_write"]
-}
-
-output "harbor_robot_account_token" {
-  value = data.harbor_robot_account.master_robot.token
-}
+examples/tf-acception-test/robot_account.tf
+--8<--
 ```
 
 ## Argument Reference

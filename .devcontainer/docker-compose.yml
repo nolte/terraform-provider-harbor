@@ -12,11 +12,10 @@ services:
       - 8000:8000
   vscode:
     build: .
-    # image: docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest
-    # image: qmcgaw/godevcontainer:alpine
-    # image: qmcgaw/godevcontainer:debian
     volumes:
       - ../:/go/src/github.com/nolte/terraform-provider-harbor
+      # (only for debug)
+      # - ~/repos-ansible/github/plumbing:/go/src/github.com/nolte/plumbing:cached
       - ~/.ssh:/home/vscode/.ssh:ro
       - ~/.ssh:/root/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock

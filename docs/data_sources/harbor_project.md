@@ -3,9 +3,9 @@
 ## Example Usage
 
 ```hcl
-data "harbor_project" "project_1" {
-  name = "main"
-}
+--8<--
+examples/tf-acception-test-part-2/data_project.tf
+--8<--
 
 data "harbor_project" "project_2" {
   id = 4

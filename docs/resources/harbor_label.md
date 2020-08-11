@@ -6,20 +6,14 @@ Harbor Api: [/labels](https://demo.goharbor.io/#/Products/post_labels)
 ## Example Usage
 
 ```hcl
-resource "harbor_label" "main" {
-  name        = "testlabel"
-  description = "Test Label"
-  color       = "#61717D"
-  scope       = "g"
-}
+--8<--
 
-resource "harbor_label" "project_label" {
-  name        = "projectlabel"
-  description = "Test Label for Project"
-  color       = "#333333"
-  scope       = "p"
-  project_id  = harbor_project.main.id
-}
+examples/tf-acception-test/label.tf
+
+examples/tf-acception-test-part-2/data_project.tf
+
+examples/tf-acception-test-part-2/label.tf
+--8<--
 ```
 
 ## Argument Reference

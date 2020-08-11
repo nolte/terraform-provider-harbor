@@ -12,11 +12,7 @@ Handle a [Harbor Project Resource](https://goharbor.io/docs/1.10/working-with-pr
 ## Example Usage
 
 ```hcl
-resource "harbor_project" "main" {
-  name                   = "main"
-  public                 = false # (Optional) Default value is false
-  vulnerability_scanning = true  # (Optional) Default vale is true. Automatically scan images on push
-}
+--8<-- "examples/tf-acception-test/project.tf"
 ```
 
 ## Argument Reference

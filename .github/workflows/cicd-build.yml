@@ -18,28 +18,202 @@ jobs:
           go-version: ^1.14
         id: go
 
-      - name: Get dependencies
-        run: |
-          SWAGGER_VERSION=v0.23.0
-          mkdir -p $HOME/bin
-          curl -Lo $HOME/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/${SWAGGER_VERSION}/swagger_linux_amd64 \
-            && chmod +x $HOME/bin/swagger
-          echo "::add-path::$HOME/bin"
-
-      - name: install go stuff
-        run: |
-          go get -v \
-           github.com/magefile/mage \
-           github.com/evanphx/json-patch/cmd/json-patch
-          echo "::add-path::$(go env GOPATH)/bin"
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
       - name: install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
+          curl -sSfL \
+            https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
+            | sh -s -- -b $(go env GOPATH)/bin v1.30.0
 
-      - name: test provider
+      - name: Generate Sources from Swagger Spec
         run: |
-          make build
+          make generate
+
+      - name: execute the Tests
+        run: |
+          make test
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: build --rm-dist --snapshot
+
+      - name: Upload terraform provider
+        uses: actions/upload-artifact@v2
+        with:
+          name: provider
+          path: dist/*
+  acc:
+    name: Acception Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.1
+            harbor_path: "/api/v2.0"
+          # TODO: https://github.com/nolte/terraform-provider-harbor/issues/40
+          - helm_chart_version: 1.3.2
+            harbor_path: "/api"
+    env:
+      HARBOR_HELM_CHART_VERSION: ${{ matrix.harbor_deployments.helm_chart_version }}
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Generate Api Client from Swagger Spac
+        run: |
+          make generate
+
+      # https://github.com/engineerd/setup-kind
+      - uses: engineerd/setup-kind@v0.4.0
+        with:
+          skipClusterCreation: true
+
+      - name: Starting the Kind Cluster
+        run: |
+          make e2e_prepare
+
+      - name: configure kind kubeconfig
+        run: |
+          kind export kubeconfig
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          NODEDNSNAME=$(kubectl get nodes -ojson | jq '.items[0].status.addresses[0].address' -r | sed 's/\./-/g')
+          echo "::set-env name=INGRESS_DOMAIN::${NODEDNSNAME}.sslip.io"
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: install helm3
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: install harbor
+        run: |
+          cd ./tools && go run mage.go -v testArtefacts:deploy
+
+      - name: Starting the Acc
+        run: |
+          ./scripts/tst-15-execute-go-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
+
+      - name: remove the kind cluster
+        if: ${{ always() }}
+        run: |
+          kind delete cluster
+  acc_terratest:
+    name: acc-terratest
+    runs-on: ubuntu-latest
+    needs: build
+    #env:
+    #  TF_LOG: TRACE
+    strategy:
+      # Workarround, otherwithe the the different matrix jobs faild.
+      # max-parallel: 1
+      fail-fast: false
+      matrix:
+        terraform_version:
+          # - 0.11.14 Out of Support
+          - 0.12.25
+          - 0.12.29
+          # - 0.13.0-rc1 # required changes at the cicd structure
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.1
+            harbor_path: "/api/v2.0"
+          # TODO: https://github.com/nolte/terraform-provider-harbor/issues/40
+          - helm_chart_version: 1.3.2
+            harbor_path: "/api"
+    env:
+      HARBOR_HELM_CHART_VERSION: ${{ matrix.harbor_deployments.helm_chart_version }}
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Download terraform provider binary
+        uses: actions/download-artifact@v2
+        with:
+          name: provider
+          path: dist
+
+      - name: install the provider to local terraform.d folder
+        run: |
+          make install
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ matrix.terraform_version }}
+
+      # https://github.com/engineerd/setup-kind
+      - uses: engineerd/setup-kind@v0.4.0
+        with:
+          skipClusterCreation: true
+
+      - name: Starting the Kind Cluster
+        run: |
+          make e2e_prepare
+
+      - name: configure kind kubeconfig
+        run: |
+          kind export kubeconfig
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          NODEDNSNAME=$(kubectl get nodes -ojson | jq '.items[0].status.addresses[0].address' -r | sed 's/\./-/g')
+          echo "::set-env name=INGRESS_DOMAIN::${NODEDNSNAME}.sslip.io"
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: install helm3
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: install harbor
+        run: |
+          cd ./tools && go run mage.go -v testArtefacts:deploy
+      #- name: install harbor
+      #  run: |
+      #    echo "::set-env name=INGRESS_DOMAIN::harbor.${NODEDNSNAME}.sslip.io"
+      - name: Wait some Time
+        run: |
+          sleep 30
+      - name: Starting the Acc
+        run: |
+          ./scripts/tst-15-execute-classic-acc.sh "${{ matrix.harbor_deployments.harbor_path }}"
+
+      - name: read harbor logs core
+        if: ${{ failure() }}
+        run: |
+          kubectl logs -l component=core -n harbor --tail=-1
+      - name: read harbor logs jobservice
+        if: ${{ failure() }}
+        run: |
+          kubectl logs -l component=jobservice -n harbor --tail=-1
+
+      - name: remove the kind cluster
+        if: ${{ always() }}
+        run: |
+          kind delete cluster
