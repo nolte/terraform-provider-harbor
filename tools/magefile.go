@@ -229,7 +229,6 @@ func terraformPluginDir() string {
 	check(err)
 	if v13.Compare(version) == 0 {
 		return filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT/linux_amd64")
-
 	} else {
 		return filepath.Join(home, ".terraform.d/plugins/")
 	}
@@ -239,7 +238,12 @@ func terraformVersion() (semver.Version, error) {
 	versionString, err := sh.Output("terraform", "version")
 	check(err)
 	vstr := strings.ReplaceAll(versionString, "Terraform v", "")
-	return semver.Make(vstr)
+	version, err := semver.Make(vstr)
+	if err != nil {
+		log.Printf("Original Response: %s", versionString)
+		log.Printf("Trimmed Response: %s", vstr)
+	}
+	return version, err
 }
 
 func buildVersion(version, commit, date, builtBy string) string {
