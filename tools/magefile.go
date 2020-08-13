@@ -5,9 +5,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
+	"path/filepath"
 
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
@@ -160,6 +163,55 @@ func (Build) GoRelease() {
 		os.Exit,
 		args,
 	)
+}
+
+func Copy(src, dst string) error {
+	in, err := os.Open(src)
+	check(err)
+	defer in.Close()
+	destDir, err := filepath.Abs(filepath.Dir(dst))
+	check(err)
+
+	err = os.MkdirAll(destDir, 0755)
+	check(err)
+
+	out, err := os.Create(dst)
+	check(err)
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	check(err)
+
+	err = os.Chmod(dst, 0777)
+	check(err)
+
+	return out.Close()
+}
+func (Build) TerraformInstallProvider() {
+
+	distPath := "../dist/terraform-provider-harbor_linux_amd64"
+	files, err := ioutil.ReadDir(distPath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, f := range files {
+		localFile := filepath.Join(distPath, f.Name())
+		home, err := os.UserHomeDir()
+		check(err)
+		dest := filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT", f.Name())
+
+		//
+		Copy(localFile, dest)
+	}
+
+	//os.Chdir("../")
+	//defer os.Chdir("./tools")
+	//args := []string{"build", "--rm-dist", "--snapshot"}
+	//cmd.Execute(
+	//	buildVersion(version, commit, date, builtBy),
+	//	os.Exit,
+	//	args,
+	//)
 }
 func buildVersion(version, commit, date, builtBy string) string {
 	var result = version

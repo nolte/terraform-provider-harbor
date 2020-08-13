@@ -24,7 +24,7 @@ compile:
 	cd ./tools && go run mage.go -v build:goRelease
 
 install:
-	$(call install_provider)
+	cd ./tools && go run mage.go -v build:TerraformInstallProvider
 
 build: generate test compile
 
