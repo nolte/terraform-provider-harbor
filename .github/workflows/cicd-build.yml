@@ -159,14 +159,14 @@ jobs:
           name: provider
           path: dist
 
-      - name: install the provider to local terraform.d folder
-        run: |
-          make install
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: ${{ matrix.terraform_version }}
+
+      - name: install the provider to local terraform.d folder
+        run: |
+          make install
 
       # https://github.com/engineerd/setup-kind
       - uses: engineerd/setup-kind@v0.4.0
