@@ -11,6 +11,9 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
+
+	semver "github.com/blang/semver/v4"
 
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
@@ -18,6 +21,7 @@ import (
 	"github.com/goreleaser/goreleaser/cmd"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/magefile/mage/mg"
+	"github.com/magefile/mage/sh"
 	"github.com/nolte/plumbing/cmd/golang"
 
 	// mage:import
@@ -191,14 +195,12 @@ func (Build) TerraformInstallProvider() {
 
 	distPath := "../dist/terraform-provider-harbor_linux_amd64"
 	files, err := ioutil.ReadDir(distPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	check(err)
 	for _, f := range files {
 		localFile := filepath.Join(distPath, f.Name())
-		home, err := os.UserHomeDir()
-		check(err)
-		dest := filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT", f.Name())
+
+		dest := filepath.Join(terraformPluginDir(), f.Name())
+		log.Printf("Copy privider to %s", dest)
 
 		//
 		Copy(localFile, dest)
@@ -213,6 +215,33 @@ func (Build) TerraformInstallProvider() {
 	//	args,
 	//)
 }
+func TerraformVersion() {
+	dir := terraformPluginDir()
+	log.Printf("da %s", dir)
+
+}
+func terraformPluginDir() string {
+	version, err := terraformVersion()
+	check(err)
+	v13, err := semver.Make("0.13.0")
+	check(err)
+	home, err := os.UserHomeDir()
+	check(err)
+	if v13.Compare(version) == 0 {
+		return filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT")
+
+	} else {
+		return filepath.Join(home, ".terraform.d/plugins/")
+	}
+}
+func terraformVersion() (semver.Version, error) {
+
+	versionString, err := sh.Output("terraform", "version")
+	check(err)
+	vstr := strings.ReplaceAll(versionString, "Terraform v", "")
+	return semver.Make(vstr)
+}
+
 func buildVersion(version, commit, date, builtBy string) string {
 	var result = version
 	if commit != "" {

@@ -3,6 +3,7 @@ module main
 go 1.14
 
 require (
+	github.com/blang/semver/v4 v4.0.0
 	github.com/evanphx/json-patch v4.2.0+incompatible
 	github.com/go-swagger/go-swagger v0.25.0
 	github.com/golangci/golangci-lint v1.30.0
