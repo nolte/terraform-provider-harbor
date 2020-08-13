@@ -228,7 +228,7 @@ func terraformPluginDir() string {
 	home, err := os.UserHomeDir()
 	check(err)
 	if v13.Compare(version) == 0 {
-		return filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT")
+		return filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT/linux_amd64")
 
 	} else {
 		return filepath.Join(home, ".terraform.d/plugins/")
