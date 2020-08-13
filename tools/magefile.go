@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,7 +12,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strings"
 
 	semver "github.com/blang/semver/v4"
 
@@ -235,9 +235,13 @@ func terraformPluginDir() string {
 }
 func terraformVersion() (semver.Version, error) {
 
-	versionString, err := sh.Output("terraform", "version")
+	versionString, err := sh.Output("terraform", "version", "-json")
 	check(err)
-	vstr := strings.ReplaceAll(versionString, "Terraform v", "")
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(versionString), &data)
+	check(err)
+
+	vstr := data["terraform_version"].(string)
 	version, err := semver.Make(vstr)
 	if err != nil {
 		log.Printf("Original Response: %s", versionString)
