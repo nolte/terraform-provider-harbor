@@ -176,7 +176,7 @@ func Copy(src, dst string) error {
 	destDir, err := filepath.Abs(filepath.Dir(dst))
 	check(err)
 
-	err = os.MkdirAll(destDir, 0755)
+	err = os.MkdirAll(destDir, 0700)
 	check(err)
 
 	out, err := os.Create(dst)
@@ -186,10 +186,16 @@ func Copy(src, dst string) error {
 	_, err = io.Copy(out, in)
 	check(err)
 
-	err = os.Chmod(dst, 0777)
+	err = os.Chmod(dst, 0744)
 	check(err)
 
 	return out.Close()
+}
+
+func terraformCustomDataDir() string {
+	home, err := os.UserHomeDir()
+	check(err)
+	return filepath.Join(home, ".local/share/terraform/plugins") //".terraform.d/plugins/linux_amd64"
 }
 func (Build) TerraformInstallProvider() {
 
@@ -198,8 +204,11 @@ func (Build) TerraformInstallProvider() {
 	check(err)
 	for _, f := range files {
 		localFile := filepath.Join(distPath, f.Name())
+		// f.Name()
 
-		dest := filepath.Join(terraformPluginDir(), f.Name())
+		os.RemoveAll(terraformCustomDataDir())
+		os.MkdirAll(terraformCustomDataDir(), 0700)
+		dest := filepath.Join(terraformPluginDir(), "terraform-provider-harbor")
 		log.Printf("Copy privider to %s", dest)
 
 		//
@@ -221,17 +230,15 @@ func TerraformVersion() {
 
 }
 func terraformPluginDir() string {
-	version, err := terraformVersion()
-	check(err)
-	v13, err := semver.Make("0.13.0")
-	check(err)
-	home, err := os.UserHomeDir()
-	check(err)
-	if v13.Compare(version) == 0 {
-		return filepath.Join(home, ".terraform.d/plugins/test.local/nolte/harbor/0.1.6-SNAPSHOT/linux_amd64")
-	} else {
-		return filepath.Join(home, ".terraform.d/plugins/")
-	}
+	//version, err := terraformVersion()
+	//check(err)
+	//v13, err := semver.Make("0.13.0")
+	//check(err)
+	//if v13.Compare(version) == 0 {
+	return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.3.0/linux_amd64")
+	//} else {
+	//	return terraformCustomDataDir()
+	//}
 }
 func terraformVersion() (semver.Version, error) {
 

@@ -1,8 +1,12 @@
-output "harbor_project_id" {
-  value = harbor_project.main.id
+# will be configure by env vars from script
+provider "harbor" {
+
 }
 
+
+
 terraform {
+
   required_providers {
     harbor = {
       #source  = "terraform.example.com/nolte/harbor"
@@ -11,4 +15,3 @@ terraform {
     }
   }
 }
-#

@@ -1,16 +1,30 @@
 FROM docker.pkg.github.com/nolte/vscode-devcontainers/k8s-operator:latest
 
+# https://github.com/bflad/tfproviderdocs/releases
+ENV TFPROVIDERDOCS_VERSION=0.7.0
+
 # https://github.com/bats-core/bats-core
 ENV BATS_VERSION=1.2.0
 
 USER root
 
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/swagger /usr/local/bin/swagger
-COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/terraform /usr/local/bin/terraform
+COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/terraform /usr/local/bin/terraform_012
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/terraform-doc  /usr/local/bin/terraform-doc
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/shellcheck  /usr/local/bin/shellcheck
 
-RUN curl -sSL -k https://github.com/bflad/tfproviderdocs/releases/download/v0.6.0/tfproviderdocs_0.6.0_linux_amd64.tar.gz -o /tmp/tfproviderdocs.tgz \
+# https://github.com/hashicorp/terraform/releases
+ENV TERRAFORM_VERSION=0.13.0
+
+RUN curl -Lo ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+  && unzip ./terraform.zip \
+  && mv ./terraform /usr/local/bin/terraform \
+  && chmod +x /usr/local/bin/terraform \
+  && rm ./terraform.zip
+
+
+
+RUN curl -sSL -k https://github.com/bflad/tfproviderdocs/releases/download/v${TFPROVIDERDOCS_VERSION}/tfproviderdocs_${TFPROVIDERDOCS_VERSION}_linux_amd64.tar.gz -o /tmp/tfproviderdocs.tgz \
     && tar -zxf /tmp/tfproviderdocs.tgz -C /tmp \
     && mv /tmp/tfproviderdocs /usr/local/bin/
 
