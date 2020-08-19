@@ -217,8 +217,17 @@ func (Build) TerraformInstallProvider() {
 }
 
 func terraformPluginDir() string {
-	return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.0.1/linux_amd64")
+	version, err := terraformVersion()
+	check(err)
+	v13, err := semver.Make("0.13.0")
+	check(err)
+	if v13.Compare(version) == 0 {
+		return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.0.1/linux_amd64")
+	} else {
+		return filepath.Join(terraformCustomDataDir(), "linux_amd64")
+	}
 }
+
 func terraformVersion() (semver.Version, error) {
 
 	versionString, err := sh.Output("terraform", "version", "-json")
