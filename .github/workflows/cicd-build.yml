@@ -167,6 +167,9 @@ jobs:
         with:
           terraform_version: ${{ matrix.terraform_versions.version }}
 
+      - name: debuggin
+        run: |
+          terraform version -json
       - name: install the provider to local terraform.d folder
         run: |
           make install
