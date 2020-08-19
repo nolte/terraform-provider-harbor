@@ -215,11 +215,7 @@ func (Build) TerraformInstallProvider() {
 		Copy(localFile, dest)
 	}
 }
-func TerraformVersion() {
-	dir := terraformPluginDir()
-	log.Printf("da %s", dir)
 
-}
 func terraformPluginDir() string {
 	return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.0.1/linux_amd64")
 }
