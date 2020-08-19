@@ -130,9 +130,9 @@ jobs:
       matrix:
         terraform_versions:
           # - 0.11.14 Out of Support
-          # <0.12.29 Out of automatical test scope ... missing helper methodes.
-          - version: 0.12.25
-            acc_test_dir: "tf-v12"
+          # <0.12.29 Out of automatical test scope ...
+          # missing helper methodes, and v0.13 provider file system Structure.
+          #- version: 0.12.25
           - version: 0.12.29
           - version: 0.13.0
         harbor_deployments:

@@ -7,7 +7,7 @@ terraform {
   required_providers {
     harbor = {
       source  = "nolte/harbor"
-      version = "~> 0.1"
+      version = "~> 0.0.1"
     }
   }
 }

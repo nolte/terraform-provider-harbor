@@ -195,7 +195,7 @@ func Copy(src, dst string) error {
 func terraformCustomDataDir() string {
 	home, err := os.UserHomeDir()
 	check(err)
-	return filepath.Join(home, ".local/share/terraform/plugins") //".terraform.d/plugins/linux_amd64"
+	return filepath.Join(home, ".local/share/terraform/plugins")
 }
 func (Build) TerraformInstallProvider() {
 
@@ -214,15 +214,6 @@ func (Build) TerraformInstallProvider() {
 		//
 		Copy(localFile, dest)
 	}
-
-	//os.Chdir("../")
-	//defer os.Chdir("./tools")
-	//args := []string{"build", "--rm-dist", "--snapshot"}
-	//cmd.Execute(
-	//	buildVersion(version, commit, date, builtBy),
-	//	os.Exit,
-	//	args,
-	//)
 }
 func TerraformVersion() {
 	dir := terraformPluginDir()
@@ -230,15 +221,7 @@ func TerraformVersion() {
 
 }
 func terraformPluginDir() string {
-	//version, err := terraformVersion()
-	//check(err)
-	//v13, err := semver.Make("0.13.0")
-	//check(err)
-	//if v13.Compare(version) == 0 {
-	return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.3.0/linux_amd64")
-	//} else {
-	//	return terraformCustomDataDir()
-	//}
+	return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.0.1/linux_amd64")
 }
 func terraformVersion() (semver.Version, error) {
 
