@@ -3,7 +3,6 @@
 package test
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -12,11 +11,7 @@ import (
 )
 
 func testsBaseDirectory() string {
-	accPath := os.Getenv("HARBOR_ACC_BASEPATH")
-	if accPath == "" {
-		accPath = "tf-v13"
-	}
-	return accPath
+	return "../"
 }
 
 func TestHarborBaseComponentsExists(t *testing.T) {
