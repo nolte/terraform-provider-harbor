@@ -10,5 +10,5 @@ require (
 	github.com/goreleaser/goreleaser v0.141.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/magefile/mage v1.10.0
-	github.com/nolte/plumbing v0.0.1
+	github.com/nolte/plumbing v0.0.2-0.20200820161834-674f1ee627a1
 )

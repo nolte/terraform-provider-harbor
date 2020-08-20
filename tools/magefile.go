@@ -4,7 +4,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -232,11 +231,8 @@ func terraformVersion() (semver.Version, error) {
 
 	versionString, err := sh.Output("terraform", "version", "-json")
 	check(err)
-	var data map[string]interface{}
-	err = json.Unmarshal([]byte(versionString), &data)
-	check(err)
-
-	vstr := data["terraform_version"].(string)
+    vstr,err := plumbing.ParsingVersionFromOutput(versionString)
+    check(err)
 	version, err := semver.Make(vstr)
 	if err != nil {
 		log.Printf("Original Response: %s", versionString)
