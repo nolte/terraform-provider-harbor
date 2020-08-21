@@ -232,6 +232,7 @@ func terraformVersion() (semver.Version, error) {
 	versionString, err := sh.Output("terraform", "version", "-json")
 	check(err)
     vstr,err := plumbing.ParsingVersionFromOutput(versionString)
+    log.Printf("Trimmed Response: %s", vstr)
     check(err)
 	version, err := semver.Make(vstr)
 	if err != nil {
