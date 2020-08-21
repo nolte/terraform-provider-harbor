@@ -3,22 +3,27 @@
 package test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
 
+func testsBaseDirectory() string {
+	return "../"
+}
+
 func TestHarborBaseComponentsExists(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../tf-acception-test",
+		TerraformDir: filepath.Join(testsBaseDirectory(), "tf-acception-test"),
 		//Parallelism:        1,
 		//MaxRetries:         5,
 		//TimeBetweenRetries: time.Second + 10,
 	}
 	terraformOptionsPartTwo := &terraform.Options{
-		TerraformDir: "../tf-acception-test-part-2",
+		TerraformDir: filepath.Join(testsBaseDirectory(), "tf-acception-test-part-2"),
 		//Parallelism:        1,
 		//MaxRetries:         5,
 		//TimeBetweenRetries: time.Second + 10,
@@ -39,7 +44,7 @@ func TestHarborBaseComponentsExists(t *testing.T) {
 func TestHarborSystemConfig(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../tf-project-only",
+		TerraformDir: filepath.Join(testsBaseDirectory(), "tf-project-only"),
 		//Parallelism:  1,
 		//MaxRetries:   5,
 	}
@@ -47,5 +52,4 @@ func TestHarborSystemConfig(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	terraform.InitAndApply(t, terraformOptions)
-
 }

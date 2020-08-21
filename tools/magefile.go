@@ -5,9 +5,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
+	"path/filepath"
+
+	semver "github.com/blang/semver/v4"
 
 	jsonpatch "github.com/evanphx/json-patch"
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
@@ -161,6 +166,98 @@ func (Build) GoRelease() {
 		args,
 	)
 }
+
+func Copy(src, dst string) error {
+	in, err := os.Open(src)
+	check(err)
+	defer in.Close()
+	destDir, err := filepath.Abs(filepath.Dir(dst))
+	check(err)
+
+	err = os.MkdirAll(destDir, 0700)
+	check(err)
+
+	out, err := os.Create(dst)
+	check(err)
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	check(err)
+
+	err = os.Chmod(dst, 0744)
+	check(err)
+
+	return out.Close()
+}
+
+type TerraformInstallation struct {
+	pluginsDir       string
+	providerFileName string
+}
+
+func (tf TerraformInstallation) InstallPlugin(providerPath string) error {
+	dest := filepath.Join(tf.pluginsDir, tf.providerFileName)
+	log.Printf("Copy privider to %s", dest)
+	return Copy(providerPath, dest)
+}
+
+func (tf TerraformInstallation) CleanPlugins() error {
+	os.RemoveAll(tf.pluginsDir)
+	return os.MkdirAll(tf.pluginsDir, 0700)
+}
+
+func tf13(home string) TerraformInstallation {
+	return TerraformInstallation{
+		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
+		providerFileName: "terraform-provider-harbor",
+	}
+}
+
+func tf12(home string) TerraformInstallation {
+	return TerraformInstallation{
+		pluginsDir:       filepath.Join(home, ".terraform.d/plugins/linux_amd64"),
+		providerFileName: "terraform-provider-harbor_v0.0.1",
+	}
+}
+
+func terraformCustomDataDir() string {
+	home, err := os.UserHomeDir()
+	check(err)
+	return filepath.Join(home, ".local/share/terraform/plugins")
+}
+
+func (Build) TerraformInstallProvider() {
+
+	distPath := "../dist/terraform-provider-harbor_linux_amd64"
+	files, err := ioutil.ReadDir(distPath)
+	check(err)
+	for _, f := range files {
+		localFile := filepath.Join(distPath, f.Name())
+
+		tfPlugins := terraformPluginDir()
+		tfPlugins.CleanPlugins()
+		tfPlugins.InstallPlugin(localFile)
+
+	}
+}
+
+func terraformPluginDir() TerraformInstallation {
+	versionTxt := os.Getenv("TF_VERSION")
+	if versionTxt == "" {
+		versionTxt = "0.13.0"
+	}
+	version, err := semver.Make(versionTxt)
+	home, err := os.UserHomeDir()
+	check(err)
+	v13, err := semver.Make("0.13.0")
+	check(err)
+	if v13.Compare(version) == 0 {
+		return tf13(home)
+	} else {
+		return tf12(home)
+	}
+}
+
 func buildVersion(version, commit, date, builtBy string) string {
 	var result = version
 	if commit != "" {
