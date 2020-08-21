@@ -687,8 +687,8 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWb
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/nishanths/exhaustive v0.0.0-20200708172631-8866003e3856 h1:W3KBC2LFyfgd+wNudlfgCCsTo4q97MeNWrfz8/wSdSc=
 github.com/nishanths/exhaustive v0.0.0-20200708172631-8866003e3856/go.mod h1:wBEpHwM2OdmeNpdCvRPUlkEbBuaFmcK4Wv8Q7FuGW3c=
-github.com/nolte/plumbing v0.0.1 h1:oSdTRfz8aE3JqqSSaBZFLW6Xb03KUumkgNUT88kuQ1I=
-github.com/nolte/plumbing v0.0.1/go.mod h1:wHyGGjfvHsFPgUtPQCRZxP6XXqfbDvvIEfB7ZBPYvqc=
+github.com/nolte/plumbing v0.0.2-0.20200820161834-674f1ee627a1 h1:a5l3ISWi7vt8zN/u+B1jD7o3aAjaoKI+PlWxp3miFn8=
+github.com/nolte/plumbing v0.0.2-0.20200820161834-674f1ee627a1/go.mod h1:wHyGGjfvHsFPgUtPQCRZxP6XXqfbDvvIEfB7ZBPYvqc=
 github.com/nxadm/tail v1.4.4 h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
 github.com/oklog/ulid v1.3.1/go.mod h1:CirwcVhetQ6Lv90oh/F+FBtV6XMibvdAFo93nm5qn4U=
