@@ -20,7 +20,6 @@ import (
 	"github.com/goreleaser/goreleaser/cmd"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/magefile/mage/mg"
-	"github.com/magefile/mage/sh"
 	"github.com/nolte/plumbing/cmd/golang"
 
 	// mage:import
@@ -191,11 +190,39 @@ func Copy(src, dst string) error {
 	return out.Close()
 }
 
+type TerraformInstallation struct {
+	pluginsDir string
+}
+
+func (tf TerraformInstallation) InstallPlugin(providerPath string) error {
+	dest := filepath.Join(tf.pluginsDir, "terraform-provider-harbor")
+	log.Printf("Copy privider to %s", dest)
+	return Copy(providerPath, dest)
+}
+
+func (tf TerraformInstallation) CleanPlugins() error {
+	os.RemoveAll(tf.pluginsDir)
+	return os.MkdirAll(tf.pluginsDir, 0700)
+}
+
+func tf13(home string) TerraformInstallation {
+	return TerraformInstallation{
+		pluginsDir: filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
+	}
+}
+
+func tf12(home string) TerraformInstallation {
+	return TerraformInstallation{
+		pluginsDir: filepath.Join(home, ".terraform.d/plugins/linux_amd64"),
+	}
+}
+
 func terraformCustomDataDir() string {
 	home, err := os.UserHomeDir()
 	check(err)
 	return filepath.Join(home, ".local/share/terraform/plugins")
 }
+
 func (Build) TerraformInstallProvider() {
 
 	distPath := "../dist/terraform-provider-harbor_linux_amd64"
@@ -203,54 +230,29 @@ func (Build) TerraformInstallProvider() {
 	check(err)
 	for _, f := range files {
 		localFile := filepath.Join(distPath, f.Name())
-		// f.Name()
 
-		os.RemoveAll(terraformCustomDataDir())
-		os.MkdirAll(terraformCustomDataDir(), 0700)
-		dest := filepath.Join(terraformPluginDir(), "terraform-provider-harbor")
-		log.Printf("Copy privider to %s", dest)
+		tfPlugins := terraformPluginDir()
+		tfPlugins.CleanPlugins()
+		tfPlugins.InstallPlugin(localFile)
 
-		//
-		Copy(localFile, dest)
 	}
 }
 
-func terraformPluginDir() string {
+func terraformPluginDir() TerraformInstallation {
 	versionTxt := os.Getenv("TF_VERSION")
 	if versionTxt == "" {
 		versionTxt = "0.13.0"
 	}
 	version, err := semver.Make(versionTxt)
-
+	home, err := os.UserHomeDir()
+	check(err)
 	v13, err := semver.Make("0.13.0")
 	check(err)
 	if v13.Compare(version) == 0 {
-		return filepath.Join(terraformCustomDataDir(), "registry.terraform.io/nolte/harbor/0.0.1/linux_amd64")
+		return tf13(home)
 	} else {
-		return filepath.Join(terraformCustomDataDir(), "linux_amd64")
+		return tf12(home)
 	}
-}
-
-func ShowTFVersion() {
-	terraformVersion()
-}
-
-func terraformVersion() (semver.Version, error) {
-
-	versionString, err := sh.Output("terraform", "version", "-json")
-	check(err)
-	log.Printf("Original Output: %s", versionString)
-	vstr, err := plumbing.ParsingVersionFromOutput(versionString)
-	log.Printf("Trimmed Response: %s", vstr)
-	check(err)
-	version, err := semver.Make(vstr)
-	if err != nil {
-		log.Printf("Original Response: %s", versionString)
-		log.Printf("Trimmed Response: %s", vstr)
-		return version, err
-	}
-	log.Printf("Extracted: %s", version)
-	return version, err
 }
 
 func buildVersion(version, commit, date, builtBy string) string {
