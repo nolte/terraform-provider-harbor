@@ -191,11 +191,12 @@ func Copy(src, dst string) error {
 }
 
 type TerraformInstallation struct {
-	pluginsDir string
+	pluginsDir       string
+	providerFileName string
 }
 
 func (tf TerraformInstallation) InstallPlugin(providerPath string) error {
-	dest := filepath.Join(tf.pluginsDir, "terraform-provider-harbor")
+	dest := filepath.Join(tf.pluginsDir, tf.providerFileName)
 	log.Printf("Copy privider to %s", dest)
 	return Copy(providerPath, dest)
 }
@@ -207,13 +208,15 @@ func (tf TerraformInstallation) CleanPlugins() error {
 
 func tf13(home string) TerraformInstallation {
 	return TerraformInstallation{
-		pluginsDir: filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
+		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
+		providerFileName: "terraform-provider-harbor",
 	}
 }
 
 func tf12(home string) TerraformInstallation {
 	return TerraformInstallation{
-		pluginsDir: filepath.Join(home, ".terraform.d/plugins/linux_amd64"),
+		pluginsDir:       filepath.Join(home, ".terraform.d/plugins/linux_amd64"),
+		providerFileName: "terraform-provider-harbor_v0.0.1",
 	}
 }
 
