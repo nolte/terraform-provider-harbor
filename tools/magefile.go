@@ -216,8 +216,12 @@ func (Build) TerraformInstallProvider() {
 }
 
 func terraformPluginDir() string {
-	version, err := terraformVersion()
-	check(err)
+	versionTxt := os.Getenv("TF_VERSION")
+	if versionTxt == "" {
+		versionTxt = "0.13.0"
+	}
+	version, err := semver.Make(versionTxt)
+
 	v13, err := semver.Make("0.13.0")
 	check(err)
 	if v13.Compare(version) == 0 {
@@ -227,18 +231,25 @@ func terraformPluginDir() string {
 	}
 }
 
+func ShowTFVersion() {
+	terraformVersion()
+}
+
 func terraformVersion() (semver.Version, error) {
 
 	versionString, err := sh.Output("terraform", "version", "-json")
 	check(err)
-    vstr,err := plumbing.ParsingVersionFromOutput(versionString)
-    log.Printf("Trimmed Response: %s", vstr)
-    check(err)
+	log.Printf("Original Output: %s", versionString)
+	vstr, err := plumbing.ParsingVersionFromOutput(versionString)
+	log.Printf("Trimmed Response: %s", vstr)
+	check(err)
 	version, err := semver.Make(vstr)
 	if err != nil {
 		log.Printf("Original Response: %s", versionString)
 		log.Printf("Trimmed Response: %s", vstr)
+		return version, err
 	}
+	log.Printf("Extracted: %s", version)
 	return version, err
 }
 
