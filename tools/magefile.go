@@ -225,7 +225,6 @@ func terraformCustomDataDir() string {
 	check(err)
 	return filepath.Join(home, ".local/share/terraform/plugins")
 }
-
 func (Build) TerraformInstallProvider() {
 
 	distPath := "../dist/terraform-provider-harbor_linux_amd64"
