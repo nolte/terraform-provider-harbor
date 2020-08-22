@@ -11,7 +11,7 @@ More informations about the Documentation process can be found at
 https://nolte.github.io/terraform-provider-harbor/guides/development/#docs
 --->
 ### Documentation
-- [ ] Have you create or updated the provider documentation at ``./docs``?
+- [ ] Have you create or updated the provider documentation at ``./documentation/provider_doc``?
   - [ ] If **new** resources or datasource documentation happen, did you add this to the `mkdocs.yml` configuration?
 
 ### References

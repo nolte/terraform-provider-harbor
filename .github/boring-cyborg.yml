@@ -6,7 +6,7 @@ labelPRBasedOnFilePath:
   chore:
     - .github/**
   documentations:
-    - docs/**
+    - documentation/**
     - mkdocs.yml
     - .github/ISSUE_TEMPLATE/**
     - .github/pull_request_template.md

@@ -6,7 +6,7 @@ Harbor Api: [Create](https://demo.goharbor.io/#/Products/post_registries)
 ## Example Usage
 
 ```hcl
---8<-- "examples/tf-acception-test/registry.tf"
+!INCLUDE "../examples/tf-acception-test/registry.tf"
 ```
 
 ## Argument Reference

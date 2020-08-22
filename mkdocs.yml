@@ -1,28 +1,30 @@
 site_name: "Terraform Provider: Harbor"
 site_url: https://nolte.github.io/terraform-provider-harbor/
 repo_url: https://github.com/nolte/terraform-provider-harbor
-
+docs_dir: documentation/mkdocs
 nav:
   - Getting Started: index.md
-  - Data Sources:
-      - harbor_label: data_sources/harbor_label.md
-      - harbor_project: data_sources/harbor_project.md
-      - harbor_registry: data_sources/harbor_registry.md
-  - Resources:
-      - harbor_config_system: resources/harbor_config_system.md
-      - harbor_configuration: resources/harbor_configuration.md
-      - harbor_label: resources/harbor_label.md
-      - harbor_project_member: resources/harbor_project_member.md
-      - harbor_project: resources/harbor_project.md
-      - harbor_registry: resources/harbor_registry.md
-      - harbor_replication: resources/harbor_replication.md
-      - harbor_retention_policy: resources/harbor_retention_policy.md
-      - harbor_robot_account: resources/harbor_robot_account.md
-      - harbor_tasks: resources/harbor_tasks.md
-      - harbor_usergroup: resources/harbor_usergroup.md
   - Guides:
       - Development: guides/development.md
       - Local E2E Tests: guides/kind.md
+  - Provider:
+    - Data Sources:
+        - harbor_label: gen/data-sources/harbor_label.md
+        - harbor_project: gen/data-sources/harbor_project.md
+        - harbor_registry: gen/data-sources/harbor_registry.md
+    - Resources:
+        - harbor_config_system: gen/resources/harbor_config_system.md
+        - harbor_configuration: gen/resources/harbor_configuration.md
+        - harbor_label: gen/resources/harbor_label.md
+        - harbor_project_member: gen/resources/harbor_project_member.md
+        - harbor_project: gen/resources/harbor_project.md
+        - harbor_registry: gen/resources/harbor_registry.md
+        - harbor_replication: gen/resources/harbor_replication.md
+        - harbor_retention_policy: gen/resources/harbor_retention_policy.md
+        - harbor_robot_account: gen/resources/harbor_robot_account.md
+        - harbor_tasks: gen/resources/harbor_tasks.md
+        - harbor_usergroup: gen/resources/harbor_usergroup.md
+
 theme: readthedocs
 markdown_extensions:
   - toc:

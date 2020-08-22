@@ -3,9 +3,7 @@
 ## Example Usage
 
 ```hcl
---8<--
-examples/tf-acception-test-part-2/data_registry.tf
---8<--
+!INCLUDE "../examples/tf-acception-test-part-2/data_registry.tf"
 
 data "harbor_registry" "registry_2" {
   id = 4

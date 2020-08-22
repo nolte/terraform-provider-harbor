@@ -3,16 +3,11 @@
 ## Example Usage
 
 ```hcl
---8<--
+!INCLUDE "../examples/tf-acception-test/project.tf"
 
-examples/tf-acception-test/project.tf
+!INCLUDE "../examples/tf-acception-test/usergroup.tf"
 
-examples/tf-acception-test/usergroup.tf
-
-examples/tf-acception-test/project_member.tf
---8<--
-
-
+!INCLUDE "../examples/tf-acception-test/project_member.tf"
 ```
 
 ## Argument Reference

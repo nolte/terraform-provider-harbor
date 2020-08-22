@@ -12,7 +12,7 @@ Handle a [Harbor Project Resource](https://goharbor.io/docs/1.10/working-with-pr
 ## Example Usage
 
 ```hcl
---8<-- "examples/tf-acception-test/project.tf"
+!INCLUDE "../examples/tf-acception-test/project.tf"
 ```
 
 ## Argument Reference

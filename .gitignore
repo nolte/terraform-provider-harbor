@@ -2,6 +2,7 @@ terraform-provider-harbor_*
 gen
 bin
 dist
+docs
 
 # Local .terraform directories
 **/.terraform/*
