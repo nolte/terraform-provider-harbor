@@ -3,9 +3,7 @@
 ## Example Usage
 
 ```hcl
---8<--
-examples/tf-acception-test/usergroup.tf
---8<--
+!INCLUDE "../examples/tf-acception-test/usergroup.tf"
 ```
 
 

@@ -9,9 +9,7 @@ description: |-
 
 ## Example Usage
 ```
---8<--
-examples/tf-acception-test/tasks.tf
---8<--
+!INCLUDE "../examples/tf-acception-test/tasks.tf"
 ```
 
 ## Argument Reference

@@ -3,13 +3,12 @@
 ## Example Usage
 
 ```hcl
---8<--
-examples/tf-acception-test-part-2/data_label.tf
---8<--
+!INCLUDE "../examples/tf-acception-test-part-2/data_label.tf"
 
 data "harbor_label" "label_2" {
   id = 4
 }
+
 ```
 
 ## Argument Reference

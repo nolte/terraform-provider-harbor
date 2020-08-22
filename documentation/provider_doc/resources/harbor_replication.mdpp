@@ -1,18 +1,16 @@
 # Resource: harbor_replication
 
-Harbor Doc: [configuring-replication](https://goharbor.io/docs/2.0.0/administration/configuring-replication/)  
+Harbor Doc: [configuring-replication](https://goharbor.io/docs/2.0.0/administration/configuring-replication/)
 
 
 ## Example Usage
 
 ```hcl
---8<--
-examples/tf-acception-test/project.tf
+!INCLUDE "../examples/tf-acception-test/project.tf"
 
-examples/tf-acception-test/registry.tf
+!INCLUDE "../examples/tf-acception-test/registry.tf"
 
-examples/tf-acception-test/replication.tf
---8<--
+!INCLUDE "../examples/tf-acception-test/replication.tf"
 ```
 
 ## Argument Reference
@@ -39,7 +37,7 @@ The following arguments are supported:
 
 * `override` - (Optional) Specify whether to override the resources at the destination if a resource with the same name exists. Default: `false`
 
-* `enabled` - (Optional) 
+* `enabled` - (Optional)
 
 
 ## Attributes Reference

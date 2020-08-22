@@ -1,19 +1,16 @@
 # Resource: harbor_label
 
-Harbor Doc: [Managing Labels](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/create-labels/)  
-Harbor Api: [/labels](https://demo.goharbor.io/#/Products/post_labels)  
+Harbor Doc: [Managing Labels](https://goharbor.io/docs/1.10/working-with-projects/working-with-images/create-labels/)
+Harbor Api: [/labels](https://demo.goharbor.io/#/Products/post_labels)
 
 ## Example Usage
 
 ```hcl
---8<--
+!INCLUDE "../examples/tf-acception-test/label.tf"
 
-examples/tf-acception-test/label.tf
+!INCLUDE "../examples/tf-acception-test-part-2/data_project.tf"
 
-examples/tf-acception-test-part-2/data_project.tf
-
-examples/tf-acception-test-part-2/label.tf
---8<--
+!INCLUDE "../examples/tf-acception-test-part-2/label.tf"
 ```
 
 ## Argument Reference
