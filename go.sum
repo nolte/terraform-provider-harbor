@@ -394,6 +394,8 @@ github.com/gruntwork-io/terratest v0.28.13 h1:wzydkaIekNMuIpeU/ksgxuUFwc0wgEL5Y5
 github.com/gruntwork-io/terratest v0.28.13/go.mod h1:PkVylPuUNmItkfOTwSiFreYA4FkanK8AluBuNeGxQOw=
 github.com/gruntwork-io/terratest v0.28.15 h1:in1DRBq8/RjxMyb6Amr1SRrczOK/hGnPi+gQXOOtbZI=
 github.com/gruntwork-io/terratest v0.28.15/go.mod h1:PkVylPuUNmItkfOTwSiFreYA4FkanK8AluBuNeGxQOw=
+github.com/gruntwork-io/terratest v0.29.0 h1:EyPLLxglZIHJ0jU1cbx2NJT7A3MVEmPle8ENWDDwVAA=
+github.com/gruntwork-io/terratest v0.29.0/go.mod h1:aVz7181EP4okz7LMx6BLpiF7bL8wkq+h57V6uicvoc0=
 github.com/hashicorp/errwrap v1.0.0 h1:hLrqtEDnRye3+sgx6z4qVLNuviH3MR5aQ0ykNJa/UYA=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/go-checkpoint v0.5.0 h1:MFYpPZCnQqQTE18jFwSII6eUQrD/oxMFp3mlgcqk5mU=
