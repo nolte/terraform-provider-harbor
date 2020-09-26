@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go v1.34.0 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/go-openapi/errors v0.19.7
-	github.com/go-openapi/runtime v0.19.21
+	github.com/go-openapi/runtime v0.19.22
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/go-openapi/swag v0.19.9
