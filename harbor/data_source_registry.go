@@ -41,6 +41,19 @@ func dataSourceRegistry() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"access_key": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"access_secret": {
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
+			},
+			"credential_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 		Read: dataSourceRegistryRead,
 	}
