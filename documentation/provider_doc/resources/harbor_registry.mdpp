@@ -23,6 +23,12 @@ The following arguments are supported:
 
 * `insecure` - (Optional) Harbor ignores insecure external registry errors. Can be set to `true` or `false` (Default: `false`)
 
+* `access_key` - (Optional) The registry access key.
+
+* `access_secret` - (Optional) The registry access secret.
+
+* `credential_type` - (Optional) Credential type, such as 'basic', 'oauth'.
+
 ## Attributes Reference
 
 In addition to all argument, the following attributes are exported:

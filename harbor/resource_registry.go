@@ -35,6 +35,19 @@ func resourceRegistry() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"access_key": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"access_secret": {
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
+			},
+			"credential_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 		Create: resourceRegistryCreate,
 		Read:   resourceRegistryRead,
@@ -55,6 +68,11 @@ func resourceRegistryCreate(d *schema.ResourceData, m interface{}) error {
 		Name:        d.Get("name").(string),
 		Type:        d.Get("type").(string),
 		URL:         d.Get("url").(string),
+		Credential: &models.RegistryCredential{
+			AccessKey:    d.Get("access_key").(string),
+			AccessSecret: d.Get("access_secret").(string),
+			Type:         d.Get("credential_type").(string),
+		},
 	})
 
 	_, err := apiClient.Products.PostRegistries(body, nil)
@@ -122,10 +140,13 @@ func resourceRegistryUpdate(d *schema.ResourceData, m interface{}) error {
 
 	if registryID, err := strconv.ParseInt(d.Id(), 10, 64); err == nil {
 		params := products.NewPutRegistriesIDParams().WithID(registryID).WithRepoTarget(&models.PutRegistry{
-			Description: d.Get("description").(string),
-			Insecure:    d.Get("insecure").(bool),
-			Name:        d.Get("name").(string),
-			URL:         d.Get("url").(string),
+			Description:    d.Get("description").(string),
+			Insecure:       d.Get("insecure").(bool),
+			Name:           d.Get("name").(string),
+			URL:            d.Get("url").(string),
+			AccessKey:      d.Get("access_key").(string),
+			AccessSecret:   d.Get("access_secret").(string),
+			CredentialType: d.Get("credential_type").(string),
 		})
 		if _, err := apiClient.Products.PutRegistriesID(params, nil); err != nil {
 			return err
@@ -173,6 +194,14 @@ func setRegistrySchema(d *schema.ResourceData, registry *models.Registry) error 
 	}
 
 	if err := d.Set("url", registry.URL); err != nil {
+		return err
+	}
+
+	if err := d.Set("access_key", registry.Credential.AccessKey); err != nil {
+		return err
+	}
+
+	if err := d.Set("credential_type", registry.Credential.Type); err != nil {
 		return err
 	}
 
