@@ -1,0 +1,26 @@
+---
+layout: "harbor"
+#subcategory: "config"
+page_title: "Harbor: harbor_config_system"
+description: |-
+  Manages an Base Harbor System Configuration
+---
+
+# Resource: harbor_config_system
+
+## Example Usage
+```
+resource "harbor_config_system" "main" {
+  project_creation_restriction = "adminonly"
+  robot_token_expiration       = 5259492
+}
+```
+
+## Argument Reference
+The following arguments are supported:
+
+* **project_creation_restriction** - (Optional) Who can create projects within Harbor. Can be **"adminonly"** or **"everyone"**
+
+* **robot_token_expiration** - (Optional) The amount of time in minutes a robot account will expiry. 
+
+`NOTE: If the time is set to high you will get a 500 internal server error message when creating robot accounts`
