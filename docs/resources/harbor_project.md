@@ -1,0 +1,60 @@
+---
+subcategory: "project"
+page_title: "Harbor: harbor_project"
+description: |-
+  Manages an Harbor Project
+---
+
+# Resource: harbor_project
+
+Handle a [Harbor Project Resource](https://goharbor.io/docs/1.10/working-with-projects/create-projects/).
+
+## Example Usage
+
+```hcl
+resource "harbor_project" "main" {
+  name                    = "main"
+  public                  = false # (Optional) Default value is false
+  vulnerability_scanning  = true  # (Optional) Default value is true. Automatically scan images on push
+  reuse_sys_cve_whitelist = false # (Optional) Default value is true.
+  cve_whitelist           = ["CVE-2020-12345", "CVE-2020-54321"]
+}
+```
+
+## Argument Reference
+
+The following arguments are required:
+
+* `name` - (Required) Name of the Project.
+
+The following arguments are optional:
+
+* `public` - (Optional) Handle the access to the hosted images. Default: `true`
+
+    If `true` Any user can pull images from this project. This is a convenient way for you to share repositories with others.
+
+    If `false` Only users who are members of the project can pull images
+
+* `vulnerability_scanning` - (Optional) Activate [Vulnerability Scanning](https://goharbor.io/docs/1.10/administration/vulnerability-scanning/). Default: `true`
+
+* `reuse_sys_cve_whitelist` - (Optional) Whether this project should reuse the system level CVE whitelist as the whitelist of its own. Default: `true`
+
+    If `true`  The whitelist associated with this project will be ignored.
+
+    If `false` The project will use the whitelist defined by `cve_whitelist`.
+
+* `cve_whitelist` - (Optional) List of whitelisted CVE ids for the project.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - Harbor Project ID.
+
+## Import
+
+Harbor Projects can be imported using the `harbor_project`, e.g.
+
+```
+$ terraform import harbor_project.main 1
+```
