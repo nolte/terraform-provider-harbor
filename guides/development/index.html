@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://nolte.github.io/terraform-provider-harbor/guides/development/">
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Development - Terraform Provider: Harbor</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../../css/table.css" rel="stylesheet" />
+  <link href="../../css/extras.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Development";
+    var mkdocs_page_input_path = "guides/development.md";
+    var mkdocs_page_url = "/terraform-provider-harbor/guides/development/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Terraform Provider: Harbor</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">Getting Started</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Guides</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Development</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#visual-studio-code-devcontainer">Visual Studio Code DevContainer</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#precondition-for-use">Precondition for Use</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#process">Process</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#releasing">Releasing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#build">Build</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#cicd">CI/CD</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#harborapi-client">HarborAPI Client</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#docs">Docs</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#github-page">GitHub Page</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#terraform-registry">Terraform Registry</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development-shortcuts">Development Shortcuts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#links">Links</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../kind/">Local E2E Tests</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Provider</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Data Sources</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_label.md">harbor_label</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_project.md">harbor_project</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_registry.md">harbor_registry</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Resources</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_config_system.md">harbor_config_system</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_configuration.md">harbor_configuration</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_label.md">harbor_label</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_project_member.md">harbor_project_member</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_project.md">harbor_project</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_registry.md">harbor_registry</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_replication.md">harbor_replication</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_retention_policy.md">harbor_retention_policy</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_robot_account.md">harbor_robot_account</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_tasks.md">harbor_tasks</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_usergroup.md">harbor_usergroup</a>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Terraform Provider: Harbor</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Guides &raquo;</li>
+        
+      
+    
+    <li>Development</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/nolte/terraform-provider-harbor/edit/master/docs/guides/development.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="development">Development<a class="headerlink" href="#development" title="Permanent link">&para;</a></h1>
+<h2 id="visual-studio-code-devcontainer">Visual Studio Code DevContainer<a class="headerlink" href="#visual-studio-code-devcontainer" title="Permanent link">&para;</a></h2>
+<p>For Easy development use <a href="https://code.visualstudio.com/docs/remote/containers">Visual Studio Code DevContainer</a>, you can find the basement from the Development Containers at <a href="https://github.com/nolte/vscode-devcontainers">nolte/vscode-devcontainers</a>.</p>
+<h3 id="precondition-for-use">Precondition for Use<a class="headerlink" href="#precondition-for-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Create you Github Personal Access Token under <a href="https://github.com/settings/tokens">github.com/settings/tokens</a> with the following scopes:</p>
+<ul>
+<li><code>read:packages</code></li>
+</ul>
+</li>
+<li>
+<p>Login to fetch the required dev containers</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    docker login docker.pkg.github.com
+</code></pre></div>
+
+<ul>
+<li>Grab you a Coffee and wait for 3 Minutes (This happens on the first time use)</li>
+<li>Click Terminal -&gt; New Terminal and execute the following command:</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    make
+</code></pre></div>
+
+<h2 id="process">Process<a class="headerlink" href="#process" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th><em>branch</em></th>
+<th><em>description</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>master</code></td>
+<td>The <code>master</code> will only used for Presentation, and the Deployment process.</td>
+</tr>
+<tr>
+<td><code>tags/v*</code></td>
+<td>All Created Releases must be start with a <code>v*</code> prefix at the tag name.</td>
+</tr>
+<tr>
+<td><code>gh-pages</code></td>
+<td>Branch for the Static HTML presentation, generated by the GitHub Release Workflow.</td>
+</tr>
+<tr>
+<td><code>develop</code></td>
+<td>Branch for the current development, this branch will be used for integrate new Features, and starting the release flow.</td>
+</tr>
+<tr>
+<td><code>feature/*</code></td>
+<td>This are temporary branches for develop new functions.</td>
+</tr>
+<tr>
+<td><code>fix/*</code></td>
+<td>Used for bugfixing from existing versions, if no FastForward Fix Possible.</td>
+</tr>
+</tbody>
+</table>
+<p>Please use the <code>develop</code> branch for new features and fixes.</p>
+<h3 id="releasing">Releasing<a class="headerlink" href="#releasing" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://github.com/nolte/terraform-provider-harbor/releases">Github Release</a> Assets will be automatic attach from the build job see <code>.github/workflows/gorelease.yaml</code>. The Release Process use <a href="https://goreleaser.com/">goreleaser</a> for create the the Binaries.
+Each Release will be start, <em>at the moment</em>, from the <code>develop</code> branch.
+The release description will be generated by <a href="https://github.com/release-drafter/release-drafter">release-drafter/release-drafter</a> in a seperated workflow. Look to <code>.github/workflows/release-drafter.yml</code> for the Job, and <code>.github/release-drafter.yml</code> for the description configuration.</p>
+<h2 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h2>
+<p>The Build scripted at the moment splitted into the GitHub Workflow Stuff and a combination of Makefiles and Shell Scripts, an Targets from the <a href="https://github.com/nolte/plumbing">nolte/plumbing</a>.
+The <code>Makefile/Magefile</code> should be use for the local development, permanten using the full GitHub Workflows needs a lot of time.</p>
+<p>You will get the compleat list of possible <a href="https://magefile.org/magefiles/">Magefile</a> Targets with:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./tools <span class="o">&amp;&amp;</span> go run mage.go -l
+</code></pre></div>
+
+<h3 id="cicd">CI/CD<a class="headerlink" href="#cicd" title="Permanent link">&para;</a></h3>
+<p>For local usage the GitHub Actions we use the <a href="https://github.com/nektos/act">nektos/act</a> Project.
+The first local execute will be take some time for pulling the large <a href="https://hub.docker.com/r/nektos/act-environments-ubuntu/tags">nektos/act-environments-ubuntu:18.04</a> image.</p>
+<table>
+<thead>
+<tr>
+<th><em>Workflow Job</em></th>
+<th><em>Job</em></th>
+<th><em>Local</em></th>
+<th><em>Description</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Classic+CI%2FCD%22"><img alt="Classic CI/CD" src="https://github.com/nolte/terraform-provider-harbor/workflows/Classic%20CI/CD/badge.svg" /></a></td>
+<td><code>build</code></td>
+<td>👍</td>
+<td>This is the Classic Build job with Static Tests, and compile the provider.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Release+Flow%22"><img alt="Release Flow" src="https://github.com/nolte/terraform-provider-harbor/workflows/Release%20Flow/badge.svg" /></a></td>
+<td><code>releaseBuild</code></td>
+<td>👎</td>
+<td>This Job are used for attatch Release Assets to a existing GHRelease</td>
+</tr>
+<tr>
+<td><a href="https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3A%22Acception+Tests+CI%2FCD%22"><img alt="Acception Tests CI/CD" src="https://github.com/nolte/terraform-provider-harbor/workflows/Acception%20Tests%20CI/CD/badge.svg" /></a></td>
+<td><code>acc</code></td>
+<td>👎</td>
+<td>Starting a full run of Terraform Integration Tests, with starting a local kind cluster and deploy a <code>v2</code> Harbor.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3Ashellcheck"><img alt="shellcheck" src="https://github.com/nolte/terraform-provider-harbor/workflows/shellcheck/badge.svg" /></a></td>
+<td><code>shellcheck-check</code></td>
+<td>👍</td>
+<td>Check the Schell scripts for problems.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/nolte/terraform-provider-harbor/actions?query=workflow%3Adevcontainers"><img alt="devcontainers" src="https://github.com/nolte/terraform-provider-harbor/workflows/devcontainers/badge.svg" /></a></td>
+<td><code>devcontainers-check</code>,<code>docscontainers-check</code></td>
+<td>👎</td>
+<td>Simple build job for the both Dev Containers (VSCode and mkdocs)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># call job</span>
+act -j &lt;job&gt; -P ubuntu-latest<span class="o">=</span>nektos/act-environments-ubuntu:18.04
+
+<span class="c1"># example calling the build workflow</span>
+act -j build -P ubuntu-latest<span class="o">=</span>nektos/act-environments-ubuntu:18.04
+</code></pre></div>
+
+<p>Since the Acception Tests Workflow is a matrix build, for better Tests again different Harbor Versions. It is not possible to run it locally, because the you can`t start two or more Kind Cluster out of the box locally. Feature Request <a href="https://github.com/nektos/act/issues/114">#114</a> for call a specific Matrix Workflow.</p>
+<h3 id="harborapi-client">HarborAPI Client<a class="headerlink" href="#harborapi-client" title="Permanent link">&para;</a></h3>
+<p>At the moment the Swagger Json for generate the Api Client, look <a href="https://github.com/nolte/terraform-provider-harbor/blob/develop/docs/adr/0001-use-swagger-for-generate-http-client.md">./docs/adr/0001-use-swagger-for-generate-http-client.md</a>.</p>
+<p>For manipulate the Swagger Json, and generating a useable go api client, we use <a href="https://github.com/evanphx/json-patch">evanphx/json-patch</a> inside the buildprocess, for adding or replace different JSonStructures. So if you need new manipulations, change the <code>scripts/swagger-specs/patch.1.json</code> patch file. More informations about <a href="http://jsonpatch.com/">jsonpatch</a>. The problem are tracked, <a href="https://github.com/goharbor/harbor/issues/12474">#12474</a>.</p>
+<h2 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h2>
+<p>The Documentation are presented in Different Formats, as <a href="https://nolte.github.io/terraform-provider-harbor/">GitHub Page</a> , and for the <a href="https://registry.terraform.io/providers/nolte/harbor/latest/docs">registry.terraform.io</a>.</p>
+<h3 id="github-page">GitHub Page<a class="headerlink" href="#github-page" title="Permanent link">&para;</a></h3>
+<p>If you use the <a href="#visual-studio-code-devcontainer">VSCode DevContainer</a>, the <a href="https://www.mkdocs.org/">mkdocs</a> container will be started automatical, as a sidecar container.
+At the Development you ca access the current state from the Documentation at <a href="http://127.0.0.1:8000/">127.0.0.1:8000</a>.
+For some extras, like Tasks List or Snippeds we use the <a href="https://github.com/jreese/markdown-pp">MarkdownPP</a> project.</p>
+<h3 id="terraform-registry">Terraform Registry<a class="headerlink" href="#terraform-registry" title="Permanent link">&para;</a></h3>
+<p>The Focus from the Registy Documentation is the Provider self, for example <code>Resources</code> and <code>Datasources</code>. More informations about the Required Format at <a href="https://www.terraform.io/docs/registry/providers/docs.html">terraform.io</a>.</p>
+<h2 id="development-shortcuts">Development Shortcuts<a class="headerlink" href="#development-shortcuts" title="Permanent link">&para;</a></h2>
+<p><strong>build and test in one command</strong></p>
+<div class="highlight"><pre><span></span><code>make compile <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> make install <span class="se">\</span>
+    <span class="o">&amp;&amp;</span> bats scripts/test/bats/build
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>terraform import -var harbor_endpoint=${HARBOR_ENDPOINT} -var harbor_base_path=&#39;/api&#39; harbor_project.main 24
+</code></pre></div>
+
+<h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.terraform.io/docs/extend/writing-custom-providers.html">writing-custom-providers</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../kind/" class="btn btn-neutral float-right" title="Local E2E Tests">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/nolte/terraform-provider-harbor/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../kind/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../js/table.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

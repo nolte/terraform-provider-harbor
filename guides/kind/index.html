@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="canonical" href="https://nolte.github.io/terraform-provider-harbor/guides/kind/">
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Local E2E Tests - Terraform Provider: Harbor</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  <link href="../../css/table.css" rel="stylesheet" />
+  <link href="../../css/extras.css" rel="stylesheet" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Local E2E Tests";
+    var mkdocs_page_input_path = "guides/kind.md";
+    var mkdocs_page_url = "/terraform-provider-harbor/guides/kind/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Terraform Provider: Harbor</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">Getting Started</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Guides</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../development/">Development</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Local E2E Tests</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#go-based-tests">Go Based Tests</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#terratest-file-based-tests">Terratest File Based Tests</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">Provider</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Data Sources</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_label.md">harbor_label</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_project.md">harbor_project</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/data-sources/harbor_registry.md">harbor_registry</a>
+                </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="#">Resources</a>
+    <ul>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_config_system.md">harbor_config_system</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_configuration.md">harbor_configuration</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_label.md">harbor_label</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_project_member.md">harbor_project_member</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_project.md">harbor_project</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_registry.md">harbor_registry</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_replication.md">harbor_replication</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_retention_policy.md">harbor_retention_policy</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_robot_account.md">harbor_robot_account</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_tasks.md">harbor_tasks</a>
+                </li>
+                <li class="toctree-l2"><a class="" href="../../gen/resources/harbor_usergroup.md">harbor_usergroup</a>
+                </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Terraform Provider: Harbor</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Guides &raquo;</li>
+        
+      
+    
+    <li>Local E2E Tests</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/nolte/terraform-provider-harbor/edit/master/docs/guides/kind.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="e2e-tests-with-kind">E2E Tests With Kind<a class="headerlink" href="#e2e-tests-with-kind" title="Permanent link">&para;</a></h1>
+<p>For Quick and Easy Local Development it is Recommended to use a Vanilla <a href="">Harbor</a> installation. The Local Test environment will be used the <a href="https://helm.sh/">Helm Chart</a> from <a href="https://github.com/goharbor/harbor-helm/releases">goharbor/harbor-helm</a>.  </p>
+<p>All relevant <code>Makefile</code> goals are prefixed with <code>e2s_*</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>e2e_prepare</code></td>
+<td>Configure the Kind based Env, and install the latest version from the Harbor Chart.</td>
+</tr>
+<tr>
+<td><code>e2e_prepare_harbor_v1</code></td>
+<td>Install a Harbor v1 to the Kind Cluster</td>
+</tr>
+<tr>
+<td><code>e2e_prepare_harbor_v2</code></td>
+<td>Install a Harbor v2 to the Kind Cluster</td>
+</tr>
+<tr>
+<td><code>e2e_test_v1</code></td>
+<td>Starting the go based tests again a Harbor V1 Deployment</td>
+</tr>
+<tr>
+<td><code>e2e_test_v2</code></td>
+<td>Starting the go based tests again a Harbor V2 Deployment</td>
+</tr>
+<tr>
+<td><code>e2e_test_classic</code></td>
+<td>Test the Terraform Scripts from <code>examples</code> with <a href="https://terratest.gruntwork.io/">terratest</a></td>
+</tr>
+<tr>
+<td><code>e2e_clean_harbor</code></td>
+<td>Delete the Harbor helm chart from kind cluster</td>
+</tr>
+<tr>
+<td><code>e2e_clean_cluster</code></td>
+<td>Remove the current kind cluster.</td>
+</tr>
+</tbody>
+</table>
+<p>The same flavore of tests will be integrated into the <a href="/guides/development/#cicd">CI/CD</a> Process.</p>
+<p><strong>Befor you execute <code>e2e_prepare</code> ensure that the <code>INGRESS_DOMAIN</code> to your local host</strong> (By default we use the Docker Bridge Network Interface like <code>172-17-0-1.sslip.io</code>.)</p>
+<p><em>example without change any files</em></p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ./tools <span class="o">&amp;&amp;</span> go run mage.go -v kind:recreate
+./scripts/tst-01-prepare-harbor.sh <span class="s2">&quot;10-42-0-100.sslip.io&quot;</span> <span class="s2">&quot;1.2.0&quot;</span>
+</code></pre></div>
+
+<p>As wildcard DNS we use a service like <a href="https://sslip.io/">sslip.io</a>.<br />
+The scripts will be starting the <a href="https://kind.sigs.k8s.io">Kind</a> Cluster with <a href="https://kind.sigs.k8s.io/docs/user/ingress/">Ingress Support</a>, as Ingress Controller we use <a href="https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx">Nginx</a> .</p>
+<p>The <a href="https://kind.sigs.k8s.io">Kind</a> installation is part of the used <a href="/guides/development/#visual-studio-code-devcontainer">Visual Studio Code Devcontainer</a></p>
+<h2 id="go-based-tests">Go Based Tests<a class="headerlink" href="#go-based-tests" title="Permanent link">&para;</a></h2>
+<p>For quick response and tests near the Code we use <a href="https://www.terraform.io/docs/extend/testing/acceptance-tests/index.html">Terrafomr Go Acceptance Tests</a>.</p>
+<div class="highlight"><pre><span></span><code>make e2e_test
+</code></pre></div>
+
+<p>Tests will be matchs by the file name prefix <code>*_test.go</code>.</p>
+<h2 id="terratest-file-based-tests">Terratest File Based Tests<a class="headerlink" href="#terratest-file-based-tests" title="Permanent link">&para;</a></h2>
+<p>The Classic Terraform File based tests are located at <code>examples/**</code>, and executed with <a href="https://terratest.gruntwork.io/">terratest</a>. For execution you need, a full runnable Terraform Enviroment with the current version from the harbor terraform provider.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># compile the provider</span>
+make compile
+
+<span class="c1"># copy provider to local ~/.terraform.d/plugins/linux_amd64 folder</span>
+make install
+
+<span class="c1"># start the tests</span>
+make e2e_test_classic
+</code></pre></div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../development/" class="btn btn-neutral" title="Development"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/nolte/terraform-provider-harbor/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../development/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../js/table.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
