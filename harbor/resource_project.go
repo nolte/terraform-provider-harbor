@@ -28,6 +28,16 @@ func resourceProject() *schema.Resource {
 				Optional: true,
 				Default:  true,
 			},
+			"reuse_sys_cve_whitelist": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
+			"cve_whitelist": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 		Create: resourceProjectCreate,
 		Read:   resourceProjectRead,
@@ -46,8 +56,12 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	body := products.NewPostProjectsParams().WithProject(&models.ProjectReq{
 		ProjectName: projectName,
 		Metadata: &models.ProjectMetadata{
-			AutoScan: strconv.FormatBool(d.Get("vulnerability_scanning").(bool)),
-			Public:   strconv.FormatBool(d.Get("public").(bool)),
+			AutoScan:             strconv.FormatBool(d.Get("vulnerability_scanning").(bool)),
+			Public:               strconv.FormatBool(d.Get("public").(bool)),
+			ReuseSysCveWhitelist: strconv.FormatBool(d.Get("reuse_sys_cve_whitelist").(bool)),
+		},
+		CveWhitelist: &models.CVEWhitelist{
+			Items: expandCveWhitelist(d.Get("cve_whitelist").([]interface{})),
 		},
 	})
 
@@ -61,6 +75,14 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(strconv.Itoa(int(project.ProjectID)))
+
+	if len(d.Get("cve_whitelist").([]interface{})) > 0 {
+		// There is a bug in the Harbor API where the CVE Whitelist does not persist during Project creation
+		err = resourceProjectUpdate(d, m)
+		if err != nil {
+			return err
+		}
+	}
 
 	return resourceProjectRead(d, m)
 }
@@ -119,8 +141,12 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 		body := products.NewPutProjectsProjectIDParams().WithProject(&models.ProjectReq{
 			ProjectName: d.Get("name").(string),
 			Metadata: &models.ProjectMetadata{
-				AutoScan: d.Get("vulnerability_scanning").(string),
-				Public:   d.Get("public").(string),
+				AutoScan:             strconv.FormatBool(d.Get("vulnerability_scanning").(bool)),
+				Public:               strconv.FormatBool(d.Get("public").(bool)),
+				ReuseSysCveWhitelist: strconv.FormatBool(d.Get("reuse_sys_cve_whitelist").(bool)),
+			},
+			CveWhitelist: &models.CVEWhitelist{
+				Items: expandCveWhitelist(d.Get("cve_whitelist").([]interface{})),
 			},
 		}).WithProjectID(projectID)
 
@@ -177,5 +203,45 @@ func setProjectSchema(data *schema.ResourceData, project *models.Project) error 
 		return err
 	}
 
+	if project.Metadata.ReuseSysCveWhitelist != "" {
+		reuseSysCveWhitelist, err := strconv.ParseBool(project.Metadata.ReuseSysCveWhitelist)
+		if err != nil {
+			return err
+		}
+
+		if err := data.Set("reuse_sys_cve_whitelist", reuseSysCveWhitelist); err != nil {
+			return err
+		}
+	}
+
+	if err := data.Set("cve_whitelist", flattenCveWhitelist(data, project.CveWhitelist)); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func expandCveWhitelist(cveWhitelist []interface{}) []*models.CVEWhitelistItem {
+	var cveWhitelistItems []*models.CVEWhitelistItem
+
+	for _, cve := range cveWhitelist {
+		cveWhitelistItem := &models.CVEWhitelistItem{
+			CveID: cve.(string),
+		}
+		cveWhitelistItems = append(cveWhitelistItems, cveWhitelistItem)
+	}
+
+	return cveWhitelistItems
+}
+
+func flattenCveWhitelist(data *schema.ResourceData, CveWhitelist *models.CVEWhitelist) []interface{} {
+	var cveWhitelist []interface{}
+
+	for _, cve := range CveWhitelist.Items {
+		if cve.CveID != "" {
+			cveWhitelist = append(cveWhitelist, cve.CveID)
+		}
+	}
+
+	return cveWhitelist
 }

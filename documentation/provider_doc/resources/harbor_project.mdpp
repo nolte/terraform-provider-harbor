@@ -31,6 +31,13 @@ The following arguments are optional:
 
 * `vulnerability_scanning` - (Optional) Activate [Vulnerability Scanning](https://goharbor.io/docs/1.10/administration/vulnerability-scanning/). Default: `true`
 
+* `reuse_sys_cve_whitelist` - (Optional) Whether this project should reuse the system level CVE whitelist as the whitelist of its own. Default: `true`
+
+    If `true`  The whitelist associated with this project will be ignored.
+
+    If `false` The project will use the whitelist defined by `cve_whitelist`.
+
+* `cve_whitelist` - (Optional) List of whitelisted CVE ids for the project.
 
 ## Attributes Reference
 

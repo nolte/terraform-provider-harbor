@@ -32,6 +32,16 @@ func dataSourceProject() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"reuse_sys_cve_whitelist": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
+			"cve_whitelist": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 		},
 
 		Read: dataSourceProjectRead,
