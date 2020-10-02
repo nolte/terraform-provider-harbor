@@ -56,6 +56,7 @@ func Provider() terraform.ResourceProvider {
 			"harbor_replication":      resourceReplication(),
 			"harbor_usergroup":        resourceUsergroup(),
 			"harbor_retention_policy": resourceRetentionPolicy(),
+			"harbor_webhook_policy":   resourceWebhookPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"harbor_project":  dataSourceProject(),

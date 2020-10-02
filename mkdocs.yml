@@ -24,6 +24,7 @@ nav:
         - harbor_robot_account: gen/resources/harbor_robot_account.md
         - harbor_tasks: gen/resources/harbor_tasks.md
         - harbor_usergroup: gen/resources/harbor_usergroup.md
+        - harbor_webhook_policy: gen/resources/harbor_webhook_policy.md
 
 theme: readthedocs
 markdown_extensions:
