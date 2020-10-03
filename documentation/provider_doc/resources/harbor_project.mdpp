@@ -1,5 +1,5 @@
 ---
-subcategory: "project"
+subcategory: "Resources"
 page_title: "Harbor: harbor_project"
 description: |-
   Manages an Harbor Project

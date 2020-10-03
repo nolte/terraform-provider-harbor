@@ -119,14 +119,13 @@ func findLabelByNameAndScope(d *schema.ResourceData, m interface{}) (*models.Lab
 				return &models.Label{}, err
 			}
 
-			if len(resp.Payload) < 1 {
-				return &models.Label{}, fmt.Errorf("no label found with name %v", searchName)
-			} else if resp.Payload[0].Name != searchName {
-				return &models.Label{},
-					fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, searchName)
+			for _, element := range resp.Payload {
+				if element.Name == searchName {
+					return element, nil
+				}
 			}
 
-			return resp.Payload[0], nil
+			return &models.Label{}, fmt.Errorf("no label found with name %v", searchName)
 		}
 	}
 

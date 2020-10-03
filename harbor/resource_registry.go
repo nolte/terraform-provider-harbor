@@ -102,15 +102,12 @@ func findRegistryByName(d *schema.ResourceData, m interface{}) (*models.Registry
 			d.SetId("")
 			return &models.Registry{}, err
 		}
-
-		if len(resp.Payload) < 1 {
-			return &models.Registry{}, fmt.Errorf("no Registry found with name %v", registryName)
-		} else if resp.Payload[0].Name != registryName {
-			return &models.Registry{},
-				fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, registryName)
+		for _, element := range resp.Payload {
+			if element.Name == registryName {
+				return element, nil
+			}
 		}
-
-		return resp.Payload[0], nil
+		return &models.Registry{}, fmt.Errorf("no Registry found with name %v", registryName)
 	}
 
 	return &models.Registry{}, fmt.Errorf("fail to lookup Registry by Name")
