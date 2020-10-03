@@ -16,7 +16,7 @@ Thank you for opening an issue. Please note that we try to keep the Terraform is
 ### Terraform Version and Provider Version
 <!--- Run `terraform -v` to show the version. If you are not running the latest version of Terraform, please upgrade because your issue may have already been fixed. --->
 
-### Harbor Version 
+### Harbor Version
 <!--- For reproduce the issue, give the Tested Harbor Version  --->
 
 ### Affected Resource(s)
@@ -32,7 +32,7 @@ If this issue appears to affect multiple resources, it may be an issue with Terr
 ```
 
 ### Debug Output
-<!--Please provider a link to a GitHub Gist containing the complete debug output: https://www.terraform.io/docs/internals/debugging.html. Please do NOT paste the debug output in the issue; just paste a link to the Gist.-->
+<!--Please provider a link to a GitHub Gist containing the complete debug output: https://www.terraform.io/docs/internals/debugging.html. Please do NOT paste the debug output in the issue; just paste a link to the Gist. And Please check the Debug Output for any Plain Text Credentials.-->
 
 ### Panic Output
 <!--If Terraform produced a panic, please provide a link to a GitHub Gist containing the output of the `crash.log`.-->
