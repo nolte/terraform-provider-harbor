@@ -159,6 +159,7 @@ jobs:
           #- version: 0.12.25
           - version: 0.12.29
           - version: 0.13.0
+          - version: 0.13.4
         harbor_deployments:
           - helm_chart_version: 1.4.0
             harbor_path: "/api/v2.0"
