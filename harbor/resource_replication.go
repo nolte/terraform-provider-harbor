@@ -166,15 +166,12 @@ func findReplicationByName(d *schema.ResourceData, m interface{}) (*models.Repli
 			d.SetId("")
 			return &models.ReplicationPolicy{}, err
 		}
-
-		if len(resp.Payload) < 1 {
-			return &models.ReplicationPolicy{}, fmt.Errorf("no Replication found with name %v", registryName)
-		} else if resp.Payload[0].Name != registryName {
-			return &models.ReplicationPolicy{},
-				fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, registryName)
+		for _, element := range resp.Payload {
+			if element.Name == registryName {
+				return element, nil
+			}
 		}
-
-		return resp.Payload[0], nil
+		return &models.ReplicationPolicy{}, fmt.Errorf("no Replication found with name %v", registryName)
 	}
 
 	return &models.ReplicationPolicy{}, fmt.Errorf("fail to lookup Replication by Name")
