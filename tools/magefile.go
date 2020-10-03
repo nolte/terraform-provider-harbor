@@ -250,7 +250,7 @@ func terraformPluginDir() TerraformInstallation {
 	check(err)
 	v13, err := semver.Make("0.13.0")
 	check(err)
-	if v13.Compare(version) == 0 {
+	if v13.Compare(version) >= 0 {
 		return tf13(home)
 	} else {
 		return tf12(home)
