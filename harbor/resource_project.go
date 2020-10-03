@@ -99,15 +99,13 @@ func findProjectByName(d *schema.ResourceData, m interface{}) (*models.Project, 
 			d.SetId("")
 			return &models.Project{}, err
 		}
-
-		if len(resp.Payload) < 1 {
-			return &models.Project{}, fmt.Errorf("no project found with name %v", projectName)
-		} else if resp.Payload[0].Name != projectName {
-			return &models.Project{},
-				fmt.Errorf("response Name %v not match with Expected Name %v", resp.Payload[0].Name, projectName)
+		for _, element := range resp.Payload {
+			if element.Name == projectName {
+				return element, nil
+			}
 		}
 
-		return resp.Payload[0], nil
+		return &models.Project{}, fmt.Errorf("no project found with name %v", projectName)
 	}
 
 	return &models.Project{}, fmt.Errorf("fail to lookup project by Name")
