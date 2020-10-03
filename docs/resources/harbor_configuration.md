@@ -1,5 +1,5 @@
 ---
-subcategory: "config"
+subcategory: "Resources"
 page_title: "Harbor: harbor_config_auth"
 description: |-
   Manages an Base Harbor Auth Configuration
@@ -9,7 +9,8 @@ description: |-
 # Resource: harbor_config_auth
 
 ## Example Usage
-```
+
+```hcl
 resource "harbor_config_auth" "oidc" {
   auth_mode          = "oidc_auth"
   oidc_name          = "azure"
