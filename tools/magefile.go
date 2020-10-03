@@ -82,13 +82,13 @@ func (TestArtefacts) DeployV1(ctx context.Context) {
 
 // DeployV2 Harbor Helm Chart to Cluster.
 func (TestArtefacts) DeployV2(ctx context.Context) {
-	chart, labels := newHarborHelmDeployment("1.4.2")
+	chart, labels := newHarborHelmDeployment("1.4.3")
 	plumbing.ApplyHelmChart(chart, labels)
 }
 
 // Delete Harbor Helm Chart from Cluster.
 func (TestArtefacts) Delete(ctx context.Context) {
-	chart, _ := newHarborHelmDeployment("1.4.2")
+	chart, _ := newHarborHelmDeployment("1.4.3")
 	chart.Delete()
 }
 
@@ -208,8 +208,8 @@ func (tf TerraformInstallation) CleanPlugins() error {
 
 func tf13(home string) TerraformInstallation {
 	return TerraformInstallation{
-		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
-		providerFileName: "terraform-provider-harbor",
+		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.private/nolte/harbor/0.0.1/linux_amd64"),
+		providerFileName: "terraform-provider-harbor_v0.0.1",
 	}
 }
 
