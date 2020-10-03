@@ -7,7 +7,7 @@ terraform {
 
     harbor = {
       source  = "nolte/harbor"
-      version = "0.1.9"
+      version = "0.1.10"
     }
   }
   required_version = ">= 0.13"
