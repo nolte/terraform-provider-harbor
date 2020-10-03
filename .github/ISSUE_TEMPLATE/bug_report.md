@@ -16,10 +16,13 @@ Thank you for opening an issue. Please note that we try to keep the Terraform is
 ### Terraform Version and Provider Version
 <!--- Run `terraform -v` to show the version. If you are not running the latest version of Terraform, please upgrade because your issue may have already been fixed. --->
 
+### Harbor Version 
+<!--- For reproduce the issue, give the Tested Harbor Version  --->
+
 ### Affected Resource(s)
 <!-- Please list the resources as a list, for example:
-- opc_instance
-- opc_storage_volume
+- harbor_project
+- harbor_configuration
 
 If this issue appears to affect multiple resources, it may be an issue with Terraform's core, so please mention this. -->
 
