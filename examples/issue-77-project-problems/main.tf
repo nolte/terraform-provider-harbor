@@ -24,7 +24,7 @@ resource "harbor_registry" "dockerhub" {
 resource "harbor_registry" "gcr_io" {
   name        = "k8s-gcr-io-classic"
   url         = "https://k8s.gcr.io"
-  type        = "docker-hub"
+  type        = "docker-registry"
   description = "Google K8S Container Registry"
   insecure    = false
 }
@@ -38,7 +38,7 @@ resource "harbor_registry" "gcr_io" {
 #  basepath = "/api/v2.0"
 #}
 provider "harbor" {
-
+ basepath = "/api/v2.0"
 }
 
 resource "harbor_project" "rancher" {
@@ -65,6 +65,7 @@ resource "harbor_replication" "pull_nginx" {
   source_registry_filter_name = "ingress-nginx/controller"
   source_registry_filter_tag  = "v0.35.0"
   destination_namespace       = harbor_project.ingress_nginx.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_rancher" {
@@ -74,6 +75,7 @@ resource "harbor_replication" "rancher_rancher" {
   source_registry_filter_name = "rancher/rancher"
   source_registry_filter_tag  = "v2.4.8"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_rancher_agent" {
@@ -83,6 +85,7 @@ resource "harbor_replication" "rancher_rancher_agent" {
   source_registry_filter_name = "rancher/rancher-agent"
   source_registry_filter_tag  = "v2.4.8"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_metrics_server" {
@@ -92,6 +95,7 @@ resource "harbor_replication" "rancher_metrics_server" {
   source_registry_filter_name = "rancher/metrics-server"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_hyperkube" {
@@ -101,6 +105,7 @@ resource "harbor_replication" "rancher_hyperkube" {
   source_registry_filter_name = "rancher/hyperkube"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_coreos_flannel" {
@@ -110,6 +115,7 @@ resource "harbor_replication" "rancher_coreos_flannel" {
   source_registry_filter_name = "rancher/coreos-flannel"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_coredns_coredns" {
@@ -119,6 +125,7 @@ resource "harbor_replication" "rancher_coredns_coredns" {
   source_registry_filter_name = "rancher/coredns-coredns"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_cluster_proportional_autoscaler" {
@@ -128,6 +135,7 @@ resource "harbor_replication" "rancher_cluster_proportional_autoscaler" {
   source_registry_filter_name = "rancher/cluster-proportional-autoscaler"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_calico_pod2daemon_flexvol" {
@@ -137,6 +145,7 @@ resource "harbor_replication" "rancher_calico_pod2daemon_flexvol" {
   source_registry_filter_name = "rancher/calico-pod2daemon-flexvol"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 
 resource "harbor_replication" "metallb_speaker" {
@@ -146,6 +155,7 @@ resource "harbor_replication" "metallb_speaker" {
   source_registry_filter_name = "metallb/speaker"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.metallb.name
+  enabled = true
 }
 
 resource "harbor_replication" "metallb_controller" {
@@ -155,6 +165,7 @@ resource "harbor_replication" "metallb_controller" {
   source_registry_filter_name = "metallb/controller"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.metallb.name
+  enabled = true
 }
 
 resource "harbor_replication" "rancher_calico_node" {
@@ -164,6 +175,7 @@ resource "harbor_replication" "rancher_calico_node" {
   source_registry_filter_name = "rancher/calico-node"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
 resource "harbor_replication" "rancher_calico_cni" {
   name                        = "rancher-calico-cni"
@@ -172,4 +184,6 @@ resource "harbor_replication" "rancher_calico_cni" {
   source_registry_filter_name = "rancher/calico-cni"
   source_registry_filter_tag  = "*"
   destination_namespace       = harbor_project.rancher.name
+  enabled = true
 }
+
