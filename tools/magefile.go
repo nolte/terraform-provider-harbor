@@ -242,15 +242,17 @@ func (Build) TerraformInstallProvider() {
 
 func terraformPluginDir() TerraformInstallation {
 	versionTxt := os.Getenv("TF_VERSION")
+	log.Printf("Given TF_VERSION Env '%s'", versionTxt)
 	if versionTxt == "" {
 		versionTxt = "0.13.0"
+		log.Printf("No Env Variable use the fallback '%s'", versionTxt)
 	}
 	version, err := semver.Make(versionTxt)
 	home, err := os.UserHomeDir()
 	check(err)
 	v13, err := semver.Make("0.13.0")
 	check(err)
-	if v13.Compare(version) >= 0 {
+	if v13.Compare(version) <= 0 {
 		return tf13(home)
 	} else {
 		return tf12(home)
