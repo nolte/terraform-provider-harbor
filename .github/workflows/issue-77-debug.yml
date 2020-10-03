@@ -1,0 +1,135 @@
+name: issue-77-debug
+
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "*.*"
+  pull_request:
+jobs:
+  issue77:
+    name: issue77
+    runs-on: ubuntu-latest
+    #env:
+    #  TF_LOG: TRACE
+    strategy:
+      # Workarround, otherwithe the the different matrix jobs faild.
+      # max-parallel: 1
+      fail-fast: false
+      matrix:
+        terraform_versions:
+          # - 0.11.14 Out of Support
+          # <0.12.29 Out of automatical test scope ...
+          # missing helper methodes, and v0.13 provider file system Structure.
+          #- version: 0.12.25
+          #- version: 0.12.29
+          - version: 0.13.4
+          - version: 0.13.1
+        harbor_deployments:
+          - helm_chart_version: 1.4.0
+            harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.1
+            harbor_path: "/api/v2.0"
+          - helm_chart_version: 1.4.3
+            harbor_path: "/api/v2.0"
+          #- helm_chart_version: 1.3.2
+          #  harbor_path: "/api"
+    env:
+      HARBOR_HELM_CHART_VERSION: ${{ matrix.harbor_deployments.helm_chart_version }}
+      TF_VERSION: ${{ matrix.terraform_versions.version }}
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ matrix.terraform_versions.version }}
+
+      - name: install helm3
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: debuggin
+        run: |
+          terraform version -json
+
+      # https://github.com/engineerd/setup-kind
+      - uses: engineerd/setup-kind@v0.4.0
+        with:
+          skipClusterCreation: true
+
+      - name: Starting the Kind Cluster
+        working-directory: tools
+        run: |
+          go run mage.go -v kind:recreate
+
+
+      - name: configure kind kubeconfig
+        run: |
+          kind export kubeconfig
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          NODEDNSNAME=$(kubectl get nodes -ojson | jq '.items[0].status.addresses[0].address' -r | sed 's/\./-/g')
+          echo "::set-env name=INGRESS_DOMAIN::${NODEDNSNAME}.sslip.io"
+          echo "current-context:" $(kubectl config current-context)
+          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: Wait some Time
+        run: |
+          sleep 5
+
+      - name: Deploy harbor Chart
+        working-directory: tools
+        run: |
+          go run mage.go -v testArtefacts:deploy
+
+      - name: Wait some Time
+        run: |
+          sleep 30
+
+      - name: Configure harbor provider Envs
+        run: |
+          echo "::set-env name=HARBOR_ENDPOINT::$(kubectl get Ingress tf-harbor-test-harbor-ingress -n harbor -ojson | jq '.spec.rules[].host' -r | grep harbor)"
+          echo "::set-env name=HARBOR_USERNAME::admin"
+          echo "::set-env name=HARBOR_PASSWORD::$(kubectl -n harbor get secret tf-harbor-test-harbor-core -ojson | jq '.data.HARBOR_ADMIN_PASSWORD' -r | base64 -d)"
+          echo "::set-env name=HARBOR_INSECURE::true"
+          echo "::set-env name=HARBOR_BASEPATH::${{ matrix.harbor_deployments.harbor_path }}"
+
+
+      - name: Terraform init
+        working-directory: examples/issue-77-project-problems
+        run: |
+          terraform init
+
+      - name: Apply
+        working-directory: examples/issue-77-project-problems
+        run: |
+          terraform apply -auto-approve
+      - name: Wait some Time
+        run: |
+          sleep 5
+      - name: destroy
+        working-directory: examples/issue-77-project-problems
+        run: |
+          terraform apply -auto-approve
+      - name: read harbor logs core
+        if: ${{ failure() }}
+        run: |
+          kubectl logs -l component=core -n harbor --tail=-1
+      - name: read harbor logs jobservice
+        if: ${{ failure() }}
+        run: |
+          kubectl logs -l component=jobservice -n harbor --tail=-1
+
+      - name: remove the kind cluster
+        if: ${{ always() }}
+        run: |
+          kind delete cluster
