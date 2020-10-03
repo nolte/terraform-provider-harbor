@@ -14,7 +14,7 @@ COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/
 COPY --from=docker.pkg.github.com/nolte/vscode-devcontainers/devops:latest /usr/local/bin/shellcheck  /usr/local/bin/shellcheck
 
 # https://github.com/hashicorp/terraform/releases
-ENV TERRAFORM_VERSION=0.13.0
+ENV TERRAFORM_VERSION=0.13.4
 
 RUN curl -Lo ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip ./terraform.zip \
@@ -66,3 +66,9 @@ RUN npm i markdown-spellcheck -g
 RUN curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
 
 RUN npm i madr adr-log -g
+
+RUN mkdir -p ${WORKON_HOME} \
+  && virtualenv -p python3 ${WORKON_HOME}/development \
+  && source ${WORKON_HOME}/development/bin/activate \
+  && pip install MarkdownPP mkdocs \
+  && deactivate
