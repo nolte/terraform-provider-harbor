@@ -82,13 +82,13 @@ func (TestArtefacts) DeployV1(ctx context.Context) {
 
 // DeployV2 Harbor Helm Chart to Cluster.
 func (TestArtefacts) DeployV2(ctx context.Context) {
-	chart, labels := newHarborHelmDeployment("1.4.2")
+	chart, labels := newHarborHelmDeployment("1.4.3")
 	plumbing.ApplyHelmChart(chart, labels)
 }
 
 // Delete Harbor Helm Chart from Cluster.
 func (TestArtefacts) Delete(ctx context.Context) {
-	chart, _ := newHarborHelmDeployment("1.4.2")
+	chart, _ := newHarborHelmDeployment("1.4.3")
 	chart.Delete()
 }
 
@@ -208,8 +208,8 @@ func (tf TerraformInstallation) CleanPlugins() error {
 
 func tf13(home string) TerraformInstallation {
 	return TerraformInstallation{
-		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.io/nolte/harbor/0.0.1/linux_amd64"),
-		providerFileName: "terraform-provider-harbor",
+		pluginsDir:       filepath.Join(home, ".local/share/terraform/plugins/registry.terraform.private/nolte/harbor/0.0.1/linux_amd64"),
+		providerFileName: "terraform-provider-harbor_v0.0.1",
 	}
 }
 
@@ -242,15 +242,17 @@ func (Build) TerraformInstallProvider() {
 
 func terraformPluginDir() TerraformInstallation {
 	versionTxt := os.Getenv("TF_VERSION")
+	log.Printf("Given TF_VERSION Env '%s'", versionTxt)
 	if versionTxt == "" {
 		versionTxt = "0.13.0"
+		log.Printf("No Env Variable use the fallback '%s'", versionTxt)
 	}
 	version, err := semver.Make(versionTxt)
 	home, err := os.UserHomeDir()
 	check(err)
 	v13, err := semver.Make("0.13.0")
 	check(err)
-	if v13.Compare(version) == 0 {
+	if v13.Compare(version) <= 0 {
 		return tf13(home)
 	} else {
 		return tf12(home)
