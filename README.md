@@ -72,7 +72,7 @@ For full building and testing you need the following tools on our machine.
 
 ## Supported Versions
 
-Tested with Harbor v1.10.2, v2.0.0 and v2.1.0.
+Tested with Harbor v1.10.2, v2.0.0 and ~v2.1.0~ (currently broken [#83](https://github.com/nolte/terraform-provider-harbor/pull/83)).
 
 ## Tests
 
