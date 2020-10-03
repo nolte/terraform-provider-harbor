@@ -1,5 +1,5 @@
 ---
-subcategory: "project"
+subcategory: "Resources"
 page_title: "Harbor: harbor_tasks"
 description: |-
   Manages an Harbor Task
@@ -8,7 +8,8 @@ description: |-
 # Resource: harbor_tasks
 
 ## Example Usage
-```
+
+```hcl
 !INCLUDE "../examples/tf-acception-test/tasks.tf"
 ```
 

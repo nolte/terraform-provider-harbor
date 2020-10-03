@@ -48,6 +48,11 @@ func GenerateDocumation() error {
 		log.Println(err)
 	}
 	copyCommand := fmt.Sprintf("%s/provider_doc", file)
+
+	os.RemoveAll(outputDir)
+	os.RemoveAll(mkdocsOut)
+	os.MkdirAll(filepath.Dir(outputDir), 0700)
+	os.MkdirAll(filepath.Dir(mkdocsOut), 0700)
 	err = copy.Copy(copyCommand, outputDir)
 	err = copy.Copy(copyCommand, mkdocsOut)
 
