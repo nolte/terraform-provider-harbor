@@ -40,14 +40,14 @@ jobs:
         run: |
           cd ./documentation && go run mage.go -v GenerateDocumation
 
-      - uses: EndBug/add-and-commit@v5 # You can change this to use a specific version
+      - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
         if: github.event_name != 'pull_request'
         with:
           add: 'docs --force --ignore-errors'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: EndBug/add-and-commit@v5 # You can change this to use a specific version
+      - uses: EndBug/add-and-commit@v7 # You can change this to use a specific version
         if: github.event_name != 'pull_request'
         with:
           add: 'documentation/provider_doc --force --ignore-errors'
