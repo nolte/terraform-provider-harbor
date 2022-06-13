@@ -183,7 +183,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download terraform provider binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: provider
           path: dist
