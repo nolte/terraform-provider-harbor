@@ -17,7 +17,7 @@ jobs:
   devcontainers-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
       - uses: azure/docker-login@v1
         with:
           login-server: docker.pkg.github.com
@@ -31,7 +31,7 @@ jobs:
   docscontainers-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3.0.2
 
       - name: buid docs image
         run: |
