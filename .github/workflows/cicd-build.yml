@@ -109,7 +109,7 @@ jobs:
           make generate
 
       # https://github.com/engineerd/setup-kind
-      - uses: engineerd/setup-kind@v0.4.0
+      - uses: engineerd/setup-kind@v0.5.0
         with:
           skipClusterCreation: true
 
@@ -201,7 +201,7 @@ jobs:
           make install
 
       # https://github.com/engineerd/setup-kind
-      - uses: engineerd/setup-kind@v0.4.0
+      - uses: engineerd/setup-kind@v0.5.0
         with:
           skipClusterCreation: true
 
